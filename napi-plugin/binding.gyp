@@ -1,4 +1,7 @@
 {
+  "variables": {
+    "native_config%": "Release"
+  },
   "targets": [
     {
       "target_name": "winwatch",
@@ -11,12 +14,12 @@
       ],
       "defines": [ "NAPI_DISABLE_CPP_EXCEPTIONS" ],
       "libraries": [ 
-          "../native/x64/Release/WindowMonitor.lib",
-          "uiautomationcore.lib",
-          "ole32.lib",
-          "oleaut32.lib",
-          "user32.lib",
-          "kernel32.lib"
+        "../../native/x64/<(native_config)/WindowMonitor.lib",
+        "uiautomationcore.lib",
+        "ole32.lib",
+        "oleaut32.lib",
+        "user32.lib",
+        "kernel32.lib"
       ],
       "msvs_settings": {
         "VCCLCompilerTool": {

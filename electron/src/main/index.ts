@@ -5,8 +5,20 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 // Load NAPI plugin
 let winwatch: any
 try {
-  // Try local build path first (relative to project root)
-  winwatch = require('../../../../napi-plugin/build/Release/winwatch.node')
+  // In dev mode, try Debug build first, then Release // Try local build path first (relative to project root)
+  if (is.dev) {
+    try {
+      winwatch = require('../../../../napi-plugin/build/Debug/winwatch.node')
+      console.log('Loaded winwatch.node from Debug build')
+    } catch (debugError) {
+      console.log('Debug build not found, trying Release build')
+      winwatch = require('../../../../napi-plugin/build/Release/winwatch.node')
+      console.log('Loaded winwatch.node from Release build')
+    }
+  } else {
+    // Production: use Release build
+    winwatch = require('../../../../napi-plugin/build/Release/winwatch.node')
+  }
 } catch (error) {
   console.error('Failed to load winwatch.node from default path:', error)
   try {
