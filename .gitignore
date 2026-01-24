@@ -1,0 +1,56 @@
+# General
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln.docstates
+
+# Visual Studio / C++
+.vs/
+x64/
+x86/
+Debug/
+Release/
+*.user
+*.aps
+*.sdf
+*.opensdf
+*.ipch
+*.db
+*.iobj
+*.ipdb
+*.tlog
+*.obj
+*.lib
+*.dll
+*.exe
+*.pdb
+*.exp
+*.ilk
+
+# Preserve source code and project files
+!native/WindowMonitor.sln
+!native/WindowMonitor.vcxproj
+!napi-plugin/binding.gyp
+
+# Electron / Vite
+electron/out/
+electron/dist/
+electron/release/
+electron/*.log
+
+# NAPI Plugin / node-gyp
+napi-plugin/build/
+*.node
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
