@@ -1,0 +1,3 @@
+onlyBuiltDependencies:
+  - electron@28.3.3
+  - esbuild@0.21.5
