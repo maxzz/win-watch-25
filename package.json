@@ -4,7 +4,12 @@
   "description": "Windows UI Automation Monitor",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:napi": "npm run build --workspace=napi-plugin",
+    "build:napi:debug": "npm run build:debug --workspace=napi-plugin",
+    "dev": "npm run dev --workspace=electron",
+    "dev:debug": "npm run dev:debug --workspace=electron",
+    "copy:dll": "copy native\\x64\\Release\\WindowMonitor.dll electron\\"
   },
   "keywords": [],
   "author": "",
