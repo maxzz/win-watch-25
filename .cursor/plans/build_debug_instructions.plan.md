@@ -26,16 +26,16 @@ This component interacts directly with the OS via Microsoft UI Automation API.
 2.  Right-click project > Properties > Debugging.
 3.  Set **Command** to your Electron executable path.
 
-  - Example: `C:\y\w\2-web\0-dp\win-watch-25\electron\node_modules\electron\dist\electron.exe`
+- Example: `C:\y\w\2-web\0-dp\win-watch-25\electron\node_modules\electron\dist\electron.exe`
 
 4.  Set **Command Arguments** to the path of your electron main script.
 
-  - Example: `.` (if running from electron folder) or `src/main/index.js`
+- Example: `.` (if running from electron folder) or `src/main/index.js`
 
 5.  Set breakpoints in `WindowMonitor.cpp`.
 6.  Press F5 to start debugging.
 
-  - *Note*: Debugging mixed native/node environments can be complex. Attaching to the running `electron.exe` process (Main process) is often easier.
+- *Note*: Debugging mixed native/node environments can be complex. Attaching to the running `electron.exe` process (Main process) is often easier.
 
 ## 2. NAPI Plugin (`napi-plugin/`)
 
@@ -51,7 +51,7 @@ This component bridges Node.js/Electron with the native DLL.
 1.  Open a terminal in the `napi-plugin/` directory.
 2.  Run `npm install`.
 
-  - **Critical**: This installs `node-addon-api`. If this step is skipped, you will see errors about missing includes like `<napi.h>`.
+- **Critical**: This installs `node-addon-api`. If this step is skipped, you will see errors about missing includes like `<napi.h>`.
 
 3.  Run `npm run install` (or `node-gyp rebuild`).
 4.  **Verify Output**: Check for `napi-plugin/build/Release/winwatch.node`.
@@ -73,7 +73,7 @@ The frontend user interface.
 2.  Run `npm install`.
 3.  **Critical Step**: Copy the `native/x64/Release/WindowMonitor.dll` file to the `electron/` root folder.
 
-  - The application looks for the DLL in the same directory as the executable or in the system PATH.
+- The application looks for the DLL in the same directory as the executable or in the system PATH.
 
 4.  Run `npm run dev` to start the application.
 
