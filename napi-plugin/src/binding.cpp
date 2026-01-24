@@ -78,7 +78,7 @@ Napi::Value InvokeControlWrapper(const Napi::CallbackInfo& info) {
     
     if (info.Length() < 2 || !info[0].IsString() || !info[1].IsString()) {
         Napi::TypeError::New(env, "Expected (handle: string, runtimeId: string)").ThrowAsJavaScriptException();
-        return env.Boolean();
+        return Napi::Boolean::New(env, false);
     }
     
     std::string handleStr = info[0].As<Napi::String>().Utf8Value();
