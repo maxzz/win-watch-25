@@ -1,21 +1,20 @@
 {
-  "name": "win-watch-25",
-  "version": "1.0.0",
-  "description": "Windows UI Automation Monitor",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build:napi": "npm run build --workspace=napi-plugin",
-    "build:napi:debug": "npm run build:debug --workspace=napi-plugin",
-    "dev": "npm run dev --workspace=electron",
-    "dev:debug": "npm run dev:debug --workspace=electron",
-    "copy:dll": "copy native\\x64\\Release\\WindowMonitor.dll electron\\"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "workspaces": [
-    "electron",
-    "napi-plugin"
-  ]
+    "name": "win-watch-25",
+    "version": "1.0.0",
+    "description": "Windows UI Automation Monitor",
+    "author": "Max Zakharzhevskiy",
+    "license": "ISC",
+    "keywords": [],
+    "main": "index.js",
+    "workspaces": [
+        "electron",
+        "napi-plugin"
+    ],
+    "scripts": {
+        "dev": "pnpm run dev --workspace=electron",
+        "dev:debug": "pnpm run dev:debug --workspace=electron",
+        "copy:dll": "copy native\\x64\\Release\\WindowMonitor.dll electron\\",
+        "build:napi": "pnpm run build --workspace=napi-plugin",
+        "build:napi:debug": "pnpm run build:debug --workspace=napi-plugin"
+    }
 }

@@ -1,35 +1,39 @@
 {
-  "name": "win-watch-electron",
-  "version": "1.0.0",
-  "main": "./out/main/index.js",
-  "scripts": {
-    "dev": "electron-vite dev",
-    "dev:debug": "electron-vite dev --inspect",
-    "build": "electron-vite build",
-    "preview": "electron-vite preview"
-  },
-  "dependencies": {
-    "@radix-ui/react-slot": "^1.0.2",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.0",
-    "lucide-react": "^0.300.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tailwind-merge": "^2.2.0",
-    "tailwindcss-animate": "^1.0.7"
-  },
-  "devDependencies": {
-    "@electron-toolkit/preload": "^3.0.0",
-    "@types/node": "^18.19.0",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "@vitejs/plugin-react": "^4.2.1",
-    "autoprefixer": "^10.4.17",
-    "electron": "^28.1.0",
-    "electron-vite": "^2.0.0",
-    "postcss": "^8.4.33",
-    "tailwindcss": "^4.0.0",
-    "typescript": "^5.3.3",
-    "vite": "^5.0.11"
-  }
+    "name": "win-watch-electron",
+    "version": "1.0.0",
+    "description": "Windows UI Automation Monitor",
+    "author": "Max Zakharzhevskiy",
+    "license": "ISC",
+    "keywords": [],
+    "main": "./out/main/index.js",
+    "devDependencies": {
+        "@electron-toolkit/preload": "^3.0.0",
+        "@types/node": "^25.0.10",
+        "@types/react": "^19.2.9",
+        "@types/react-dom": "^19.2.3",
+        "@vitejs/plugin-react": "^5.1.2",
+        "autoprefixer": "^10.4.17",
+        "electron": "^40.0.0",
+        "electron-vite": "^5.0.0",
+        "postcss": "^8.4.33",
+        "tailwindcss": "^4.0.0",
+        "typescript": "^5.3.3",
+        "vite": "^7.3.1"
+    },
+    "dependencies": {
+        "@radix-ui/react-slot": "^1.0.2",
+        "class-variance-authority": "^0.7.0",
+        "clsx": "^2.1.0",
+        "lucide-react": "^0.563.0",
+        "react": "^19.2.3",
+        "react-dom": "^19.2.3",
+        "tailwind-merge": "^3.4.0",
+        "tailwindcss-animate": "^1.0.7"
+    },
+    "scripts": {
+        "dev": "electron-vite dev",
+        "dev:debug": "electron-vite dev --inspect",
+        "build": "electron-vite build",
+        "preview": "electron-vite preview"
+    }
 }
