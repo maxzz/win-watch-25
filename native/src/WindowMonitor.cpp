@@ -1,0 +1,93 @@
+#include "WindowMonitor.h"
+#include "WindowList.h"
+#include "ControlTree.h"
+#include "ControlInfo.h"
+#include <atomic>
+#include <thread>
+#include <mutex>
+
+static ActiveWindowChangedCallback g_Callback = nullptr;
+static HWINEVENTHOOK g_hHook = nullptr;
+static std::mutex g_Mutex;
+
+void CALLBACK WinEventProc(HWINEVENTHOOK hWinEventHook, DWORD event, HWND hwnd, LONG idObject, LONG idChild, DWORD dwEventThread, DWORD dwmsEventTime) {
+    if (event == EVENT_SYSTEM_FOREGROUND && idObject == OBJID_WINDOW && idChild == CHILDID_SELF) {
+        std::lock_guard<std::mutex> lock(g_Mutex);
+        if (g_Callback) {
+            // We just send a simple JSON with the handle for now
+            // The frontend can then request the full tree
+            std::string json = "{\"handle\":\"" + std::to_string((long long)hwnd) + "\"}"; // Simplified handle
+            // Or better, reuse WindowList logic to get quick info
+            g_Callback(json.c_str());
+        }
+    }
+}
+
+bool InitializeMonitor() {
+    return ControlTree::Initialize();
+}
+
+void CleanupMonitor() {
+    StopActiveWindowMonitoring();
+    ControlTree::Cleanup();
+}
+
+void StartActiveWindowMonitoring(ActiveWindowChangedCallback callback) {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    g_Callback = callback;
+    if (!g_hHook) {
+        // Run hook on a separate thread? 
+        // SetWinEventHook requires a message loop if we want to catch events from all processes.
+        // Actually, for EVENT_SYSTEM_FOREGROUND out of context (WINEVENT_OUTOFCONTEXT), 
+        // the callback is called on the thread that called SetWinEventHook. 
+        // So that thread must have a message loop.
+        // Node.js main thread has a message loop (libuv), but typically we might want a dedicated thread for this to not block or depend on Node's loop details.
+        // However, standard SetWinEventHook WINEVENT_OUTOFCONTEXT works fine if the message loop is pumping.
+        // In an Electron/Node addon, we might be on a worker thread or the main thread.
+        
+        // For simplicity, we assume the caller pumps messages or we might need a worker thread with a message loop.
+        // But for now, let's try standard hook.
+        
+        g_hHook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, NULL, WinEventProc, 0, 0, WINEVENT_OUTOFCONTEXT | WINEVENT_SKIPOWNPROCESS);
+    }
+}
+
+void StopActiveWindowMonitoring() {
+    std::lock_guard<std::mutex> lock(g_Mutex);
+    g_Callback = nullptr;
+    if (g_hHook) {
+        UnhookWinEvent(g_hHook);
+        g_hHook = nullptr;
+    }
+}
+
+const char* GetTopLevelWindowsJson() {
+    auto windows = WindowList::EnumerateTopLevelWindows();
+    std::string json = WindowList::ToJson(windows);
+    return _strdup(json.c_str());
+}
+
+const char* GetControlTreeJson(HWND hwnd) {
+    auto root = ControlTree::GetTreeForWindow(hwnd);
+    std::string json = ControlTree::ToJson(root);
+    return _strdup(json.c_str());
+}
+
+const char* GetControlDetailsJson(HWND hwnd, const char* runtimeId) {
+    // TODO: find element by runtimeId and call ControlInfo::GetDetailsJson
+    // For now returning empty
+    return _strdup("{}");
+}
+
+void HighlightControl(int x, int y, int width, int height) {
+    // Basic highlight implementation using a transparent window or GDI
+    // This is complex, will implement a simple version later or leave as todo
+}
+
+bool InvokeControl(HWND hwnd, const char* runtimeId) {
+    return ControlTree::InvokeControl(hwnd, runtimeId);
+}
+
+void FreeString(const char* str) {
+    if (str) free((void*)str);
+}
