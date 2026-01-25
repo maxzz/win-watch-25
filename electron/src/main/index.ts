@@ -1,39 +1,38 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join, dirname } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { fileURLToPath } from 'url'
 import { createRequire } from 'node:module'
-import { fileURLToPath } from 'node:url'
+import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
 const require = createRequire(import.meta.url)
 
 // Load NAPI plugin
 let winwatch: any
 try {
-  // In dev mode, try Debug build first, then Release // Try local build path first (relative to project root)
+  // In dev mode, try Debug build first, then Release
   if (is.dev) {
     try {
-      const debugPath = join(__dirname, '../../../napi-plugin/build/Debug/winwatch.node')
+      const debugPath = fileURLToPath(new URL('../../../napi-plugin/build/Debug/winwatch.node', import.meta.url))
       console.log('Trying to load Debug build from:', debugPath)
       winwatch = require(debugPath)
       console.log('Loaded winwatch.node from Debug build')
     } catch (debugError) {
       console.log('Debug build not found, trying Release build')
-      const releasePath = join(__dirname, '../../../napi-plugin/build/Release/winwatch.node')
+      const releasePath = fileURLToPath(new URL('../../../napi-plugin/build/Release/winwatch.node', import.meta.url))
       console.log('Trying to load Release build from:', releasePath)
       winwatch = require(releasePath)
       console.log('Loaded winwatch.node from Release build')
     }
   } else {
     // Production: use Release build
-    winwatch = require(join(__dirname, '../../../napi-plugin/build/Release/winwatch.node'))
+    const releasePath = fileURLToPath(new URL('../../../napi-plugin/build/Release/winwatch.node', import.meta.url))
+    winwatch = require(releasePath)
   }
 } catch (error) {
   console.error('Failed to load winwatch.node from default path:', error)
   try {
       // Try adjacent to executable or other paths
-      winwatch = require('./winwatch.node')
+      const fallbackPath = fileURLToPath(new URL('./winwatch.node', import.meta.url))
+      winwatch = require(fallbackPath)
   } catch (e) {
       console.error('Failed to load winwatch.node fallback:', e)
   }
@@ -45,9 +44,9 @@ function createWindow(): void {
     height: 800,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon: join(__dirname, '../../build/icon.png') } : {}),
+    ...(process.platform === 'linux' ? { icon: fileURLToPath(new URL('../../build/icon.png', import.meta.url)) } : {}),
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: fileURLToPath(new URL('../preload/index.mjs', import.meta.url)),
       sandbox: false,
       contextIsolation: true
     }
@@ -65,7 +64,7 @@ function createWindow(): void {
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    mainWindow.loadFile(fileURLToPath(new URL('../renderer/index.html', import.meta.url)))
   }
 }
 

@@ -6,7 +6,7 @@
     "author": "Max Zakharzhevskiy",
     "license": "ISC",
     "keywords": [],
-    "main": "./out/main/index.js",
+    "main": "./out/main/index.mjs",
     "devDependencies": {
         "@electron-toolkit/preload": "^3.0.0",
         "@tailwindcss/vite": "^4.1.18",

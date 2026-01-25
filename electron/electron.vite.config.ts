@@ -4,12 +4,8 @@ import tailwindcss from '@tailwindcss/vite'
 import { resolve } from 'path'
 
 export default defineConfig({
-  main: {
-    plugins: []
-  },
-  preload: {
-    plugins: []
-  },
+  main: {},
+  preload: {},
   renderer: {
     resolve: {
       alias: {
