@@ -1,9 +1,10 @@
 import { app, BrowserWindow } from 'electron';
 import { electronApp, optimizer } from '@electron-toolkit/utils';
-import { createTopWindow } from '../1-start-main-window/1-create-window';
+import { appWindow } from '../1-start-main-window/9-app-window-instance';
+import { createTopWindow } from '../1-start-main-window/1-create-top-window';
+import { setListenersRenderCalls } from '../1-start-main-window/2-1-listeners-render-calls';
+import { setAppWindowListeners } from '../1-start-main-window/2-2-listeners-of-app-window';
 import { iniFileOptions } from '../1-start-main-window/8-ini-file-options';
-import { createAppWindow } from '../1-start-main-window/1-create-app-window';
-import { setListenersRenderCalls } from '../1-start-main-window/3-3-listeners-render-calls';
 
 app.whenReady().then(() => {
     electronApp.setAppUserModelId('com.electron');
@@ -27,3 +28,8 @@ app.on('window-all-closed', () => {
         app.quit();
     }
 });
+
+function createAppWindow() {
+    appWindow.wnd = createTopWindow();
+    setAppWindowListeners(appWindow);
+}
