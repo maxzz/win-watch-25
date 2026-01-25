@@ -8,16 +8,20 @@ try {
   // In dev mode, try Debug build first, then Release // Try local build path first (relative to project root)
   if (is.dev) {
     try {
-      winwatch = require('../../../../napi-plugin/build/Debug/winwatch.node')
+      const debugPath = join(__dirname, '../../../napi-plugin/build/Debug/winwatch.node')
+      console.log('Trying to load Debug build from:', debugPath)
+      winwatch = require(debugPath)
       console.log('Loaded winwatch.node from Debug build')
     } catch (debugError) {
       console.log('Debug build not found, trying Release build')
-      winwatch = require('../../../../napi-plugin/build/Release/winwatch.node')
+      const releasePath = join(__dirname, '../../../napi-plugin/build/Release/winwatch.node')
+      console.log('Trying to load Release build from:', releasePath)
+      winwatch = require(releasePath)
       console.log('Loaded winwatch.node from Release build')
     }
   } else {
     // Production: use Release build
-    winwatch = require('../../../../napi-plugin/build/Release/winwatch.node')
+    winwatch = require(join(__dirname, '../../../napi-plugin/build/Release/winwatch.node'))
   }
 } catch (error) {
   console.error('Failed to load winwatch.node from default path:', error)

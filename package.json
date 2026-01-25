@@ -16,5 +16,12 @@
         "copy:dll": "copy native\\x64\\Release\\WindowMonitor.dll electron\\",
         "build:napi": "pnpm run build --workspace=napi-plugin",
         "build:napi:debug": "pnpm run build:debug --workspace=napi-plugin"
+    },
+    "pnpm": {
+        "onlyBuiltDependencies": [
+            "electron",
+            "esbuild",
+            "node-addon-api"
+        ]
     }
 }
