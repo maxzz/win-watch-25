@@ -1,5 +1,6 @@
 {
     "name": "win-watch-electron",
+    "type": "module",
     "version": "1.0.0",
     "description": "Windows UI Automation Monitor",
     "author": "Max Zakharzhevskiy",
