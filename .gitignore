@@ -38,6 +38,8 @@ Release/
 !native/WindowMonitor.vcxproj
 !napi-plugin/binding.gyp
 
+!electron/WindowMonitor.dll
+
 # Electron / Vite
 electron/out/
 electron/dist/
@@ -45,8 +47,20 @@ electron/release/
 electron/*.log
 
 # NAPI Plugin / node-gyp
-napi-plugin/build/
+# napi-plugin/build/
+napi-plugin/build/*
+!napi-plugin/build/binding.sln
+!napi-plugin/build/winwatch.vcxproj
+!napi-plugin/build/winwatch.vcxproj.filters
+napi-plugin/build/config.gypi
+!napi-plugin/build/Release/
+!napi-plugin/build/Debug/
+napi-plugin/build/Release/*
+napi-plugin/build/Debug/*
+!napi-plugin/build/Release/*.node
+!napi-plugin/build/Debug/*.node
 *.node
+!napi-plugin/**/*.node
 
 # Environment variables
 .env
