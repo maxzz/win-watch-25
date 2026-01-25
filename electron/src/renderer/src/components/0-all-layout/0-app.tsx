@@ -3,10 +3,10 @@ import { useActiveWindow } from '@renderer/hooks/useActiveWindow';
 import { useWindowList } from '@renderer/hooks/useWindowList';
 import { ControlNode } from '@renderer/types';
 
-import { ControlTree } from '../2-main/ControlTree';
-import { PropertiesPanel } from '../2-main/PropertiesPanel';
-import { WindowInfo } from '../2-main/WindowInfo';
-import { WindowTree } from '../2-main/WindowTree';
+import { ControlTree } from '../2-main/2-control-tree';
+import { PropertiesPanel } from '../2-main/3-properties-panel';
+import { WindowInfo } from '../2-main/4-window-info';
+import { WindowTree } from '../2-main/1-window-tree';
 
 export function App() {
     const { windows, refresh } = useWindowList();
@@ -19,13 +19,15 @@ export function App() {
     // I'll try to fuzzy match or normalized in the future
     const activeWindow = windows.find(w => w.handle == activeHandle) || windows.find(w => parseInt(w.handle) == parseInt(activeHandle || "0")) || null;
 
-    useEffect(() => {
-        // Start monitoring on mount
-        window.api.startMonitoring("0"); // Argument ignored by current C++ impl
-        return () => {
-            window.api.stopMonitoring();
-        };
-    }, []);
+    useEffect(
+        () => {
+            // Start monitoring on mount
+            window.api.startMonitoring("0"); // Argument ignored by current C++ impl
+            return () => {
+                window.api.stopMonitoring();
+            };
+        },
+        []);
 
     async function handleInvoke(control: ControlNode) {
         if (activeHandle && control.runtimeId) {
@@ -57,7 +59,7 @@ export function App() {
                             onInvoke={handleInvoke}
                         />
                     </div>
-                    
+
                     <div className="h-1/3 min-h-[150px]">
                         <PropertiesPanel control={selectedControl} />
                     </div>
@@ -66,4 +68,3 @@ export function App() {
         </div>
     );
 }
-
