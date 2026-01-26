@@ -55,9 +55,9 @@ function WindowNode({ window, selectedHandle, onSelect, depth }: { window: Windo
                 <IconMonitor className="shrink-0 mr-0.5 size-3.5 text-muted-foreground" />
 
                 <span className="text-xs truncate" title={window.title || "No Title"}>
-                    <span className="ml-1 text-xs text-muted-foreground">
+                    {/* <span className="ml-1 text-xs text-muted-foreground">
                         {window.handle}
-                    </span>
+                    </span> */}
                     {window.title || `[${window.processName}]`}
                 </span>
             </div>
