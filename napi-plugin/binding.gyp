@@ -14,7 +14,7 @@
       ],
       "defines": [ "NAPI_DISABLE_CPP_EXCEPTIONS" ],
       "libraries": [ 
-        "../../native/x64/<(native_config)/WindowMonitor.lib",
+        "../../plugins/<(native_config)/WindowMonitor.lib",
         "uiautomationcore.lib",
         "ole32.lib",
         "oleaut32.lib",
