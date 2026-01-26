@@ -89,12 +89,26 @@ The script uses `vswhere.exe` to automatically locate Visual Studio:
 2. The script queries vswhere for the latest VS installation with MSBuild:
    ```
    vswhere -latest -requires Microsoft.Component.MSBuild -property installationPath
+   vswhere -latest -requires Microsoft.Component.MSBuild -property installationVersion
    ```
 
 3. MSBuild is then found at:
    ```
    {VS_INSTALL_PATH}\MSBuild\Current\Bin\MSBuild.exe
    ```
+
+## Platform Toolset Auto-Detection
+
+The script automatically detects and uses the correct Platform Toolset based on your Visual Studio version:
+
+| VS Version | Major Version | Platform Toolset |
+|------------|---------------|------------------|
+| VS 2017    | 15.x          | v141             |
+| VS 2019    | 16.x          | v142             |
+| VS 2022    | 17.x          | v143             |
+| VS 2026    | 18.x          | v144             |
+
+This means you don't need to manually update the `.vcxproj` file when switching between Visual Studio versions - the build script handles it automatically by passing `/p:PlatformToolset=vXXX` to MSBuild.
 
 ## Troubleshooting
 

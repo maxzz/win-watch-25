@@ -27,18 +27,37 @@ const OUTPUT_DIR = join(ROOT_DIR, 'dist-electron', 'plugins');
 // vswhere.exe is installed with Visual Studio and can locate VS installations
 const VSWHERE_PATH = 'C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\vswhere.exe';
 
+interface VSInfo {
+    msbuildPath: string;
+    platformToolset: string;
+    version: string;
+}
+
 /**
- * Find MSBuild path using vswhere.exe
- * Returns the full path to MSBuild.exe or null if not found
+ * Map VS major version to platform toolset
  */
-function findMSBuild(): string | null {
+function getPlatformToolset(vsMajorVersion: number): string {
+    const toolsetMap: Record<number, string> = {
+        15: 'v141',  // VS 2017
+        16: 'v142',  // VS 2019
+        17: 'v143',  // VS 2022
+        18: 'v144',  // VS 2026
+    };
+    return toolsetMap[vsMajorVersion] || 'v143'; // Default to v143
+}
+
+/**
+ * Find Visual Studio installation info using vswhere.exe
+ * Returns MSBuild path and platform toolset
+ */
+function findVSInfo(): VSInfo | null {
     if (!existsSync(VSWHERE_PATH)) {
         console.warn('vswhere.exe not found. Make sure Visual Studio is installed.');
         return null;
     }
 
     try {
-        // Find the latest VS installation and get the MSBuild path
+        // Find the latest VS installation
         const vsPath = execSync(
             `"${VSWHERE_PATH}" -latest -requires Microsoft.Component.MSBuild -property installationPath`,
             { encoding: 'utf8' }
@@ -49,17 +68,34 @@ function findMSBuild(): string | null {
             return null;
         }
 
+        // Get VS version
+        const vsVersion = execSync(
+            `"${VSWHERE_PATH}" -latest -requires Microsoft.Component.MSBuild -property installationVersion`,
+            { encoding: 'utf8' }
+        ).trim();
+
         const msbuildPath = join(vsPath, 'MSBuild', 'Current', 'Bin', 'MSBuild.exe');
         
-        if (existsSync(msbuildPath)) {
-            console.log(`Found MSBuild at: ${msbuildPath}`);
-            return msbuildPath;
+        if (!existsSync(msbuildPath)) {
+            console.warn(`MSBuild.exe not found at expected path: ${msbuildPath}`);
+            return null;
         }
 
-        console.warn(`MSBuild.exe not found at expected path: ${msbuildPath}`);
-        return null;
+        // Extract major version (e.g., "17.8.34309.116" -> 17)
+        const majorVersion = parseInt(vsVersion.split('.')[0], 10);
+        const platformToolset = getPlatformToolset(majorVersion);
+
+        console.log(`Found Visual Studio ${vsVersion} at: ${vsPath}`);
+        console.log(`Using Platform Toolset: ${platformToolset}`);
+        console.log(`MSBuild path: ${msbuildPath}`);
+
+        return {
+            msbuildPath,
+            platformToolset,
+            version: vsVersion,
+        };
     } catch (error) {
-        console.warn('Failed to locate MSBuild using vswhere:', error);
+        console.warn('Failed to locate Visual Studio using vswhere:', error);
         return null;
     }
 }
@@ -90,16 +126,17 @@ function ensureOutputDir(): void {
 function buildNative(config: 'Debug' | 'Release'): void {
     console.log(`\n=== Building native project (${config}) ===\n`);
 
-    // Try to find MSBuild automatically
-    const msbuildPath = findMSBuild();
+    // Try to find Visual Studio automatically
+    const vsInfo = findVSInfo();
     
-    if (!msbuildPath) {
-        console.error('MSBuild not found. Please ensure Visual Studio is installed with C++ workload.');
+    if (!vsInfo) {
+        console.error('Visual Studio not found. Please ensure Visual Studio is installed with C++ workload.');
         console.error('Alternatively, run this script from a Visual Studio Developer Command Prompt.');
         process.exit(1);
     }
 
-    const msbuildCmd = `"${msbuildPath}" WindowMonitor.vcxproj /p:Configuration=${config} /p:Platform=x64 /verbosity:minimal`;
+    // Build with auto-detected platform toolset
+    const msbuildCmd = `"${vsInfo.msbuildPath}" WindowMonitor.vcxproj /p:Configuration=${config} /p:Platform=x64 /p:PlatformToolset=${vsInfo.platformToolset} /verbosity:minimal`;
 
     try {
         execSync(msbuildCmd, { cwd: NATIVE_DIR, stdio: 'inherit' });
