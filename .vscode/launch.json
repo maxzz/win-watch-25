@@ -1,0 +1,106 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Main Process",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "pnpm",
+            "runtimeArgs": [
+                "run",
+                "dev"
+            ],
+            "console": "integratedTerminal",
+            "autoAttachChildProcesses": true,
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "name": "Debug Renderer",
+            "type": "chrome",
+            "request": "attach",
+            "port": 9222,
+            "webRoot": "${workspaceFolder}",
+            "timeout": 30000
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug All",
+            "configurations": [
+                "Debug Main Process",
+                "Debug Renderer"
+            ]
+        }
+    ]
+}
+
+/*
+    app.whenReady().then(
+        () => {
+            console.log('main-process-ready'); // This is marker for vscode to start debugger in launch.json. Don't remove this line!
+            ...
+
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Main Process",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+            "windows": {
+                "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+            },
+            "runtimeArgs": [
+                "--sourcemap"
+            ],
+            "env": {
+                "REMOTE_DEBUGGING_PORT": "9222"
+            },
+            "serverReadyAction": {
+                "action": "startDebugging",
+                "pattern": "main-process-ready",
+                "name": "Debug Renderer Process"
+            }
+        },
+        {
+            "name": "Debug Renderer Process",
+            "port": 9222,
+            "request": "attach",
+            "type": "chrome",
+            "webRoot": "${workspaceFolder}/src/renderer",
+            "timeout": 60000,
+            "presentation": {
+                "hidden": true
+            }
+        },
+        {
+            "name": "localhost:3000",
+            "url": "http://localhost:3000",
+            "request": "launch",
+            "type": "chrome",
+            "webRoot": "${workspaceFolder}/src/renderer",
+            "runtimeArgs": ["--preserve-symlinks"],
+            "timeout": 60000,
+            "userDataDir": "C:/x/settings/tm-chrome-debug-profile/.profile",
+            //"userDataDir": "c:/Users/maxzz/AppData/Roaming/Code/User/workspaceStorage/2bd09df41c757ca0ea1d0935b57d0cc7/ms-vscode.js-debug/.profile",
+        },
+    ],
+    "compounds": [
+        {
+            "name": "Debug All",
+            "configurations": [
+                "Debug Main Process"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "order": 1
+            }
+        }
+    ]
+}
+*/

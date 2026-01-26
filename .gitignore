@@ -3,7 +3,7 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.log
-.vscode/
+#.vscode/
 .idea/
 *.suo
 *.ntvs*
