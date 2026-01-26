@@ -38,6 +38,8 @@ Release/
 !native/WindowMonitor.vcxproj
 !napi-plugin/binding.gyp
 
+!electron/WindowMonitor.dll
+
 # Electron / Vite
 electron/out/
 electron/dist/
@@ -59,13 +61,6 @@ napi-plugin/build/Debug/*
 !napi-plugin/build/Debug/*.node
 *.node
 !napi-plugin/**/*.node
-
-# Plugins folder - keep built artifacts
-!plugins/
-!plugins/**/*.dll
-!plugins/**/*.lib
-!plugins/**/*.node
-plugins/obj/
 
 # Environment variables
 .env
