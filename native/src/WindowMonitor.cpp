@@ -2,6 +2,7 @@
 #include "WindowList.h"
 #include "ControlTree.h"
 #include "ControlInfo.h"
+#include "ControlHighlighter.h"
 #include <atomic>
 #include <thread>
 #include <mutex>
@@ -24,11 +25,16 @@ void CALLBACK WinEventProc(HWINEVENTHOOK hWinEventHook, DWORD event, HWND hwnd, 
 }
 
 bool InitializeMonitor() {
-    return ControlTree::Initialize();
+    bool result = ControlTree::Initialize();
+    if (result) {
+        ControlHighlighter::GetInstance().Initialize();
+    }
+    return result;
 }
 
 void CleanupMonitor() {
     StopActiveWindowMonitoring();
+    ControlHighlighter::GetInstance().Cleanup();
     ControlTree::Cleanup();
 }
 
@@ -79,9 +85,31 @@ const char* GetControlDetailsJson(HWND hwnd, const char* runtimeId) {
     return _strdup("{}");
 }
 
-void HighlightControl(int x, int y, int width, int height) {
-    // Basic highlight implementation using a transparent window or GDI
-    // This is complex, will implement a simple version later or leave as todo
+void HighlightRect(int x, int y, int width, int height, int color, int borderWidth, int blinkCount) {
+    HighlightParams params;
+    params.x = x;
+    params.y = y;
+    params.width = width;
+    params.height = height;
+    
+    // Color is passed as RGB, convert if needed (Windows uses BGR internally but we use RGB for API consistency)
+    if (color != 0) {
+        params.highlightColor = color;
+    }
+    
+    if (borderWidth > 0) {
+        params.borderWidth = borderWidth;
+    }
+    
+    if (blinkCount >= 0) {
+        params.blinkCount = blinkCount;
+    }
+    
+    ControlHighlighter::GetInstance().Highlight(params);
+}
+
+void HideHighlight() {
+    ControlHighlighter::GetInstance().Hide();
 }
 
 bool InvokeControl(HWND hwnd, const char* runtimeId) {

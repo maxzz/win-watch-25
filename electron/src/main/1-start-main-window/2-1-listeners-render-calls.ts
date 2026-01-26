@@ -42,4 +42,18 @@ export function setListenersRenderCalls() {
         if (!winwatchPlugin) return false;
         return winwatchPlugin.invokeControl(handle, runtimeId);
     });
+
+    // Highlight a rectangle on screen
+    // bounds: {x, y, width, height}
+    // options: {color?, borderWidth?, blinkCount?}
+    ipcMain.handle('highlight-rect', (_, bounds: { x: number; y: number; width: number; height: number }, options?: { color?: number; borderWidth?: number; blinkCount?: number }) => {
+        if (!winwatchPlugin) return;
+        winwatchPlugin.highlightRect(bounds, options);
+    });
+
+    // Hide the highlight rectangle
+    ipcMain.handle('hide-highlight', () => {
+        if (!winwatchPlugin) return;
+        winwatchPlugin.hideHighlight();
+    });
 }

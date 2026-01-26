@@ -59,7 +59,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>uiautomationcore.lib;ole32.lib;oleaut32.lib;user32.lib;kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>uiautomationcore.lib;ole32.lib;oleaut32.lib;user32.lib;kernel32.lib;gdi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -79,10 +79,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>uiautomationcore.lib;ole32.lib;oleaut32.lib;user32.lib;kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>uiautomationcore.lib;ole32.lib;oleaut32.lib;user32.lib;kernel32.lib;gdi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\ControlHighlighter.h" />
     <ClInclude Include="src\ControlInfo.h" />
     <ClInclude Include="src\ControlTree.h" />
     <ClInclude Include="src\Utils.h" />
@@ -90,6 +91,7 @@
     <ClInclude Include="src\WindowMonitor.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ControlHighlighter.cpp" />
     <ClCompile Include="src\ControlInfo.cpp" />
     <ClCompile Include="src\ControlTree.cpp" />
     <ClCompile Include="src\WindowList.cpp" />

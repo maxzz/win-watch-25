@@ -62,8 +62,9 @@ napi-plugin/build/Debug/*
 #!napi-plugin/build/Release/*.node
 #!napi-plugin/build/Debug/*.node
 
-*.node
-!napi-plugin/**/*.node
+# not for now
+#*.node
+#!napi-plugin/**/*.node
 
 # Environment variables
 .env

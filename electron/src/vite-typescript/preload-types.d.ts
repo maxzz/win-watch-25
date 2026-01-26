@@ -1,22 +1,33 @@
-// declare namespace tmApi {
-//     function sendNotification(message: string): void;
-// }
-// vs.
-// declare var tmApi: {
-//     sendNotification: (message: string) => void
-// }
-
-type GetFilePathResult = {
-    filePath: string;           // full path to file
-    isDirectory: boolean;       // true if filePath is a directory
-    error: string | undefined;  // statSync() error message
-};
-
-type TmApi = {
-    callMain: (data: any) => void;
-    invokeMain: <TData, TResult>(data: TData) => Promise<TResult>;
-    setCbCallFromMain: (callback: (event: /*IpcRendererEvent*/any, data: any) => void) => void;
-    getPathForFile: (file: File) => Promise<GetFilePathResult>;
+// Types for highlight API
+interface HighlightBounds {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
 }
 
-declare var tmApi: TmApi;
+interface HighlightOptions {
+    color?: number;       // RGB color (e.g., 0xFF0000 for red)
+    borderWidth?: number; // Border width in pixels (default: 5)
+    blinkCount?: number;  // Number of blinks (0 = stay visible, default: 5)
+}
+
+// API exposed by preload script
+interface WinWatchApi {
+    getTopLevelWindows: () => Promise<string>;
+    getControlTree: (handle: string) => Promise<string>;
+    startMonitoring: (handle: string) => Promise<boolean>;
+    stopMonitoring: () => Promise<boolean>;
+    invokeControl: (handle: string, runtimeId: string) => Promise<boolean>;
+    onActiveWindowChanged: (callback: (data: string) => void) => () => void;
+    highlightRect: (bounds: HighlightBounds, options?: HighlightOptions) => Promise<void>;
+    hideHighlight: () => Promise<void>;
+}
+
+declare global {
+    interface Window {
+        api: WinWatchApi;
+    }
+}
+
+export {};

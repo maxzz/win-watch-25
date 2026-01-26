@@ -36,8 +36,15 @@ extern "C" {
     // Note: This might need more complex identification strategy
     WM_API const char* GetControlDetailsJson(HWND hwnd, const char* runtimeId);
     
-    // Highlight a control's bounding rectangle
-    WM_API void HighlightControl(int x, int y, int width, int height);
+    // Highlight a rectangle on screen
+    // Parameters: x, y, width, height - screen coordinates of the rectangle
+    //             color - RGB color (default: red = 0x0000FF in BGR format)
+    //             borderWidth - width of the border in pixels (default: 5)
+    //             blinkCount - number of blinks (0 = stay visible until hidden, default: 5)
+    WM_API void HighlightRect(int x, int y, int width, int height, int color, int borderWidth, int blinkCount);
+    
+    // Hide the highlight rectangle
+    WM_API void HideHighlight();
 
     // Invoke a control (e.g. click)
     WM_API bool InvokeControl(HWND hwnd, const char* runtimeId);

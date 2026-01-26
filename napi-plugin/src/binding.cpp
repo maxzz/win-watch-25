@@ -89,6 +89,53 @@ Napi::Value InvokeControlWrapper(const Napi::CallbackInfo& info) {
     return Napi::Boolean::New(env, result); 
 }
 
+// Highlight a rectangle on screen
+// Parameters: bounds object {x, y, width, height}, optional options {color, borderWidth, blinkCount}
+Napi::Value HighlightRectWrapper(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    
+    if (info.Length() < 1 || !info[0].IsObject()) {
+        Napi::TypeError::New(env, "Expected bounds object {x, y, width, height}").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
+    
+    Napi::Object bounds = info[0].As<Napi::Object>();
+    
+    int x = bounds.Has("x") ? bounds.Get("x").As<Napi::Number>().Int32Value() : 0;
+    int y = bounds.Has("y") ? bounds.Get("y").As<Napi::Number>().Int32Value() : 0;
+    int width = bounds.Has("width") ? bounds.Get("width").As<Napi::Number>().Int32Value() : 0;
+    int height = bounds.Has("height") ? bounds.Get("height").As<Napi::Number>().Int32Value() : 0;
+    
+    // Default values
+    int color = 0;          // 0 means use default (red)
+    int borderWidth = 5;    // Default border width
+    int blinkCount = 5;     // Default blink count
+    
+    // Parse optional options object
+    if (info.Length() >= 2 && info[1].IsObject()) {
+        Napi::Object options = info[1].As<Napi::Object>();
+        
+        if (options.Has("color")) {
+            color = options.Get("color").As<Napi::Number>().Int32Value();
+        }
+        if (options.Has("borderWidth")) {
+            borderWidth = options.Get("borderWidth").As<Napi::Number>().Int32Value();
+        }
+        if (options.Has("blinkCount")) {
+            blinkCount = options.Get("blinkCount").As<Napi::Number>().Int32Value();
+        }
+    }
+    
+    HighlightRect(x, y, width, height, color, borderWidth, blinkCount);
+    return env.Undefined();
+}
+
+// Hide the highlight rectangle
+Napi::Value HideHighlightWrapper(const Napi::CallbackInfo& info) {
+    HideHighlight();
+    return info.Env().Undefined();
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     InitializeMonitor();
     
@@ -97,6 +144,8 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "startMonitoring"), Napi::Function::New(env, StartMonitoringWrapper));
     exports.Set(Napi::String::New(env, "stopMonitoring"), Napi::Function::New(env, StopMonitoringWrapper));
     exports.Set(Napi::String::New(env, "invokeControl"), Napi::Function::New(env, InvokeControlWrapper));
+    exports.Set(Napi::String::New(env, "highlightRect"), Napi::Function::New(env, HighlightRectWrapper));
+    exports.Set(Napi::String::New(env, "hideHighlight"), Napi::Function::New(env, HideHighlightWrapper));
     
     return exports;
 }

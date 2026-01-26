@@ -1,6 +1,20 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
 
+// Types for highlight API
+interface HighlightBounds {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+interface HighlightOptions {
+    color?: number;       // RGB color (e.g., 0xFF0000 for red)
+    borderWidth?: number; // Border width in pixels (default: 5)
+    blinkCount?: number;  // Number of blinks (0 = stay visible, default: 5)
+}
+
 // Custom APIs for renderer
 const api = {
     getTopLevelWindows: () => ipcRenderer.invoke('get-top-level-windows'),
@@ -12,7 +26,12 @@ const api = {
         const subscription = (_event: any, value: string) => callback(value);
         ipcRenderer.on('active-window-changed', subscription);
         return () => ipcRenderer.removeListener('active-window-changed', subscription);
-    }
+    },
+    // Highlight a rectangle on screen
+    highlightRect: (bounds: HighlightBounds, options?: HighlightOptions) => 
+        ipcRenderer.invoke('highlight-rect', bounds, options),
+    // Hide the highlight rectangle
+    hideHighlight: () => ipcRenderer.invoke('hide-highlight'),
 };
 
 // if (process.contextIsolated) {
