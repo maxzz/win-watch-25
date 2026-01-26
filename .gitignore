@@ -52,12 +52,16 @@ napi-plugin/build/*
 !napi-plugin/build/winwatch.vcxproj
 !napi-plugin/build/winwatch.vcxproj.filters
 napi-plugin/build/config.gypi
+
 !napi-plugin/build/Release/
 !napi-plugin/build/Debug/
+
 napi-plugin/build/Release/*
 napi-plugin/build/Debug/*
-!napi-plugin/build/Release/*.node
-!napi-plugin/build/Debug/*.node
+
+#!napi-plugin/build/Release/*.node
+#!napi-plugin/build/Debug/*.node
+
 *.node
 !napi-plugin/**/*.node
 

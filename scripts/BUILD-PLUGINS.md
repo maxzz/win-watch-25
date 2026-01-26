@@ -14,10 +14,10 @@ The script automatically finds MSBuild using `vswhere.exe` (installed with Visua
 
 ```bash
 # Build both native DLL and NAPI plugin (Release)
-pnpm build:plugins
+pnpm build:all
 
 # Build both native DLL and NAPI plugin (Debug)
-pnpm build:plugins:debug
+pnpm build:all:debug
 
 # Build only native DLL (Release)
 pnpm build:native
