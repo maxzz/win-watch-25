@@ -10,37 +10,37 @@
     <Filter Include="C:">
       <UniqueIdentifier>{7B735499-E5DD-1C2B-6C26-70023832A1CF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users">
-      <UniqueIdentifier>{E9F714C1-DA89-54E2-60CF-39FEB20BF756}</UniqueIdentifier>
+    <Filter Include="C:\y">
+      <UniqueIdentifier>{EA670F88-30FD-109C-0779-7F2C8C42718E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\maxzz">
-      <UniqueIdentifier>{317E04C7-A4F0-2876-5B9B-7523F75FE8B3}</UniqueIdentifier>
+    <Filter Include="C:\y\w">
+      <UniqueIdentifier>{86DEC16F-EF84-6869-6F92-5F8408C3B327}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\maxzz\AppData">
-      <UniqueIdentifier>{F852EB63-437C-846A-220F-8D9ED6DAEC1D}</UniqueIdentifier>
+    <Filter Include="C:\y\w\2-web">
+      <UniqueIdentifier>{EDF68687-3FBC-0C9B-B7BB-EDBAC4FE753F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\maxzz\AppData\Roaming">
-      <UniqueIdentifier>{D51E5808-912B-5C70-4BB7-475D1DBFA067}</UniqueIdentifier>
+    <Filter Include="C:\y\w\2-web\0-dp">
+      <UniqueIdentifier>{8D37F79E-A718-9A17-5997-E98D149E195F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\maxzz\AppData\Roaming\npm">
-      <UniqueIdentifier>{741E0E76-39B2-B1AB-9FA1-F1A20B16F295}</UniqueIdentifier>
+    <Filter Include="C:\y\w\2-web\0-dp\win-watch-25">
+      <UniqueIdentifier>{9765A060-ECE0-EC17-4C3F-56E2A8910F50}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\maxzz\AppData\Roaming\npm\node_modules">
+    <Filter Include="C:\y\w\2-web\0-dp\win-watch-25\node_modules">
       <UniqueIdentifier>{56DF7A98-063D-FB9D-485C-089023B4C16A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\maxzz\AppData\Roaming\npm\node_modules\pnpm">
-      <UniqueIdentifier>{1EA99597-72F7-7B8A-65CA-22260344E439}</UniqueIdentifier>
+    <Filter Include="C:\y\w\2-web\0-dp\win-watch-25\node_modules\.pnpm">
+      <UniqueIdentifier>{293CE058-3CF8-8B4D-C9A0-FD024AF736DB}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\maxzz\AppData\Roaming\npm\node_modules\pnpm\dist">
-      <UniqueIdentifier>{64E3201F-8721-A2FA-DD0A-6C3AF45797EA}</UniqueIdentifier>
+    <Filter Include="C:\y\w\2-web\0-dp\win-watch-25\node_modules\.pnpm\node-gyp@12.1.0">
+      <UniqueIdentifier>{F772891E-BC75-D5CD-4728-55F5D332D75E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\maxzz\AppData\Roaming\npm\node_modules\pnpm\dist\node_modules">
+    <Filter Include="C:\y\w\2-web\0-dp\win-watch-25\node_modules\.pnpm\node-gyp@12.1.0\node_modules">
       <UniqueIdentifier>{56DF7A98-063D-FB9D-485C-089023B4C16A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\maxzz\AppData\Roaming\npm\node_modules\pnpm\dist\node_modules\node-gyp">
+    <Filter Include="C:\y\w\2-web\0-dp\win-watch-25\node_modules\.pnpm\node-gyp@12.1.0\node_modules\node-gyp">
       <UniqueIdentifier>{77348C0E-2034-7791-74D5-63C077DF5A3B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\maxzz\AppData\Roaming\npm\node_modules\pnpm\dist\node_modules\node-gyp\src">
+    <Filter Include="C:\y\w\2-web\0-dp\win-watch-25\node_modules\.pnpm\node-gyp@12.1.0\node_modules\node-gyp\src">
       <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
     </Filter>
     <Filter Include="..">
@@ -51,8 +51,8 @@
     <ClCompile Include="..\src\binding.cpp">
       <Filter>..\src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\maxzz\AppData\Roaming\npm\node_modules\pnpm\dist\node_modules\node-gyp\src\win_delay_load_hook.cc">
-      <Filter>C:\Users\maxzz\AppData\Roaming\npm\node_modules\pnpm\dist\node_modules\node-gyp\src</Filter>
+    <ClCompile Include="C:\y\w\2-web\0-dp\win-watch-25\node_modules\.pnpm\node-gyp@12.1.0\node_modules\node-gyp\src\win_delay_load_hook.cc">
+      <Filter>C:\y\w\2-web\0-dp\win-watch-25\node_modules\.pnpm\node-gyp@12.1.0\node_modules\node-gyp\src</Filter>
     </ClCompile>
     <None Include="..\binding.gyp">
       <Filter>..</Filter>
