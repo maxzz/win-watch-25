@@ -1,5 +1,5 @@
 import { screen, type BrowserWindow } from "electron";
-import { type RectangleInt, type SizeInt } from "@/shared/ipc-types";
+import { type RectangleInt, type SizeInt } from "./1-shared-ipc-types";
 
 export function getWindowRect(win: BrowserWindow): Electron.Rectangle {
     const pos = win.getPosition();
