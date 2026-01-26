@@ -34,6 +34,7 @@
         "valtio": "^2.3.0"
     },
     "scripts": {
+        "tsc": "tsc --noEmit -w",
         "dev": "electron-vite dev",
         "dev:debug": "electron-vite dev --inspect",
         "build": "electron-vite build",

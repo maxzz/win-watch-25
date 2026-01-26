@@ -11,11 +11,12 @@
         "napi-plugin"
     ],
     "scripts": {
-        "dev": "pnpm run dev --workspace=electron",
-        "dev:debug": "pnpm run dev:debug --workspace=electron",
+        "tsc": "pnpm --filter win-watch-electron run tsc",
+        "dev": "pnpm --filter win-watch-electron run dev",
+        "dev:debug": "pnpm --filter win-watch-electron run dev:debug",
         "copy:dll": "copy native\\x64\\Release\\WindowMonitor.dll electron\\",
-        "build:napi": "pnpm run build --workspace=napi-plugin",
-        "build:napi:debug": "pnpm run build:debug --workspace=napi-plugin"
+        "build:napi": "pnpm --filter napi-plugin run build",
+        "build:napi:debug": "pnpm --filter napi-plugin run build:debug"
     },
     "pnpm": {
         "onlyBuiltDependencies": [
