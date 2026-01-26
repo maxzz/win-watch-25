@@ -38,9 +38,8 @@ Release/
 !native/WindowMonitor.vcxproj
 !napi-plugin/binding.gyp
 
-!electron/WindowMonitor.dll
-
 # Electron / Vite
+dist-electron/
 electron/out/
 electron/dist/
 electron/release/

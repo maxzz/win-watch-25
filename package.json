@@ -14,9 +14,16 @@
         "tsc": "pnpm --filter win-watch-electron run tsc",
         "dev": "pnpm --filter win-watch-electron run dev",
         "dev:debug": "pnpm --filter win-watch-electron run dev:debug",
-        "copy:dll": "copy native\\x64\\Release\\WindowMonitor.dll electron\\",
-        "build:napi": "pnpm --filter napi-plugin run build",
-        "build:napi:debug": "pnpm --filter napi-plugin run build:debug"
+        "build:plugins": "tsx scripts/build-plugins.ts --release",
+        "build:plugins:debug": "tsx scripts/build-plugins.ts --debug",
+        "build:native": "tsx scripts/build-plugins.ts --release --native-only",
+        "build:native:debug": "tsx scripts/build-plugins.ts --debug --native-only",
+        "build:napi": "tsx scripts/build-plugins.ts --release --napi-only",
+        "build:napi:debug": "tsx scripts/build-plugins.ts --debug --napi-only"
+    },
+    "devDependencies": {
+        "@types/node": "^22.15.3",
+        "tsx": "^4.19.2"
     },
     "pnpm": {
         "onlyBuiltDependencies": [

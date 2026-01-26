@@ -1,8 +1,7 @@
 import { fileURLToPath } from 'url';
 import { createRequire } from 'node:module';
-import { is } from '@electron-toolkit/utils';
 
-const pathToPlugin = makePath(`../../../napi-plugin/build/${is.dev ? 'Debug' : 'Release'}/winwatch.node`);
+const pathToPlugin = makePath('../../../dist-electron/plugins/winwatch.node');
 const pathToPreload = makePath('../preload/index.mjs');
 const pathToRenderer = makePath('../renderer/index.html');
 const pathToIcon = makePath('../assets/public/favicon.svg');
