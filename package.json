@@ -14,10 +14,13 @@
         "tsc": "pnpm --filter win-watch-electron run tsc",
         "dev": "pnpm --filter win-watch-electron run dev",
         "dev:debug": "pnpm --filter win-watch-electron run dev:debug",
-        "build:plugins": "tsx scripts/build-plugins.ts --release",
-        "build:plugins:debug": "tsx scripts/build-plugins.ts --debug",
+
+        "build:all": "tsx scripts/build-plugins.ts --release",
+        "build:all:debug": "tsx scripts/build-plugins.ts --debug",
+        
         "build:native": "tsx scripts/build-plugins.ts --release --native-only",
         "build:native:debug": "tsx scripts/build-plugins.ts --debug --native-only",
+
         "build:napi": "tsx scripts/build-plugins.ts --release --napi-only",
         "build:napi:debug": "tsx scripts/build-plugins.ts --debug --napi-only"
     },

@@ -4,10 +4,11 @@ This script builds the native Windows DLL and NAPI plugin, then copies them to `
 
 ## Prerequisites
 
-1. **Visual Studio** with C++ desktop development workload installed
-2. **MSBuild** available in PATH (typically via VS Developer Command Prompt)
-3. **Node.js** with node-gyp configured
-4. **Python** (required by node-gyp)
+1. **Visual Studio 2022/2026** with "Desktop development with C++" workload installed
+2. **Node.js** with node-gyp configured
+3. **Python** (required by node-gyp)
+
+The script automatically finds MSBuild using `vswhere.exe` (installed with Visual Studio), so you don't need to run from a Developer Command Prompt.
 
 ## Usage
 
@@ -50,16 +51,20 @@ npx tsx scripts/build-plugins.ts [options]
 
 The script performs these steps in order:
 
-1. **Build native project** (`native/WindowMonitor.vcxproj`)
+1. **Find MSBuild** using `vswhere.exe`
+   - Automatically locates Visual Studio installation
+   - Finds MSBuild.exe in the VS installation directory
+
+2. **Build native project** (`native/WindowMonitor.vcxproj`)
    - Uses MSBuild to compile the C++ DLL
    - Output: `native/x64/{Debug|Release}/WindowMonitor.dll`
 
-2. **Build NAPI plugin** (`napi-plugin/`)
+3. **Build NAPI plugin** (`napi-plugin/`)
    - Uses node-gyp to compile the Node.js addon
    - Links against `WindowMonitor.lib`
    - Output: `napi-plugin/build/{Debug|Release}/winwatch.node`
 
-3. **Copy files** to `dist-electron/plugins/`
+4. **Copy files** to `dist-electron/plugins/`
    - `WindowMonitor.dll` - The native Windows DLL
    - `winwatch.node` - The Node.js native addon
 
@@ -72,16 +77,39 @@ dist-electron/
     └── winwatch.node       # Node.js native addon
 ```
 
+## How MSBuild is Found
+
+The script uses `vswhere.exe` to automatically locate Visual Studio:
+
+1. `vswhere.exe` is located at:
+   ```
+   C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe
+   ```
+
+2. The script queries vswhere for the latest VS installation with MSBuild:
+   ```
+   vswhere -latest -requires Microsoft.Component.MSBuild -property installationPath
+   ```
+
+3. MSBuild is then found at:
+   ```
+   {VS_INSTALL_PATH}\MSBuild\Current\Bin\MSBuild.exe
+   ```
+
 ## Troubleshooting
 
-### MSBuild not found
+### "vswhere.exe not found"
 
-Make sure to run from a Visual Studio Developer Command Prompt, or add MSBuild to your PATH:
+Make sure Visual Studio is installed. The Visual Studio Installer creates `vswhere.exe`.
 
-```powershell
-# Add VS2022 MSBuild to PATH (adjust path as needed)
-$env:PATH += ";C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin"
-```
+### "No Visual Studio installation with MSBuild found"
+
+Install the "Desktop development with C++" workload in Visual Studio Installer:
+
+1. Open Visual Studio Installer
+2. Click "Modify" on your VS installation
+3. Check "Desktop development with C++"
+4. Click "Modify" to install
 
 ### node-gyp errors
 
@@ -91,11 +119,21 @@ Ensure you have the required build tools:
 npm install -g node-gyp
 ```
 
-On Windows, you may also need:
-```bash
-npm install -g windows-build-tools
-```
-
 ### DLL not found at runtime
 
 The `winwatch.node` addon loads `WindowMonitor.dll` at runtime. Both files must be in the same directory (`dist-electron/plugins/`).
+
+### Manual MSBuild Path (Alternative)
+
+If automatic detection fails, you can run the script from a **Developer Command Prompt for VS 2026**:
+
+1. Open Start Menu
+2. Search for "Developer Command Prompt for VS 2026"
+3. Navigate to your project directory
+4. Run `pnpm build:plugins`
+
+Or add MSBuild to your PATH manually:
+
+```powershell
+$env:PATH += ";C:\Program Files\Microsoft Visual Studio\2026\Community\MSBuild\Current\Bin"
+```

@@ -24,6 +24,46 @@ const NATIVE_DIR = join(ROOT_DIR, 'native');
 const NAPI_DIR = join(ROOT_DIR, 'napi-plugin');
 const OUTPUT_DIR = join(ROOT_DIR, 'dist-electron', 'plugins');
 
+// vswhere.exe is installed with Visual Studio and can locate VS installations
+const VSWHERE_PATH = 'C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\vswhere.exe';
+
+/**
+ * Find MSBuild path using vswhere.exe
+ * Returns the full path to MSBuild.exe or null if not found
+ */
+function findMSBuild(): string | null {
+    if (!existsSync(VSWHERE_PATH)) {
+        console.warn('vswhere.exe not found. Make sure Visual Studio is installed.');
+        return null;
+    }
+
+    try {
+        // Find the latest VS installation and get the MSBuild path
+        const vsPath = execSync(
+            `"${VSWHERE_PATH}" -latest -requires Microsoft.Component.MSBuild -property installationPath`,
+            { encoding: 'utf8' }
+        ).trim();
+
+        if (!vsPath) {
+            console.warn('No Visual Studio installation with MSBuild found.');
+            return null;
+        }
+
+        const msbuildPath = join(vsPath, 'MSBuild', 'Current', 'Bin', 'MSBuild.exe');
+        
+        if (existsSync(msbuildPath)) {
+            console.log(`Found MSBuild at: ${msbuildPath}`);
+            return msbuildPath;
+        }
+
+        console.warn(`MSBuild.exe not found at expected path: ${msbuildPath}`);
+        return null;
+    } catch (error) {
+        console.warn('Failed to locate MSBuild using vswhere:', error);
+        return null;
+    }
+}
+
 interface BuildOptions {
     config: 'Debug' | 'Release';
     buildNative: boolean;
@@ -32,7 +72,7 @@ interface BuildOptions {
 
 function parseArgs(): BuildOptions {
     const args = process.argv.slice(2);
-    
+
     return {
         config: args.includes('--debug') ? 'Debug' : 'Release',
         buildNative: !args.includes('--napi-only'),
@@ -49,9 +89,18 @@ function ensureOutputDir(): void {
 
 function buildNative(config: 'Debug' | 'Release'): void {
     console.log(`\n=== Building native project (${config}) ===\n`);
+
+    // Try to find MSBuild automatically
+    const msbuildPath = findMSBuild();
     
-    const msbuildCmd = `msbuild WindowMonitor.vcxproj /p:Configuration=${config} /p:Platform=x64 /verbosity:minimal`;
-    
+    if (!msbuildPath) {
+        console.error('MSBuild not found. Please ensure Visual Studio is installed with C++ workload.');
+        console.error('Alternatively, run this script from a Visual Studio Developer Command Prompt.');
+        process.exit(1);
+    }
+
+    const msbuildCmd = `"${msbuildPath}" WindowMonitor.vcxproj /p:Configuration=${config} /p:Platform=x64 /verbosity:minimal`;
+
     try {
         execSync(msbuildCmd, { cwd: NATIVE_DIR, stdio: 'inherit' });
         console.log(`Native build (${config}) completed successfully`);
@@ -63,12 +112,12 @@ function buildNative(config: 'Debug' | 'Release'): void {
 
 function buildNapi(config: 'Debug' | 'Release'): void {
     console.log(`\n=== Building NAPI plugin (${config}) ===\n`);
-    
+
     const isDebug = config === 'Debug';
     const gypCmd = isDebug
         ? 'node-gyp rebuild --debug -- -Dnative_config=Debug'
         : 'node-gyp rebuild';
-    
+
     try {
         execSync(gypCmd, { cwd: NAPI_DIR, stdio: 'inherit' });
         console.log(`NAPI plugin build (${config}) completed successfully`);
@@ -80,15 +129,15 @@ function buildNapi(config: 'Debug' | 'Release'): void {
 
 function copyFiles(config: 'Debug' | 'Release'): void {
     console.log(`\n=== Copying files to ${OUTPUT_DIR} ===\n`);
-    
+
     // Source paths
     const dllSrc = join(NATIVE_DIR, 'x64', config, 'WindowMonitor.dll');
     const nodeSrc = join(NAPI_DIR, 'build', config, 'winwatch.node');
-    
+
     // Destination paths
     const dllDest = join(OUTPUT_DIR, 'WindowMonitor.dll');
     const nodeDest = join(OUTPUT_DIR, 'winwatch.node');
-    
+
     // Copy DLL if it exists
     if (existsSync(dllSrc)) {
         cpSync(dllSrc, dllDest);
@@ -96,7 +145,7 @@ function copyFiles(config: 'Debug' | 'Release'): void {
     } else {
         console.warn(`Warning: DLL not found at ${dllSrc}`);
     }
-    
+
     // Copy .node file if it exists
     if (existsSync(nodeSrc)) {
         cpSync(nodeSrc, nodeDest);
@@ -108,23 +157,23 @@ function copyFiles(config: 'Debug' | 'Release'): void {
 
 function main(): void {
     const options = parseArgs();
-    
+
     console.log(`Build configuration: ${options.config}`);
     console.log(`Build native: ${options.buildNative}`);
     console.log(`Build NAPI: ${options.buildNapi}`);
-    
+
     ensureOutputDir();
-    
+
     if (options.buildNative) {
         buildNative(options.config);
     }
-    
+
     if (options.buildNapi) {
         buildNapi(options.config);
     }
-    
+
     copyFiles(options.config);
-    
+
     console.log(`\n=== Build completed successfully ===\n`);
 }
 
