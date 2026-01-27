@@ -15,13 +15,15 @@ import { WindowInfo } from '../2-main/4-window-info';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/shadcn/resizable';
 import { Button } from '../ui/shadcn/button';
 
-function ControlTreeLoader({ onInvoke }: { onInvoke: (control: ControlNode) => void }) {
+function ControlTreeLoader({ onInvoke }: { onInvoke: (control: ControlNode) => void; }) {
     const controlTree = useAtomValue(controlTreeAtom);
     return (
-        <ControlTree
-            root={controlTree}
-            onInvoke={onInvoke}
-        />
+        <Suspense fallback={<div className="p-4 text-muted-foreground">Loading controls...</div>}>
+            <ControlTree
+                root={controlTree}
+                onInvoke={onInvoke}
+            />
+        </Suspense>
     );
 }
 
@@ -110,9 +112,7 @@ export function App() {
                             {/* Control Tree */}
                             <ResizablePanel minSize={20} defaultSize={settings.controlPanelSize}>
                                 <div className="h-full overflow-auto">
-                                    <Suspense fallback={<div className="p-4 text-muted-foreground">Loading controls...</div>}>
-                                        <ControlTreeLoader onInvoke={handleInvoke} />
-                                    </Suspense>
+                                    <ControlTreeLoader onInvoke={handleInvoke} />
                                 </div>
                             </ResizablePanel>
 
