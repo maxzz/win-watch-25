@@ -1,6 +1,6 @@
 import { Suspense, useState, useEffect, useCallback } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
-import { useSnapshot } from 'valtio/react';
+import { useSnapshot } from 'valtio';
 import { useActiveWindow } from '@renderer/store/hooks/useActiveWindow';
 import { useWindowList } from '@renderer/store/hooks/useWindowList';
 import { activeHandleAtom, controlTreeAtom } from '@renderer/store/2-active-window';

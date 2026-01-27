@@ -6,8 +6,8 @@ import { App } from './components/0-all-layout/0-app';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
-        <Provider>
+        {/* <Provider> */}
             <App />
-        </Provider>
+        {/* </Provider> */}
     </React.StrictMode>
 );

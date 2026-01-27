@@ -26,11 +26,12 @@ export default defineConfig({
         resolve: {
             alias: {
                 '@renderer': resolve('src/renderer/src'),
+                // no need if run 'p i' from root directory, but interesting ways around, keep it for now
                 // Ensure single React instance
-                'react': resolve('node_modules/react'),
-                'react-dom': resolve('node_modules/react-dom'),
+                // 'react': resolve('node_modules/react'),
+                // 'react-dom': resolve('node_modules/react-dom'),
             },
-            dedupe: ['react', 'react-dom', 'jotai', 'valtio']
+            // dedupe: ['react', 'react-dom', 'jotai', 'valtio']
         },
         plugins: [
             react(),
