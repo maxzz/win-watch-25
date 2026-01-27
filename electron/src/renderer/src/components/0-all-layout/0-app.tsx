@@ -22,9 +22,9 @@ export function App() {
     useEffect(
         () => {
             // Start monitoring on mount
-            window.api.startMonitoring("0"); // Argument ignored by current C++ impl
+            tmApi.startMonitoring("0"); // Argument ignored by current C++ impl
             return () => {
-                window.api.stopMonitoring();
+                tmApi.stopMonitoring();
             };
         },
         []);
@@ -32,7 +32,7 @@ export function App() {
     async function handleInvoke(control: ControlNode) {
         if (activeHandle && control.runtimeId) {
             console.log("Invoking", control.name);
-            await window.api.invokeControl(activeHandle, control.runtimeId);
+            await tmApi.invokeControl(activeHandle, control.runtimeId);
         }
     }
 

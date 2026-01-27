@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
+//import { type WinWatchApi } from '../vite-typescript/preload-types';
 
 // Types for highlight API
 interface HighlightBounds {
@@ -16,7 +17,7 @@ interface HighlightOptions {
 }
 
 // Custom APIs for renderer
-const api = {
+const api: WinWatchApi = {
     getTopLevelWindows: () => ipcRenderer.invoke('get-top-level-windows'),
     getControlTree: (handle: string) => ipcRenderer.invoke('get-control-tree', handle),
     startMonitoring: (handle: string) => ipcRenderer.invoke('start-monitoring', handle),
@@ -28,8 +29,7 @@ const api = {
         return () => ipcRenderer.removeListener('active-window-changed', subscription);
     },
     // Highlight a rectangle on screen
-    highlightRect: (bounds: HighlightBounds, options?: HighlightOptions) => 
-        ipcRenderer.invoke('highlight-rect', bounds, options),
+    highlightRect: (bounds: HighlightBounds, options?: HighlightOptions) => ipcRenderer.invoke('highlight-rect', bounds, options),
     // Hide the highlight rectangle
     hideHighlight: () => ipcRenderer.invoke('hide-highlight'),
 };
@@ -37,7 +37,7 @@ const api = {
 // if (process.contextIsolated) {
     try {
         contextBridge.exposeInMainWorld('electron', electronAPI);
-        contextBridge.exposeInMainWorld('api', api);
+        contextBridge.exposeInMainWorld('tmApi', api);
     } catch (error) {
         console.error(error);
     }

@@ -24,10 +24,12 @@ interface WinWatchApi {
     hideHighlight: () => Promise<void>;
 }
 
-declare global {
-    interface Window {
-        api: WinWatchApi;
-    }
-}
+declare var tmApi: WinWatchApi;
 
-export {};
+// declare global {
+//     interface Window {
+//         tmApi: WinWatchApi;
+//     }
+// }
+
+// export {};

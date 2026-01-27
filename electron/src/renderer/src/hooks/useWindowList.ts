@@ -9,7 +9,7 @@ export function useWindowList() {
         async () => {
             setLoading(true);
             try {
-                const json = await window.api.getTopLevelWindows();
+                const json = await tmApi.getTopLevelWindows();
                 const data = JSON.parse(json);
                 setWindows(data);
             } catch (e) {

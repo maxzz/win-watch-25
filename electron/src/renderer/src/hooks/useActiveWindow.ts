@@ -9,7 +9,7 @@ export function useActiveWindow(initialHandle: string | null) {
     useEffect(
         () => {
             // Listen for active window changes from backend
-            const unsubscribe = window.api.onActiveWindowChanged(
+            const unsubscribe = tmApi.onActiveWindowChanged(
                 (data) => {
                     try {
                         const info = JSON.parse(data);
@@ -60,7 +60,7 @@ export function useActiveWindow(initialHandle: string | null) {
 
             async function load() {
                 try {
-                    const json = await window.api.getControlTree(activeHandle!);
+                    const json = await tmApi.getControlTree(activeHandle!);
                     if (!mounted) {
                         return;
                     }
