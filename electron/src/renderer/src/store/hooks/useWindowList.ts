@@ -1,24 +1,25 @@
-import { useState, useEffect, useCallback } from 'react';
-import { WindowInfo } from '../../types';
+import { useEffect, useCallback } from 'react';
+import { useAtom } from 'jotai';
+import { windowInfosAtom, windowInfosLoadingAtom } from '../2-active-window';
 
 export function useWindowList() {
-    const [windows, setWindows] = useState<WindowInfo[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [windowInfos, setWindowInfos] = useAtom(windowInfosAtom);
+    const [windowInfosLoading, setWindowInfosLoading] = useAtom(windowInfosLoadingAtom);
 
     const fetchWindows = useCallback(
         async () => {
-            setLoading(true);
+            setWindowInfosLoading(true);
             try {
                 const json = await tmApi.getTopLevelWindows();
                 const data = JSON.parse(json);
-                setWindows(data);
+                setWindowInfos(data);
             } catch (e) {
                 console.error("Failed to fetch windows", e);
             } finally {
-                setLoading(false);
+                setWindowInfosLoading(false);
             }
         },
-        []);
+        [setWindowInfos, setWindowInfosLoading]);
 
     useEffect(
         () => {
@@ -26,5 +27,5 @@ export function useWindowList() {
         },
         [fetchWindows]);
 
-    return { windows, loading, refresh: fetchWindows };
+    return { windows: windowInfos, windowInfosLoading, refresh: fetchWindows };
 }

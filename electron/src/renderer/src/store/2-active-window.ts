@@ -5,6 +5,9 @@ export const activeHandleAtom = atom<string | null>(null);
 
 export const selectedControlAtom = atom<ControlNode | null>(null);
 
+export const windowInfosAtom = atom<WindowInfo[]>([]);
+export const windowInfosLoadingAtom = atom<boolean>(false);
+
 export const controlTreeAtom = atom(
     async (get): Promise<ControlNode | null> => {
         const activeHandle = get(activeHandleAtom);
