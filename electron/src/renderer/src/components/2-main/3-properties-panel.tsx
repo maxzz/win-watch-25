@@ -1,5 +1,5 @@
-import { useAtomValue } from 'jotai';
-import { selectedControlAtom } from '@renderer/store/2-active-window';
+import { useAtomValue } from "jotai";
+import { selectedControlAtom } from "@renderer/store/2-active-window";
 
 export function PropertiesPanel() {
     const control = useAtomValue(selectedControlAtom);

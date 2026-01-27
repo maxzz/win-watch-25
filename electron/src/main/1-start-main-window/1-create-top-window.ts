@@ -1,7 +1,7 @@
-import { shell, BrowserWindow } from 'electron';
-import { is } from '@electron-toolkit/utils';
-import { pathToPreload, pathToRenderer, pathToIcon } from '../0-all/1-load-plugin';
-import { iniFileOptions } from './8-ini-file-options';
+import { shell, BrowserWindow } from "electron";
+import { is } from "@electron-toolkit/utils";
+import { pathToPreload, pathToRenderer, pathToIcon } from "../0-all/1-load-plugin";
+import { iniFileOptions } from "./8-ini-file-options";
 
 export function createTopWindow(): BrowserWindow {
     const mainWindow = new BrowserWindow({

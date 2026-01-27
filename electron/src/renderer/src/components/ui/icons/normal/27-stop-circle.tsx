@@ -1,5 +1,5 @@
 import { type HTMLAttributes, type SVGAttributes } from "react"; //match-streamline-ultimate-color--file-copyright-equal.svg
-import { classNames } from "@/utils";
+import { classNames } from "@renderer/utils";
 
 export function IconStopCircle({ className, title, ...rest }: SVGAttributes<SVGSVGElement> & HTMLAttributes<SVGSVGElement>) {
     return (

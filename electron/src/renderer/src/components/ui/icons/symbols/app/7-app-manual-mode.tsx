@@ -1,4 +1,4 @@
-import { classNames } from "@/utils";
+import { classNames } from "@renderer/utils";
 import { type HTMLAttributes, type SVGAttributes } from "react";
 
 export function SvgSymbolIconManualMode() { // one hand

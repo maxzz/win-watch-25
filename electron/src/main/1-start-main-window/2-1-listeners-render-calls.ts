@@ -1,5 +1,5 @@
-import { BrowserWindow, ipcMain } from 'electron';
-import { winwatchPlugin } from '../0-all/1-load-plugin';
+import { BrowserWindow, ipcMain } from "electron";
+import { winwatchPlugin } from "../0-all/1-load-plugin";
 
 export function setListenersRenderCalls() {
     // IPC handlers

@@ -1,5 +1,5 @@
 import { type HTMLAttributes, type SVGAttributes } from "react"; // https://lucide.dev/icons/square-gantt-chart
-import { classNames } from "@/utils";
+import { classNames } from "@renderer/utils";
 
 export function SvgSymbolForms() {
     return (<>

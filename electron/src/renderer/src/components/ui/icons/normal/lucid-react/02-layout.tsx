@@ -1,5 +1,5 @@
 import { type HTMLAttributes } from "react";
-import { classNames } from "@/utils";
+import { classNames } from "@renderer/utils";
 
 export function IconL_Layout({ className, title, ...rest }: HTMLAttributes<SVGSVGElement>) {
     return (

@@ -1,4 +1,4 @@
-import { type WindowInfo as WindowInfoType } from '@renderer/types';
+import { type WindowInfo as WindowInfoType } from "@renderer/types";
 
 export function WindowInfo({ window }: { window: WindowInfoType | null }) {
     if (!window) {

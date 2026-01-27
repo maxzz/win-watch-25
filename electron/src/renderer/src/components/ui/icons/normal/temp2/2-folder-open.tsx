@@ -1,4 +1,4 @@
-import { classNames } from "@/utils";
+import { classNames } from "@renderer/utils";
 import { type HTMLAttributes } from "react";
 
 export function IconFolderOpen({ className, ...rest }: HTMLAttributes<SVGElement>) {

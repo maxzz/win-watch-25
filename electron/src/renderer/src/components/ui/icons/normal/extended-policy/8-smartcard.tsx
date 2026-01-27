@@ -1,5 +1,5 @@
 import { type HTMLAttributes } from "react";
-import { classNames } from "@/utils";
+import { classNames } from "@renderer/utils";
 
 const cls1Classes = "fill-current stroke-none";
 const cls2Classes = "fill-none stroke-current [stroke-linejoin:round] [stroke-linecap:round] stroke-[0.35px]";

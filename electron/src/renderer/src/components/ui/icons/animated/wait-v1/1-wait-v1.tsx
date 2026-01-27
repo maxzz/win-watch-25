@@ -1,5 +1,5 @@
 import { type ComponentPropsWithoutRef } from "react";
-import { classNames } from "@/utils";
+import { classNames } from "@renderer/utils";
 import css from "./1-wait.module.css";
 
 export function Spinner({ className, blockClasses, ...rest }: { blockClasses: string; } & ComponentPropsWithoutRef<'div'>) {

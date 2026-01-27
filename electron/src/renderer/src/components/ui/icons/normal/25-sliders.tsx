@@ -1,5 +1,5 @@
 import { type HTMLAttributes, type SVGAttributes } from "react";
-import { classNames } from "@/utils"; // https://heroicons.com/adjustments-horizontal
+import { classNames } from "@renderer/utils"; // https://heroicons.com/adjustments-horizontal
 
 export function IconSliders({ className, title, ...rest }: SVGAttributes<SVGSVGElement> & HTMLAttributes<SVGSVGElement>) {
     return (

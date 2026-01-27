@@ -1,5 +1,5 @@
 import { type HTMLAttributes, type SVGAttributes } from "react";
-import { classNames } from "@/utils"; // lucide lucide-funnel
+import { classNames } from "@renderer/utils"; // lucide lucide-funnel
 
 export function IconFilterOn({ className, title, ...rest }: SVGAttributes<SVGSVGElement> & HTMLAttributes<SVGSVGElement>) {
     return (

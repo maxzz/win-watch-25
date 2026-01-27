@@ -1,5 +1,5 @@
 import { type HTMLAttributes, type SVGAttributes } from "react";
-import { classNames } from "@/utils";
+import { classNames } from "@renderer/utils";
 
 export function SvgSymbolSpinner() {
     // 3/4 circle arc (270 degrees) using SVG arc path

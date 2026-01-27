@@ -1,5 +1,5 @@
-import { fileURLToPath } from 'url';
-import { createRequire } from 'node:module';
+import { fileURLToPath } from "url";
+import { createRequire } from "node:module";
 
 const pathToPlugin = makePath('../../../dist-electron/plugins/winwatch.node');
 const pathToPreload = makePath('../preload/index.mjs');

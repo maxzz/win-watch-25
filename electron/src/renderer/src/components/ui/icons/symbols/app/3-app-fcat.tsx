@@ -1,5 +1,5 @@
 import { type HTMLAttributes, type SVGAttributes } from "react";
-import { classNames } from "@/utils"; // https://lucide.dev/icons/book-open
+import { classNames } from "@renderer/utils"; // https://lucide.dev/icons/book-open
 
 export function SvgSymbolCatalog() {
     return (

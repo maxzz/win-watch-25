@@ -1,5 +1,5 @@
 import { type HTMLAttributes, type SVGAttributes } from "react";
-import { classNames } from "@/utils";
+import { classNames } from "@renderer/utils";
 
 export function SvgSymbolAppWebIeDot() { // copy of SvgSymbolAppWebChrome() with red dot // https://lucide.dev/icons/chrome
     return (

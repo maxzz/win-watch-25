@@ -1,4 +1,4 @@
-import { classNames } from "@/utils";
+import { classNames } from "@renderer/utils";
 import { type HTMLAttributes, type SVGProps } from "react";
 
 export function IconTrash({ className, title, ...rest }: HTMLAttributes<SVGSVGElement> & SVGProps<SVGSVGElement>) {

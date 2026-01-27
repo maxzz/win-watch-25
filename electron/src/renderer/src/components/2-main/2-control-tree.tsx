@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useAtom } from 'jotai';
-import { selectedControlAtom } from '@renderer/store/2-active-window';
-import { ControlNode } from '@renderer/types';
-import { ChevronRight, ChevronDown, Box, MousePointerClick } from 'lucide-react';
+import { useState } from "react";
+import { useAtom } from "jotai";
+import { selectedControlAtom } from "@renderer/store/2-active-window";
+import { ControlNode } from "@renderer/types";
+import { ChevronRight, ChevronDown, Box, MousePointerClick } from "lucide-react";
 
 export function ControlTree({ root, onInvoke }: {
     root: ControlNode | null;

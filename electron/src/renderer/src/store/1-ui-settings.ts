@@ -1,5 +1,5 @@
-import { proxy, subscribe } from 'valtio';
-import { type ThemeMode, themeApplyMode } from '../utils/theme-apply';
+import { proxy, subscribe } from "valtio";
+import { type ThemeMode, themeApplyMode } from "../utils/theme-apply";
 
 const STORE_KEY = "win-watch-25";
 const STORE_VER = "v1.0";

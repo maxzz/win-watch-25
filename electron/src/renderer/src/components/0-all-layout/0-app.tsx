@@ -1,19 +1,19 @@
-import { Suspense, useEffect, useCallback } from 'react';
-import { useAtom, useAtomValue } from 'jotai';
-import { useSnapshot } from 'valtio';
-import { useActiveWindow } from '@renderer/store/hooks/useActiveWindow';
-import { useWindowList } from '@renderer/store/hooks/useWindowList';
-import { activeHandleAtom, controlTreeAtom } from '@renderer/store/2-active-window';
-import { appSettings } from '@renderer/store/1-ui-settings';
-import type { ControlNode } from '@renderer/types';
-import { PanelBottomIcon, PanelRightIcon } from 'lucide-react';
+import { Suspense, useEffect, useCallback } from "react";
+import { useAtom, useAtomValue } from "jotai";
+import { useSnapshot } from "valtio";
+import { useActiveWindow } from "@renderer/store/hooks/useActiveWindow";
+import { useWindowList } from "@renderer/store/hooks/useWindowList";
+import { activeHandleAtom, controlTreeAtom } from "@renderer/store/2-active-window";
+import { appSettings } from "@renderer/store/1-ui-settings";
+import type { ControlNode } from "@renderer/types";
+import { PanelBottomIcon, PanelRightIcon } from "lucide-react";
 
-import { WindowTree } from '../2-main/1-window-tree';
-import { ControlTree } from '../2-main/2-control-tree';
-import { PropertiesPanel } from '../2-main/3-properties-panel';
-import { WindowInfo } from '../2-main/4-window-info';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/shadcn/resizable';
-import { Button } from '../ui/shadcn/button';
+import { WindowTree } from "../2-main/1-window-tree";
+import { ControlTree } from "../2-main/2-control-tree";
+import { PropertiesPanel } from "../2-main/3-properties-panel";
+import { WindowInfo } from "../2-main/4-window-info";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "../ui/shadcn/resizable";
+import { Button } from "../ui/shadcn/button";
 
 function ControlTreeLoader() {
     const controlTree = useAtomValue(controlTreeAtom);

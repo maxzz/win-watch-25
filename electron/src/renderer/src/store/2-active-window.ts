@@ -1,5 +1,5 @@
-import { atom } from 'jotai';
-import { ControlNode, WindowInfo } from '../types';
+import { atom } from "jotai";
+import { ControlNode, WindowInfo } from "../types";
 
 export const activeHandleAtom = atom<string | null>(null);
 

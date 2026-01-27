@@ -1,5 +1,5 @@
 import { type HTMLAttributes, type SVGAttributes } from "react"; //https://heroicons.com/fire
-import { classNames } from "@/utils";
+import { classNames } from "@renderer/utils";
 
 export function SvgSymbolFire() {
     return (<>

@@ -1,5 +1,5 @@
 import { type HTMLAttributes, type SVGAttributes } from "react"; // https://www.radix-ui.com/icons
-import { classNames } from "@/utils";
+import { classNames } from "@renderer/utils";
 
 export function SvgSymbolCode() {
     return (<>

@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { type WindowInfo } from '@renderer/types';
-import { ChevronRight as IconChevronRight, ChevronDown as IconChevronDown, Monitor as IconMonitor } from 'lucide-react';
+import { useState } from "react";
+import { type WindowInfo } from "@renderer/types";
+import { ChevronRight as IconChevronRight, ChevronDown as IconChevronDown, Monitor as IconMonitor } from "lucide-react";
 
 export function WindowTree({ windows, selectedHandle, onSelectWindow, onRefresh }: {
     windows: WindowInfo[];
