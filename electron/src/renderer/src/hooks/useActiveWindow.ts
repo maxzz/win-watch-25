@@ -1,10 +1,18 @@
-import { useState, useEffect } from 'react';
-import { ControlNode, WindowInfo } from '../types';
+import { useEffect } from 'react';
+import { useAtom } from 'jotai';
+import { activeHandleAtom, controlTreeAtom, activeWindowInfoAtom } from '../store/2-active-window';
 
 export function useActiveWindow(initialHandle: string | null) {
-    const [activeHandle, setActiveHandle] = useState<string | null>(initialHandle);
-    const [controlTree, setControlTree] = useState<ControlNode | null>(null);
-    const [activeWindowInfo, setActiveWindowInfo] = useState<WindowInfo | null>(null);
+    const [activeHandle, setActiveHandle] = useAtom(activeHandleAtom);
+    const [controlTree, setControlTree] = useAtom(controlTreeAtom);
+    const [activeWindowInfo] = useAtom(activeWindowInfoAtom);
+
+    // Set initial handle on mount
+    useEffect(() => {
+        if (initialHandle !== null) {
+            setActiveHandle(initialHandle);
+        }
+    }, []);
 
     useEffect(
         () => {
