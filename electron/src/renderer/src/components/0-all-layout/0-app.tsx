@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useAtom } from 'jotai';
+import { Suspense, useState, useEffect } from 'react';
+import { useAtom, useAtomValue } from 'jotai';
 import { useActiveWindow } from '@renderer/hooks/useActiveWindow';
 import { useWindowList } from '@renderer/hooks/useWindowList';
 import { activeHandleAtom, controlTreeAtom } from '@renderer/store/2-active-window';
@@ -10,11 +10,28 @@ import { PropertiesPanel } from '../2-main/3-properties-panel';
 import { WindowInfo } from '../2-main/4-window-info';
 import { WindowTree } from '../2-main/1-window-tree';
 
+interface ControlTreeLoaderProps {
+    selectedControl: ControlNode | null;
+    onSelectControl: (control: ControlNode | null) => void;
+    onInvoke: (control: ControlNode) => void;
+}
+
+function ControlTreeLoader({ selectedControl, onSelectControl, onInvoke }: ControlTreeLoaderProps) {
+    const controlTree = useAtomValue(controlTreeAtom);
+    return (
+        <ControlTree
+            root={controlTree}
+            selectedControl={selectedControl}
+            onSelectControl={onSelectControl}
+            onInvoke={onInvoke}
+        />
+    );
+}
+
 export function App() {
     const { windows, refresh } = useWindowList();
     useActiveWindow(null); // Side effects only
     const [activeHandle, setActiveHandle] = useAtom(activeHandleAtom);
-    const [controlTree] = useAtom(controlTreeAtom);
     const [selectedControl, setSelectedControl] = useState<ControlNode | null>(null);
 
     // Find window info for active handle
@@ -56,12 +73,13 @@ export function App() {
 
                 <div className="flex-1 flex flex-col min-h-0">
                     <div className="flex-1 overflow-auto border-b">
-                        <ControlTree
-                            root={controlTree}
-                            selectedControl={selectedControl}
-                            onSelectControl={setSelectedControl}
-                            onInvoke={handleInvoke}
-                        />
+                        <Suspense fallback={<div className="p-4 text-muted-foreground">Loading controls...</div>}>
+                            <ControlTreeLoader
+                                selectedControl={selectedControl}
+                                onSelectControl={setSelectedControl}
+                                onInvoke={handleInvoke}
+                            />
+                        </Suspense>
                     </div>
 
                     <div className="h-1/3 min-h-[150px]">

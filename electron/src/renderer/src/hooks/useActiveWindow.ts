@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
-import { useAtom, useSetAtom } from 'jotai';
-import { activeHandleAtom, controlTreeAtom } from '../store/2-active-window';
+import { useSetAtom } from 'jotai';
+import { activeHandleAtom } from '../store/2-active-window';
 
 export function useActiveWindow(initialHandle: string | null) {
-    const [activeHandle, setActiveHandle] = useAtom(activeHandleAtom);
-    const setControlTree = useSetAtom(controlTreeAtom);
+    const setActiveHandle = useSetAtom(activeHandleAtom);
 
     // Set initial handle on mount
     useEffect(() => {
@@ -43,44 +42,4 @@ export function useActiveWindow(initialHandle: string | null) {
             return unsubscribe;
         },
         []);
-
-    useEffect(
-        () => {
-            if (!activeHandle) {
-                setControlTree(null);
-                return;
-            }
-
-            let mounted = true;
-
-            // Start monitoring this specific window if needed, or just fetch tree
-            // The "StartMonitoring" in API is global for "active window changes".
-            // If we want to show controls for the *currently selected* window in the tree, we just fetch controls.
-            // If we want to *track* the user's focus, we use startMonitoring.
-            // The requirement: "monitor active window ... and show controls inside THIS window".
-            // And "List of all top level windows... show windows as items tree...".
-            // "Clicking a window switches active monitoring to that window"?
-            // Or does it just show that window?
-            // Plan: "Clicking a window switches active monitoring to that window".
-            // So if user clicks a window in the tree, we act as if it's active?
-            // Or we just Inspect it.
-
-            async function load() {
-                try {
-                    const json = await tmApi.getControlTree(activeHandle!);
-                    if (!mounted) {
-                        return;
-                    }
-                    const tree = JSON.parse(json);
-                    setControlTree(tree);
-                } catch (e) {
-                    console.error("Failed to fetch control tree", e);
-                }
-            }
-
-            load();
-
-            return () => { mounted = false; };
-        },
-        [activeHandle]);
 }
