@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { WindowInfo } from '../types';
+import { WindowInfo } from '../../types';
 
 export function useWindowList() {
     const [windows, setWindows] = useState<WindowInfo[]>([]);

@@ -1,7 +1,7 @@
 import { Suspense, useState, useEffect } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
-import { useActiveWindow } from '@renderer/hooks/useActiveWindow';
-import { useWindowList } from '@renderer/hooks/useWindowList';
+import { useActiveWindow } from '@renderer/store/hooks/useActiveWindow';
+import { useWindowList } from '@renderer/store/hooks/useWindowList';
 import { activeHandleAtom, controlTreeAtom } from '@renderer/store/2-active-window';
 import { ControlNode } from '@renderer/types';
 
