@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useAtom } from 'jotai';
 import { useActiveWindow } from '@renderer/hooks/useActiveWindow';
 import { useWindowList } from '@renderer/hooks/useWindowList';
+import { activeHandleAtom, controlTreeAtom } from '@renderer/store/2-active-window';
 import { ControlNode } from '@renderer/types';
 
 import { ControlTree } from '../2-main/2-control-tree';
@@ -10,7 +12,9 @@ import { WindowTree } from '../2-main/1-window-tree';
 
 export function App() {
     const { windows, refresh } = useWindowList();
-    const { activeHandle, setActiveHandle, controlTree } = useActiveWindow(null);
+    useActiveWindow(null); // Side effects only
+    const [activeHandle, setActiveHandle] = useAtom(activeHandleAtom);
+    const [controlTree] = useAtom(controlTreeAtom);
     const [selectedControl, setSelectedControl] = useState<ControlNode | null>(null);
 
     // Find window info for active handle

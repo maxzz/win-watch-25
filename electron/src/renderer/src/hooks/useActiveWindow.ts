@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
-import { useAtom } from 'jotai';
-import { activeHandleAtom, controlTreeAtom, activeWindowInfoAtom } from '../store/2-active-window';
+import { useAtom, useSetAtom } from 'jotai';
+import { activeHandleAtom, controlTreeAtom } from '../store/2-active-window';
 
 export function useActiveWindow(initialHandle: string | null) {
     const [activeHandle, setActiveHandle] = useAtom(activeHandleAtom);
-    const [controlTree, setControlTree] = useAtom(controlTreeAtom);
-    const [activeWindowInfo] = useAtom(activeWindowInfoAtom);
+    const setControlTree = useSetAtom(controlTreeAtom);
 
     // Set initial handle on mount
     useEffect(() => {
@@ -84,11 +83,4 @@ export function useActiveWindow(initialHandle: string | null) {
             return () => { mounted = false; };
         },
         [activeHandle]);
-
-    return {
-        activeHandle,
-        setActiveHandle,
-        controlTree,
-        activeWindowInfo // We would need to look this up from window list or fetch separately
-    };
 }
