@@ -15,13 +15,22 @@ import { WindowInfo } from '../2-main/4-window-info';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/shadcn/resizable';
 import { Button } from '../ui/shadcn/button';
 
-function ControlTreeLoader({ onInvoke }: { onInvoke: (control: ControlNode) => void; }) {
+function ControlTreeLoader() {
     const controlTree = useAtomValue(controlTreeAtom);
+    const activeHandle = useAtomValue(activeHandleAtom);
+
+    async function handleInvoke(control: ControlNode) {
+        if (activeHandle && control.runtimeId) {
+            console.log("Invoking", control.name);
+            await tmApi.invokeControl(activeHandle, control.runtimeId);
+        }
+    }
+
     return (
         <Suspense fallback={<div className="p-4 text-muted-foreground">Loading controls...</div>}>
             <ControlTree
                 root={controlTree}
-                onInvoke={onInvoke}
+                onInvoke={handleInvoke}
             />
         </Suspense>
     );
@@ -49,24 +58,9 @@ export function App() {
         },
         []);
 
-    async function handleInvoke(control: ControlNode) {
-        if (activeHandle && control.runtimeId) {
-            console.log("Invoking", control.name);
-            await tmApi.invokeControl(activeHandle, control.runtimeId);
-        }
-    }
-
-    const handleMainPanelResize = useCallback((layout: readonly number[]) => {
-        appSettings.mainPanelSize = layout[0];
-    }, []);
-
-    const handleControlPanelResize = useCallback((layout: readonly number[]) => {
-        appSettings.controlPanelSize = layout[0];
-    }, []);
-
-    const togglePropertiesPosition = useCallback(() => {
-        appSettings.propertiesPanelPosition = settings.propertiesPanelPosition === 'bottom' ? 'right' : 'bottom';
-    }, [settings.propertiesPanelPosition]);
+    const handleMainPanelResize = useCallback((layout: readonly number[]) => appSettings.mainPanelSize = layout[0], []);
+    const handleControlPanelResize = useCallback((layout: readonly number[]) => appSettings.controlPanelSize = layout[0], []);
+    const togglePropertiesPosition = useCallback(() => appSettings.propertiesPanelPosition = settings.propertiesPanelPosition === 'bottom' ? 'right' : 'bottom', []);
 
     const isPropertiesOnRight = settings.propertiesPanelPosition === 'right';
 
@@ -112,7 +106,7 @@ export function App() {
                             {/* Control Tree */}
                             <ResizablePanel minSize={20} defaultSize={settings.controlPanelSize}>
                                 <div className="h-full overflow-auto">
-                                    <ControlTreeLoader onInvoke={handleInvoke} />
+                                    <ControlTreeLoader />
                                 </div>
                             </ResizablePanel>
 
