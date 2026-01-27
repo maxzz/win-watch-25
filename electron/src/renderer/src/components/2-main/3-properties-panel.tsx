@@ -1,6 +1,9 @@
-import { ControlNode } from '@renderer/types';
+import { useAtomValue } from 'jotai';
+import { selectedControlAtom } from '@renderer/store/2-active-window';
 
-export function PropertiesPanel({ control }: { control: ControlNode | null }) {
+export function PropertiesPanel() {
+    const control = useAtomValue(selectedControlAtom);
+
     if (!control) {
         return (
             <div className="h-full p-4 flex items-center justify-center text-muted-foreground bg-muted/10">

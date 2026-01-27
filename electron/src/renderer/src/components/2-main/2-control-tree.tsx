@@ -1,13 +1,14 @@
 import { useState } from 'react';
+import { useAtom } from 'jotai';
+import { selectedControlAtom } from '@renderer/store/2-active-window';
 import { ControlNode } from '@renderer/types';
 import { ChevronRight, ChevronDown, Box, MousePointerClick } from 'lucide-react';
 
-export function ControlTree({ root, onSelectControl, selectedControl, onInvoke }: {
+export function ControlTree({ root, onInvoke }: {
     root: ControlNode | null;
-    onSelectControl: (control: ControlNode) => void;
-    selectedControl: ControlNode | null;
     onInvoke: (control: ControlNode) => void;
 }) {
+    const [selectedControl, setSelectedControl] = useAtom(selectedControlAtom);
     if (!root) {
         return (
             <div className="p-4 text-muted-foreground text-center">
@@ -28,7 +29,7 @@ export function ControlTree({ root, onSelectControl, selectedControl, onInvoke }
                 <ControlTreeNode
                     node={root}
                     selectedNode={selectedControl}
-                    onSelect={onSelectControl}
+                    onSelect={setSelectedControl}
                     onInvoke={onInvoke}
                     depth={0} />
             </div>

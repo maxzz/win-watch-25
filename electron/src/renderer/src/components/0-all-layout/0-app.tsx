@@ -1,11 +1,11 @@
-import { Suspense, useState, useEffect, useCallback } from 'react';
+import { Suspense, useEffect, useCallback } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useSnapshot } from 'valtio';
 import { useActiveWindow } from '@renderer/store/hooks/useActiveWindow';
 import { useWindowList } from '@renderer/store/hooks/useWindowList';
 import { activeHandleAtom, controlTreeAtom } from '@renderer/store/2-active-window';
 import { appSettings } from '@renderer/store/1-ui-settings';
-import { ControlNode } from '@renderer/types';
+import type { ControlNode } from '@renderer/types';
 import { PanelBottomIcon, PanelRightIcon } from 'lucide-react';
 
 import { WindowTree } from '../2-main/1-window-tree';
@@ -15,19 +15,11 @@ import { WindowInfo } from '../2-main/4-window-info';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/shadcn/resizable';
 import { Button } from '../ui/shadcn/button';
 
-interface ControlTreeLoaderProps {
-    selectedControl: ControlNode | null;
-    onSelectControl: (control: ControlNode | null) => void;
-    onInvoke: (control: ControlNode) => void;
-}
-
-function ControlTreeLoader({ selectedControl, onSelectControl, onInvoke }: ControlTreeLoaderProps) {
+function ControlTreeLoader({ onInvoke }: { onInvoke: (control: ControlNode) => void }) {
     const controlTree = useAtomValue(controlTreeAtom);
     return (
         <ControlTree
             root={controlTree}
-            selectedControl={selectedControl}
-            onSelectControl={onSelectControl}
             onInvoke={onInvoke}
         />
     );
@@ -37,7 +29,6 @@ export function App() {
     const { windows, refresh } = useWindowList();
     useActiveWindow(null); // Side effects only
     const [activeHandle, setActiveHandle] = useAtom(activeHandleAtom);
-    const [selectedControl, setSelectedControl] = useState<ControlNode | null>(null);
     const settings = useSnapshot(appSettings);
 
     // Find window info for active handle
@@ -120,11 +111,7 @@ export function App() {
                             <ResizablePanel minSize={20} defaultSize={settings.controlPanelSize}>
                                 <div className="h-full overflow-auto">
                                     <Suspense fallback={<div className="p-4 text-muted-foreground">Loading controls...</div>}>
-                                        <ControlTreeLoader
-                                            selectedControl={selectedControl}
-                                            onSelectControl={setSelectedControl}
-                                            onInvoke={handleInvoke}
-                                        />
+                                        <ControlTreeLoader onInvoke={handleInvoke} />
                                     </Suspense>
                                 </div>
                             </ResizablePanel>
@@ -133,7 +120,7 @@ export function App() {
 
                             {/* Properties Panel */}
                             <ResizablePanel minSize={15} defaultSize={100 - settings.controlPanelSize}>
-                                <PropertiesPanel control={selectedControl} />
+                                <PropertiesPanel />
                             </ResizablePanel>
                         </ResizablePanelGroup>
                     </div>

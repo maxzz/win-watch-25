@@ -3,6 +3,8 @@ import { ControlNode, WindowInfo } from '../types';
 
 export const activeHandleAtom = atom<string | null>(null);
 
+export const selectedControlAtom = atom<ControlNode | null>(null);
+
 export const controlTreeAtom = atom(
     async (get): Promise<ControlNode | null> => {
         const activeHandle = get(activeHandleAtom);
