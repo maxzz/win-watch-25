@@ -1,4 +1,4 @@
-"use client"; // 01.07.26
+"use client"; // 01.26.26
 import * as React from "react";
 import { cn } from "@renderer/utils";
 import { GripVerticalIcon } from "lucide-react";
@@ -17,8 +17,8 @@ interface ResizablePanelGroupProps {
 
 export function ResizablePanelGroup({ className, orientation = 'horizontal', ...props }: ResizablePanelGroupProps) {
     const groupProps = {
-        "data-slot": "resizable-panel-group",
         className: cn("w-full h-full flex data-[panel-group-direction=vertical]:flex-col group/panel-group", className),
+        "data-slot": "resizable-panel-group",
         "data-panel-group-direction": orientation,
         direction: orientation,
         ...props

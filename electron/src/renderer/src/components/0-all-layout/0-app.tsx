@@ -93,17 +93,9 @@ export function App() {
             </div>
 
             {/* Main content */}
-            <ResizablePanelGroup
-                orientation="horizontal"
-                onLayoutChange={handleMainPanelResize}
-                className="flex-1"
-            >
+            <ResizablePanelGroup className="flex-1" orientation="horizontal" onLayoutChange={handleMainPanelResize}>
                 {/* Left panel - Window Tree */}
-                <ResizablePanel
-                    defaultSize={settings.mainPanelSize}
-                    minSize={15}
-                    maxSize={"75%"}
-                >
+                <ResizablePanel minSize={15} maxSize={"75%"} defaultSize={settings.mainPanelSize}>
                     <WindowTree
                         windows={windows}
                         selectedHandle={activeHandle}
@@ -120,15 +112,12 @@ export function App() {
                         <WindowInfo window={activeWindow} />
 
                         <ResizablePanelGroup
+                            className="flex-1"
                             orientation={isPropertiesOnRight ? "horizontal" : "vertical"}
                             onLayoutChange={handleControlPanelResize}
-                            className="flex-1"
                         >
                             {/* Control Tree */}
-                            <ResizablePanel
-                                defaultSize={settings.controlPanelSize}
-                                minSize={20}
-                            >
+                            <ResizablePanel minSize={20} defaultSize={settings.controlPanelSize}>
                                 <div className="h-full overflow-auto">
                                     <Suspense fallback={<div className="p-4 text-muted-foreground">Loading controls...</div>}>
                                         <ControlTreeLoader
@@ -143,10 +132,7 @@ export function App() {
                             <ResizableHandle />
 
                             {/* Properties Panel */}
-                            <ResizablePanel
-                                defaultSize={100 - settings.controlPanelSize}
-                                minSize={15}
-                            >
+                            <ResizablePanel minSize={15} defaultSize={100 - settings.controlPanelSize}>
                                 <PropertiesPanel control={selectedControl} />
                             </ResizablePanel>
                         </ResizablePanelGroup>
