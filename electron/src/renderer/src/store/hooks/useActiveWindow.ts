@@ -6,11 +6,13 @@ export function useActiveWindow(initialHandle: string | null) {
     const setActiveHandle = useSetAtom(activeHandleAtom);
 
     // Set initial handle on mount
-    useEffect(() => {
-        if (initialHandle !== null) {
-            setActiveHandle(initialHandle);
-        }
-    }, []);
+    useEffect(
+        () => {
+            if (initialHandle !== null) {
+                setActiveHandle(initialHandle);
+            }
+        },
+        []);
 
     useEffect(
         () => {

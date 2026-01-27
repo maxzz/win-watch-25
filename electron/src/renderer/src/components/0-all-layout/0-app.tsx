@@ -5,10 +5,10 @@ import { useWindowList } from '@renderer/store/hooks/useWindowList';
 import { activeHandleAtom, controlTreeAtom } from '@renderer/store/2-active-window';
 import { ControlNode } from '@renderer/types';
 
+import { WindowTree } from '../2-main/1-window-tree';
 import { ControlTree } from '../2-main/2-control-tree';
 import { PropertiesPanel } from '../2-main/3-properties-panel';
 import { WindowInfo } from '../2-main/4-window-info';
-import { WindowTree } from '../2-main/1-window-tree';
 
 interface ControlTreeLoaderProps {
     selectedControl: ControlNode | null;
