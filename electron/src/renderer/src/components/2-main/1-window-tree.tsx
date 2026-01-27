@@ -1,28 +1,29 @@
 import { useState } from "react";
 import { type WindowInfo } from "@renderer/types";
 import { ChevronRight as IconChevronRight, ChevronDown as IconChevronDown, Monitor as IconMonitor } from "lucide-react";
+import { classNames } from "@renderer/utils";
 
-export function WindowTree({ windows, selectedHandle, onSelectWindow, onRefresh }: {
-    windows: WindowInfo[];
+export function WindowTree({ windowInfos, selectedHandle, onSelectWindow, onRefresh }: {
+    windowInfos: WindowInfo[];
     selectedHandle: string | null;
     onSelectWindow: (handle: string) => void;
     onRefresh: () => void;
 }) {
     return (
-        <div className="flex flex-col h-full border-r bg-card">
-            <div className="p-2 border-b flex justify-between items-center bg-muted/20">
-                <span className="font-semibold text-sm">
+        <div className="h-full bg-card border-r flex flex-col">
+            <div className="p-2 bg-muted/20 border-b flex justify-between items-center">
+                <span className="text-sm font-semibold">
                     Windows
                 </span>
-                <button onClick={onRefresh} className="text-xs px-2 py-1 bg-primary text-primary-foreground rounded hover:bg-primary/90">
+                <button onClick={onRefresh} className="px-2 py-1 text-xs text-primary-foreground bg-primary rounded hover:bg-primary/90">
                     Refresh
                 </button>
             </div>
 
             <div className="flex-1 overflow-auto">
-                {windows.map(
-                    (w, i) => (
-                        <WindowNode key={i} windowInfo={w} selectedHandle={selectedHandle} onSelect={onSelectWindow} depth={0} />
+                {windowInfos.map(
+                    (windowInfo, i) => (
+                        <WindowNode key={i} windowInfo={windowInfo} selectedHandle={selectedHandle} onSelect={onSelectWindow} depth={0} />
                     )
                 )}
             </div>
@@ -38,7 +39,7 @@ function WindowNode({ windowInfo, selectedHandle, onSelect, depth }: { windowInf
     return (
         <div>
             <div
-                className={`px-2 py-0.5 cursor-pointer flex items-center ${isSelected ? 'bg-red-500 text-accent-foreground' : 'hover:bg-accent/50'}`}
+                className={classNames("px-2 py-0.5 cursor-pointer flex items-center", isSelected ? "bg-red-500 text-accent-foreground" : "hover:bg-accent/50")}
                 style={{ paddingLeft: `${depth * 12 + 4}px` }}
                 onClick={() => onSelect(windowInfo.handle)}
             >

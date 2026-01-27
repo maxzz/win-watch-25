@@ -22,7 +22,7 @@
             "type": "chrome",
             "request": "attach",
             "port": 9222,
-            "webRoot": "${workspaceFolder}",
+            "webRoot": "${workspaceFolder}/electron/src/renderer",
             "timeout": 30000
         }
     ],

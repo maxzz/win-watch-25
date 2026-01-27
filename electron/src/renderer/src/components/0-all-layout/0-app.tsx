@@ -37,7 +37,7 @@ function ControlTreeLoader() {
 }
 
 export function App() {
-    const { windows, refresh } = useWindowList();
+    const { windowInfos, refresh } = useWindowList();
     useActiveWindow(null); // Side effects only
     const [activeHandle, setActiveHandle] = useAtom(activeHandleAtom);
     const settings = useSnapshot(appSettings);
@@ -46,7 +46,7 @@ export function App() {
     // This might be slow if list is huge, but fine for now
     // Also handle format mismatch (hex vs dec) might be an issue
     // I'll try to fuzzy match or normalized in the future
-    const activeWindow = windows.find(w => w.handle == activeHandle) || windows.find(w => parseInt(w.handle) == parseInt(activeHandle || "0")) || null;
+    const activeWindow = windowInfos.find(w => w.handle == activeHandle) || windowInfos.find(w => parseInt(w.handle) == parseInt(activeHandle || "0")) || null;
 
     useEffect(
         () => {
@@ -58,9 +58,11 @@ export function App() {
         },
         []);
 
-    const handleMainPanelResize = useCallback((layout: readonly number[]) => appSettings.mainPanelSize = layout[0], []);
-    const handleControlPanelResize = useCallback((layout: readonly number[]) => appSettings.controlPanelSize = layout[0], []);
-    const togglePropertiesPosition = useCallback(() => appSettings.propertiesPanelPosition = settings.propertiesPanelPosition === 'bottom' ? 'right' : 'bottom', []);
+    const handleMainPanelResize = useCallback((layout: readonly number[]) => { appSettings.mainPanelSize = layout[0]; }, []);
+    const handleControlPanelResize = useCallback((layout: readonly number[]) => { appSettings.controlPanelSize = layout[0]; }, []);
+    const togglePropertiesPosition = useCallback(() => { 
+        appSettings.propertiesPanelPosition = settings.propertiesPanelPosition === 'bottom' ? 'right' : 'bottom';
+     }, []);
 
     const isPropertiesOnRight = settings.propertiesPanelPosition === 'right';
 
@@ -84,7 +86,7 @@ export function App() {
                 {/* Left panel - Window Tree */}
                 <ResizablePanel minSize={15} maxSize={"75%"} defaultSize={settings.mainPanelSize}>
                     <WindowTree
-                        windows={windows}
+                        windowInfos={windowInfos}
                         selectedHandle={activeHandle}
                         onSelectWindow={setActiveHandle}
                         onRefresh={refresh}

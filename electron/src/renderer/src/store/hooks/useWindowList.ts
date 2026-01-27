@@ -27,5 +27,5 @@ export function useWindowList() {
         },
         [fetchWindows]);
 
-    return { windows: windowInfos, windowInfosLoading, refresh: fetchWindows };
+    return { windowInfos, windowInfosLoading, refresh: fetchWindows };
 }
