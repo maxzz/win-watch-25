@@ -1,6 +1,6 @@
 import { Suspense, useState, useEffect, useCallback } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
-import { useSnapshot } from 'valtio';
+import { useSnapshot } from 'valtio/react';
 import { useActiveWindow } from '@renderer/store/hooks/useActiveWindow';
 import { useWindowList } from '@renderer/store/hooks/useWindowList';
 import { activeHandleAtom, controlTreeAtom } from '@renderer/store/2-active-window';
@@ -102,7 +102,7 @@ export function App() {
                 <ResizablePanel
                     defaultSize={settings.mainPanelSize}
                     minSize={15}
-                    maxSize={50}
+                    maxSize={"75%"}
                 >
                     <WindowTree
                         windows={windows}

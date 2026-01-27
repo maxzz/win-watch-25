@@ -25,8 +25,12 @@ export default defineConfig({
     renderer: {
         resolve: {
             alias: {
-                '@renderer': resolve('src/renderer/src')
-            }
+                '@renderer': resolve('src/renderer/src'),
+                // Ensure single React instance
+                'react': resolve('node_modules/react'),
+                'react-dom': resolve('node_modules/react-dom'),
+            },
+            dedupe: ['react', 'react-dom', 'jotai', 'valtio']
         },
         plugins: [
             react(),
