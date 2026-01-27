@@ -1,14 +1,19 @@
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
+import { useSnapshot } from 'valtio';
 import { useActiveWindow } from '@renderer/store/hooks/useActiveWindow';
 import { useWindowList } from '@renderer/store/hooks/useWindowList';
 import { activeHandleAtom, controlTreeAtom } from '@renderer/store/2-active-window';
+import { appSettings } from '@renderer/store/1-ui-settings';
 import { ControlNode } from '@renderer/types';
+import { PanelBottomIcon, PanelRightIcon } from 'lucide-react';
 
 import { WindowTree } from '../2-main/1-window-tree';
 import { ControlTree } from '../2-main/2-control-tree';
 import { PropertiesPanel } from '../2-main/3-properties-panel';
 import { WindowInfo } from '../2-main/4-window-info';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '../ui/shadcn/resizable';
+import { Button } from '../ui/shadcn/button';
 
 interface ControlTreeLoaderProps {
     selectedControl: ControlNode | null;
@@ -33,6 +38,7 @@ export function App() {
     useActiveWindow(null); // Side effects only
     const [activeHandle, setActiveHandle] = useAtom(activeHandleAtom);
     const [selectedControl, setSelectedControl] = useState<ControlNode | null>(null);
+    const settings = useSnapshot(appSettings);
 
     // Find window info for active handle
     // This might be slow if list is huge, but fine for now
@@ -57,36 +63,96 @@ export function App() {
         }
     }
 
+    const handleMainPanelResize = useCallback((layout: readonly number[]) => {
+        appSettings.mainPanelSize = layout[0];
+    }, []);
+
+    const handleControlPanelResize = useCallback((layout: readonly number[]) => {
+        appSettings.controlPanelSize = layout[0];
+    }, []);
+
+    const togglePropertiesPosition = useCallback(() => {
+        appSettings.propertiesPanelPosition = settings.propertiesPanelPosition === 'bottom' ? 'right' : 'bottom';
+    }, [settings.propertiesPanelPosition]);
+
+    const isPropertiesOnRight = settings.propertiesPanelPosition === 'right';
+
     return (
-        <div className="flex h-screen w-screen overflow-hidden text-foreground bg-background">
-            <div className="w-1/4 min-w-[250px] border-r">
-                <WindowTree
-                    windows={windows}
-                    selectedHandle={activeHandle}
-                    onSelectWindow={setActiveHandle}
-                    onRefresh={refresh}
-                />
+        <div className="flex flex-col h-screen w-screen overflow-hidden text-foreground bg-background">
+            {/* Header */}
+            <div className="flex items-center justify-between px-3 py-1.5 border-b bg-muted/30">
+                <span className="text-sm font-medium">Windows UI Automation Monitor</span>
+                <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={togglePropertiesPosition}
+                    title={isPropertiesOnRight ? "Move properties panel to bottom" : "Move properties panel to right"}
+                >
+                    {isPropertiesOnRight ? <PanelBottomIcon className="size-4" /> : <PanelRightIcon className="size-4" />}
+                </Button>
             </div>
 
-            <div className="flex-1 flex flex-col min-w-0">
-                <WindowInfo window={activeWindow} />
+            {/* Main content */}
+            <ResizablePanelGroup
+                orientation="horizontal"
+                onLayoutChange={handleMainPanelResize}
+                className="flex-1"
+            >
+                {/* Left panel - Window Tree */}
+                <ResizablePanel
+                    defaultSize={settings.mainPanelSize}
+                    minSize={15}
+                    maxSize={50}
+                >
+                    <WindowTree
+                        windows={windows}
+                        selectedHandle={activeHandle}
+                        onSelectWindow={setActiveHandle}
+                        onRefresh={refresh}
+                    />
+                </ResizablePanel>
 
-                <div className="flex-1 flex flex-col min-h-0">
-                    <div className="flex-1 overflow-auto border-b">
-                        <Suspense fallback={<div className="p-4 text-muted-foreground">Loading controls...</div>}>
-                            <ControlTreeLoader
-                                selectedControl={selectedControl}
-                                onSelectControl={setSelectedControl}
-                                onInvoke={handleInvoke}
-                            />
-                        </Suspense>
-                    </div>
+                <ResizableHandle />
 
-                    <div className="h-1/3 min-h-[150px]">
-                        <PropertiesPanel control={selectedControl} />
+                {/* Right panel - Window Info, Control Tree, Properties */}
+                <ResizablePanel defaultSize={100 - settings.mainPanelSize} minSize={50}>
+                    <div className="flex flex-col h-full">
+                        <WindowInfo window={activeWindow} />
+
+                        <ResizablePanelGroup
+                            orientation={isPropertiesOnRight ? "horizontal" : "vertical"}
+                            onLayoutChange={handleControlPanelResize}
+                            className="flex-1"
+                        >
+                            {/* Control Tree */}
+                            <ResizablePanel
+                                defaultSize={settings.controlPanelSize}
+                                minSize={20}
+                            >
+                                <div className="h-full overflow-auto">
+                                    <Suspense fallback={<div className="p-4 text-muted-foreground">Loading controls...</div>}>
+                                        <ControlTreeLoader
+                                            selectedControl={selectedControl}
+                                            onSelectControl={setSelectedControl}
+                                            onInvoke={handleInvoke}
+                                        />
+                                    </Suspense>
+                                </div>
+                            </ResizablePanel>
+
+                            <ResizableHandle />
+
+                            {/* Properties Panel */}
+                            <ResizablePanel
+                                defaultSize={100 - settings.controlPanelSize}
+                                minSize={15}
+                            >
+                                <PropertiesPanel control={selectedControl} />
+                            </ResizablePanel>
+                        </ResizablePanelGroup>
                     </div>
-                </div>
-            </div>
+                </ResizablePanel>
+            </ResizablePanelGroup>
         </div>
     );
 }

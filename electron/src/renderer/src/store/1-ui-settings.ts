@@ -5,14 +5,24 @@ const STORE_KEY = "win-watch-25";
 const STORE_VER = "v1.0";
 const STORAGE_ID = `${STORE_KEY}__${STORE_VER}`;
 
+export type PropertiesPanelPosition = 'bottom' | 'right';
+
 export interface AppSettings {
     showFooter: boolean;
     theme: ThemeMode;
+    // Panel sizes (percentages)
+    mainPanelSize: number; // Left panel (WindowTree) size
+    controlPanelSize: number; // Control tree size (relative to control+properties area)
+    // Properties panel position
+    propertiesPanelPosition: PropertiesPanelPosition;
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
     showFooter: true,
     theme: "light",
+    mainPanelSize: 25,
+    controlPanelSize: 70,
+    propertiesPanelPosition: 'bottom',
 };
 
 // Load settings from localStorage
