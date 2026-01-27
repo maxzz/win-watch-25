@@ -1,4 +1,17 @@
+type PointXY = {            // Point with 2 numbers, it can be client or screen coordinates
+    x: number;
+    y: number;
+};
+
+type Rect4 = {              // Rectangle with 4 numbers, it can be client or screen coordinates
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+};
+
 // Types for highlight API
+
 interface HighlightBounds {
     x: number;
     y: number;
@@ -13,6 +26,7 @@ interface HighlightOptions {
 }
 
 // API exposed by preload script
+
 interface WinWatchApi {
     getTopLevelWindows: () => Promise<string>;
     getControlTree: (handle: string) => Promise<string>;
@@ -25,11 +39,3 @@ interface WinWatchApi {
 }
 
 declare var tmApi: WinWatchApi;
-
-// declare global {
-//     interface Window {
-//         tmApi: WinWatchApi;
-//     }
-// }
-
-// export {};
