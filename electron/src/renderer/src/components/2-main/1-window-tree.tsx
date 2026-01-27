@@ -22,7 +22,7 @@ export function WindowTree({ windows, selectedHandle, onSelectWindow, onRefresh 
             <div className="flex-1 overflow-auto">
                 {windows.map(
                     (w, i) => (
-                        <WindowNode key={i} window={w} selectedHandle={selectedHandle} onSelect={onSelectWindow} depth={0} />
+                        <WindowNode key={i} windowInfo={w} selectedHandle={selectedHandle} onSelect={onSelectWindow} depth={0} />
                     )
                 )}
             </div>
@@ -30,17 +30,17 @@ export function WindowTree({ windows, selectedHandle, onSelectWindow, onRefresh 
     );
 }
 
-function WindowNode({ window, selectedHandle, onSelect, depth }: { window: WindowInfo; selectedHandle: string | null; onSelect: (h: string) => void; depth: number; }) {
+function WindowNode({ windowInfo, selectedHandle, onSelect, depth }: { windowInfo: WindowInfo; selectedHandle: string | null; onSelect: (h: string) => void; depth: number; }) {
     const [expanded, setExpanded] = useState(false);
-    const isSelected = window.handle === selectedHandle;
-    const hasChildren = window.children && window.children.length > 0;
+    const isSelected = windowInfo.handle === selectedHandle;
+    const hasChildren = windowInfo.children && windowInfo.children.length > 0;
 
     return (
         <div>
             <div
-                className={`px-2 py-0.5 cursor-pointer hover:bg-accent/50 flex items-center ${isSelected ? 'bg-accent text-accent-foreground' : ''}`}
+                className={`px-2 py-0.5 cursor-pointer flex items-center ${isSelected ? 'bg-red-500 text-accent-foreground' : 'hover:bg-accent/50'}`}
                 style={{ paddingLeft: `${depth * 12 + 4}px` }}
-                onClick={() => onSelect(window.handle)}
+                onClick={() => onSelect(windowInfo.handle)}
             >
                 <span
                     className="mr-1 size-4 flex items-center justify-center"
@@ -54,19 +54,19 @@ function WindowNode({ window, selectedHandle, onSelect, depth }: { window: Windo
 
                 <IconMonitor className="shrink-0 mr-0.5 size-3.5 text-muted-foreground" />
 
-                <span className="text-xs truncate" title={window.title || "No Title"}>
+                <span className="text-xs truncate" title={windowInfo.title || "No Title"}>
                     {/* <span className="ml-1 text-xs text-muted-foreground">
                         {window.handle}
                     </span> */}
-                    {window.title || `[${window.processName}]`}
+                    {windowInfo.title || `[${windowInfo.processName}]`}
                 </span>
             </div>
 
             {expanded && hasChildren && (
                 <div>
-                    {window.children!.map(
+                    {windowInfo.children!.map(
                         (child, i) => (
-                            <WindowNode key={i} window={child} selectedHandle={selectedHandle} onSelect={onSelect} depth={depth + 1} />
+                            <WindowNode key={i} windowInfo={child} selectedHandle={selectedHandle} onSelect={onSelect} depth={depth + 1} />
                         )
                     )}
                 </div>
