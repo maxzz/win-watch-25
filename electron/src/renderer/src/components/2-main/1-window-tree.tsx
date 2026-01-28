@@ -5,9 +5,10 @@ import { ChevronRight as IconChevronRight, ChevronDown as IconChevronDown, Monit
 import { classNames } from "@renderer/utils";
 import { useWindowList } from "@renderer/store/hooks/useWindowList";
 import { activeHandleAtom } from "@renderer/store/2-active-window";
+import { WindowTreeRefreshButton } from "./window-tree-refresh-button";
 
 export function WindowTreePanel() {
-    const { windowInfos, refresh } = useWindowList();
+    const { windowInfos } = useWindowList();
     const [activeHandle, setActiveHandle] = useAtom(activeHandleAtom);
 
     return (
@@ -15,16 +16,14 @@ export function WindowTreePanel() {
             windowInfos={windowInfos}
             selectedHandle={activeHandle}
             onSelectWindow={setActiveHandle}
-            onRefresh={refresh}
         />
     );
 }
 
-function WindowTree({ windowInfos, selectedHandle, onSelectWindow, onRefresh }: {
+function WindowTree({ windowInfos, selectedHandle, onSelectWindow }: {
     windowInfos: WindowInfo[];
     selectedHandle: string | null;
     onSelectWindow: (handle: string) => void;
-    onRefresh: () => void;
 }) {
     return (
         <div className="h-full bg-card border-r flex flex-col">
@@ -32,9 +31,7 @@ function WindowTree({ windowInfos, selectedHandle, onSelectWindow, onRefresh }: 
                 <span className="text-sm font-semibold">
                     Windows
                 </span>
-                <button onClick={onRefresh} className="px-2 py-1 text-xs text-primary-foreground bg-primary rounded hover:bg-primary/90">
-                    Refresh
-                </button>
+                <WindowTreeRefreshButton />
             </div>
 
             <div className="flex-1 overflow-auto">
