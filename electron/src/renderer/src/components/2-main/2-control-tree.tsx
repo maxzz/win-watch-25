@@ -1,26 +1,44 @@
-import { useState } from "react";
-import { useAtom } from "jotai";
-import { selectedControlAtom } from "@renderer/store/2-active-window";
+import { useState, Suspense } from "react";
+import { useAtom, useAtomValue } from "jotai";
+import { selectedControlAtom, activeHandleAtom, controlTreeAtom } from "@renderer/store/2-active-window";
 import { ControlNode } from "@renderer/types";
 import { ChevronRight, ChevronDown, Box, MousePointerClick } from "lucide-react";
 
-export function ControlTree({ root, onInvoke }: {
-    root: ControlNode | null;
-    onInvoke: (control: ControlNode) => void;
-}) {
+export function ControlTreeLoader() {
+    const controlTree = useAtomValue(controlTreeAtom);
+    const activeHandle = useAtomValue(activeHandleAtom);
+
+    async function handleInvoke(control: ControlNode) {
+        if (activeHandle && control.runtimeId) {
+            console.log("Invoking", control.name);
+            await tmApi.invokeControl(activeHandle, control.runtimeId);
+        }
+    }
+
+    return (
+        <Suspense fallback={<div className="p-4 text-muted-foreground">Loading controls...</div>}>
+            <ControlTree
+                root={controlTree}
+                onInvoke={handleInvoke}
+            />
+        </Suspense>
+    );
+}
+
+function ControlTree({ root, onInvoke }: { root: ControlNode | null; onInvoke: (control: ControlNode) => void; }) {
     const [selectedControl, setSelectedControl] = useAtom(selectedControlAtom);
     if (!root) {
         return (
-            <div className="p-4 text-muted-foreground text-center">
+            <div className="p-4 text-center text-muted-foreground">
                 No control tree available
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col h-full bg-card">
+        <div className="h-full bg-card flex flex-col">
             <div className="p-2 border-b bg-muted/20">
-                <span className="font-semibold text-sm">
+                <span className="text-sm font-semibold">
                     Control Hierarchy
                 </span>
             </div>
@@ -50,21 +68,24 @@ function ControlTreeNode({ node, selectedNode, onSelect, onInvoke, depth }: {
     return (
         <div>
             <div
-                className={`flex items-center py-1 px-2 cursor-pointer hover:bg-accent/50 ${isSelected ? 'bg-accent text-accent-foreground' : ''}`}
-                style={{ paddingLeft: `${depth * 12 + 4}px` }}
+                className={`px-2 1py-1 hover:bg-accent/50 cursor-pointer flex items-center ${isSelected ? 'bg-accent text-accent-foreground' : ''}`}
+                style={{ paddingLeft: `${depth * 20 + 4}px` }}
                 onClick={() => onSelect(node)}
             >
                 <span
-                    className="mr-1 w-4 h-4 flex items-center justify-center"
+                    className="mr-1 size-4 flex items-center justify-center"
                     onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
                 >
-                    {hasChildren && (expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />)}
+                    {hasChildren && (expanded
+                        ? <ChevronDown className="size-3.5" />
+                        : <ChevronRight className="size-3.5" />
+                    )}
                 </span>
 
                 <Box size={14} className="mr-2 text-blue-500" />
 
-                <span className="truncate text-sm" title={node.name}>
-                    {node.controlType} {node.name ? `"${node.name}"` : ""}
+                <span className="text-sm truncate" title={node.name}>
+                    type: {node.controlType} {node.name ? `name: "${node.name}"` : ""}
                 </span>
 
                 {isSelected && (
@@ -73,7 +94,7 @@ function ControlTreeNode({ node, selectedNode, onSelect, onInvoke, depth }: {
                         title="Invoke"
                         onClick={(e) => { e.stopPropagation(); onInvoke(node); }}
                     >
-                        <MousePointerClick size={12} />
+                        <MousePointerClick className="size-3" />
                     </button>
                 )}
             </div>

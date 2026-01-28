@@ -1,11 +1,11 @@
 import { useSetAtom } from "jotai";
 import { useSnapshot } from "valtio";
 import { appSettings, setPanelLayoutAtom } from "@renderer/store/1-ui-settings";
-import { WindowTreePanel, ControlTreeLoader } from "../2-main/0-panel-loaders";
+import { WindowTreePanel } from "../2-main/1-window-tree";
+import { ControlTreeLoader } from "../2-main/2-control-tree";
 import { PropertiesPanel } from "../2-main/3-properties-panel";
 import { WindowInfo } from "../2-main/4-window-info";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "../ui/shadcn/resizable";
-import { type Layout } from "react-resizable-panels";
 
 export function MainContent({ className }: { className?: string; }) {
     const { panelLayout, propertiesPanelPosition } = useSnapshot(appSettings);

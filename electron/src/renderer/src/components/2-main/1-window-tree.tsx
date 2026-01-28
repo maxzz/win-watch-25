@@ -1,9 +1,26 @@
 import { useState } from "react";
+import { useAtom } from "jotai";
 import { type WindowInfo } from "@renderer/types";
 import { ChevronRight as IconChevronRight, ChevronDown as IconChevronDown, Monitor as IconMonitor } from "lucide-react";
 import { classNames } from "@renderer/utils";
+import { useWindowList } from "@renderer/store/hooks/useWindowList";
+import { activeHandleAtom } from "@renderer/store/2-active-window";
 
-export function WindowTree({ windowInfos, selectedHandle, onSelectWindow, onRefresh }: {
+export function WindowTreePanel() {
+    const { windowInfos, refresh } = useWindowList();
+    const [activeHandle, setActiveHandle] = useAtom(activeHandleAtom);
+
+    return (
+        <WindowTree
+            windowInfos={windowInfos}
+            selectedHandle={activeHandle}
+            onSelectWindow={setActiveHandle}
+            onRefresh={refresh}
+        />
+    );
+}
+
+function WindowTree({ windowInfos, selectedHandle, onSelectWindow, onRefresh }: {
     windowInfos: WindowInfo[];
     selectedHandle: string | null;
     onSelectWindow: (handle: string) => void;
