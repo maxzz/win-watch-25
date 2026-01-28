@@ -1,6 +1,6 @@
-import { useCallback } from "react";
+import { useSetAtom } from "jotai";
 import { useSnapshot } from "valtio";
-import { type PanelId, appSettings } from "@renderer/store/1-ui-settings";
+import { appSettings, setPanelLayoutAtom } from "@renderer/store/1-ui-settings";
 import { WindowTreePanel, ControlTreeLoader } from "../2-main/0-panel-loaders";
 import { PropertiesPanel } from "../2-main/3-properties-panel";
 import { WindowInfo } from "../2-main/4-window-info";
@@ -15,19 +15,12 @@ export function MainContent({ className }: { className?: string; }) {
     const controlPanelSize = panelLayout["controls-panel"] ?? 20;
     const controlPropsPanelSize = panelLayout["control-props-panel"] ?? 80;
 
-    const handleLayout = useCallback(
-        (layout: Layout) => {
-            for (const [key, value] of Object.entries(layout)) {
-                appSettings.panelLayout[key as PanelId] = value;
-            }
-            console.log("Layout changed", layout);
-        },
-        []);
+    const setPanelLayout = useSetAtom(setPanelLayoutAtom);
 
     const isPropertiesOnRight = propertiesPanelPosition === 'right';
 
     return (
-        <ResizablePanelGroup className={className} orientation="horizontal" onLayoutChanged={handleLayout}>
+        <ResizablePanelGroup className={className} orientation="horizontal" onLayoutChanged={setPanelLayout}>
             {/* Left panel - Window Tree */}
             <ResizablePanel id="left-panel" minSize="15px" maxSize="75%" defaultSize={mainPanelSize}>
                 <WindowTreePanel />
@@ -43,7 +36,7 @@ export function MainContent({ className }: { className?: string; }) {
                     <ResizablePanelGroup
                         className="flex-1"
                         orientation={isPropertiesOnRight ? "horizontal" : "vertical"}
-                        onLayoutChanged={handleLayout}
+                        onLayoutChanged={setPanelLayout}
                     >
                         {/* Control Tree */}
                         <ResizablePanel id="controls-panel" minSize="20px" defaultSize={controlPanelSize}>

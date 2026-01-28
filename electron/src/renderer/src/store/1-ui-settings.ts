@@ -1,5 +1,7 @@
 import { proxy, subscribe } from "valtio";
+import { atom } from "jotai";
 import { type ThemeMode, themeApplyMode } from "../utils/theme-apply";
+import type { Layout } from "react-resizable-panels";
 
 const STORE_KEY = "win-watch-25";
 const STORE_VER = "v1.0";
@@ -58,3 +60,14 @@ subscribe(appSettings, () => {
         console.error("Failed to save settings", e);
     }
 });
+
+// Jotai atom setter for panel layout
+export const setPanelLayoutAtom = atom(
+    null,
+    (get, set, layout: Layout) => {
+        for (const [key, value] of Object.entries(layout)) {
+            appSettings.panelLayout[key as PanelId] = value;
+        }
+        console.log("Layout changed", layout);
+    }
+);
