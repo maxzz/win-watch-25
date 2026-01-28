@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from "react";
 import { useAtom } from "jotai";
-import { windowInfosAtom, windowInfosLoadingAtom } from "../2-active-window";
+import { windowInfosAtom, windowInfosLoadingAtom } from "../2-atoms";
 
 export function useWindowList() {
     const [windowInfos, setWindowInfos] = useAtom(windowInfosAtom);

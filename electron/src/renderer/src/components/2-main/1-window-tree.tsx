@@ -4,7 +4,7 @@ import { type WindowInfo } from "@renderer/types";
 import { ChevronRight as IconChevronRight, ChevronDown as IconChevronDown, Monitor as IconMonitor } from "lucide-react";
 import { classNames } from "@renderer/utils";
 import { useWindowList } from "@renderer/store/hooks/useWindowList";
-import { activeHandleAtom } from "@renderer/store/2-active-window";
+import { activeHandleAtom } from "@renderer/store/2-atoms";
 import { WindowTreeRefreshButton } from "./window-tree-refresh-button";
 
 export function WindowTreePanel() {

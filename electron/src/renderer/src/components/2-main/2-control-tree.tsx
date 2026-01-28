@@ -1,6 +1,6 @@
 import { useState, Suspense } from "react";
 import { useAtom, useAtomValue } from "jotai";
-import { selectedControlAtom, activeHandleAtom, controlTreeAtom } from "@renderer/store/2-active-window";
+import { selectedControlAtom, activeHandleAtom, controlTreeAtom } from "@renderer/store/2-atoms";
 import { ControlNode } from "@renderer/types";
 import { ChevronRight, ChevronDown, Box, MousePointerClick } from "lucide-react";
 

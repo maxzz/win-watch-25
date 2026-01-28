@@ -1,5 +1,5 @@
 import { useAtomValue } from "jotai";
-import { activeHandleAtom, windowInfosAtom } from "@renderer/store/2-active-window";
+import { activeHandleAtom, windowInfosAtom } from "@renderer/store/2-atoms";
 
 export function WindowInfo() {
     const windowInfos = useAtomValue(windowInfosAtom);

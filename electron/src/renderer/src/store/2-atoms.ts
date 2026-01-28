@@ -1,12 +1,31 @@
 import { atom } from "jotai";
 import { ControlNode, WindowInfo } from "../types";
 
-export const activeHandleAtom = atom<string | null>(null);
-
-export const selectedControlAtom = atom<ControlNode | null>(null);
+// Window list
 
 export const windowInfosAtom = atom<WindowInfo[]>([]);
 export const windowInfosLoadingAtom = atom<boolean>(false);
+
+export const doRefreshWindowInfosAtom = atom(
+    null,
+    async (get, set) => {
+        set(windowInfosLoadingAtom, true);
+        try {
+            const json = await tmApi.getTopLevelWindows();
+            const data = JSON.parse(json);
+            set(windowInfosAtom, data);
+        } catch (e) {
+            console.error("Failed to fetch windows", e);
+        } finally {
+            set(windowInfosLoadingAtom, false);
+        }
+    }
+);
+
+export const activeWindowInfoAtom = atom<WindowInfo | null>(null);
+export const activeHandleAtom = atom<string | null>(null);
+
+// Control tree
 
 export const controlTreeAtom = atom(
     async (get): Promise<ControlNode | null> => {
@@ -26,8 +45,9 @@ export const controlTreeAtom = atom(
     }
 );
 
-export const activeWindowInfoAtom = atom<WindowInfo | null>(null);
+export const selectedControlAtom = atom<ControlNode | null>(null);
 
+//
 
 // Start monitoring this specific window if needed, or just fetch tree
 // The "StartMonitoring" in API is global for "active window changes".

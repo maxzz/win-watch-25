@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSetAtom } from "jotai";
-import { activeHandleAtom } from "../2-active-window";
+import { activeHandleAtom } from "../2-atoms";
 
 export function useActiveWindow(initialHandle: string | null) {
     const setActiveHandle = useSetAtom(activeHandleAtom);
