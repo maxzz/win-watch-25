@@ -1,43 +1,26 @@
 import { useState } from "react";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { type WindowInfo } from "@renderer/types";
 import { ChevronRight as IconChevronRight, ChevronDown as IconChevronDown, Monitor as IconMonitor } from "lucide-react";
 import { classNames } from "@renderer/utils";
-import { useWindowList } from "@renderer/store/hooks/useWindowList";
-import { activeHandleAtom } from "@renderer/store/2-atoms";
-import { WindowTreeRefreshButton } from "./window-tree-refresh-button";
+import { activeHandleAtom, windowInfosAtom } from "@renderer/store/2-atoms";
 
 export function WindowTreePanel() {
-    const { windowInfos } = useWindowList();
+    const windowInfos: WindowInfo[] = useAtomValue(windowInfosAtom);
     const [activeHandle, setActiveHandle] = useAtom(activeHandleAtom);
 
-    return (
-        <WindowTree
-            windowInfos={windowInfos}
-            selectedHandle={activeHandle}
-            onSelectWindow={setActiveHandle}
-        />
-    );
-}
-
-function WindowTree({ windowInfos, selectedHandle, onSelectWindow }: {
-    windowInfos: WindowInfo[];
-    selectedHandle: string | null;
-    onSelectWindow: (handle: string) => void;
-}) {
     return (
         <div className="h-full bg-card border-r flex flex-col">
             <div className="p-2 bg-muted/20 border-b flex justify-between items-center">
                 <span className="text-sm font-semibold">
                     Windows
                 </span>
-                <WindowTreeRefreshButton />
             </div>
 
             <div className="flex-1 overflow-auto">
                 {windowInfos.map(
                     (windowInfo, i) => (
-                        <WindowNode key={i} windowInfo={windowInfo} selectedHandle={selectedHandle} onSelect={onSelectWindow} depth={0} />
+                        <WindowNode key={i} windowInfo={windowInfo} selectedHandle={activeHandle} onSelect={setActiveHandle} depth={0} />
                     )
                 )}
             </div>
