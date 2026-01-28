@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 import { ControlNode, WindowInfo } from "../types";
+import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 
 // Window list
 
@@ -73,3 +74,37 @@ export const selectedControlAtom = atom<ControlNode | null>(null);
 //         console.error("Failed to fetch control tree", e);
 //     }
 // }
+
+// Highlight selected window
+
+export const doHighlightSelectedWindowAtom = atom(
+    null,
+    async (get, set) => {
+        const activeHandle = get(activeHandleAtom);
+        if (!activeHandle) return;
+
+        try {
+            const rectJson = await tmApi.getWindowRect(activeHandle);
+            const rect = JSON.parse(rectJson);
+            if (!rect) {
+                notice.error(`Failed to get window rectangle of selected window (handle: ${activeHandle})`);
+                return;
+            }
+
+            const { left, top, right, bottom } = rect;
+            const bounds = {
+                x: left,
+                y: top,
+                width: right - left,
+                height: bottom - top
+            };
+            await tmApi.highlightRect(bounds, { blinkCount: 3, color: 0xFF8400, borderWidth: 2 });
+            notice.success(`Highlighted selected window (handle: ${activeHandle})`);
+        } catch (e) {
+            console.error(`Failed to highlight selected window (handle: ${activeHandle})`, e);
+            notice.error(`Failed to highlight selected window (handle: ${activeHandle})`);
+        }
+    }
+);
+
+//

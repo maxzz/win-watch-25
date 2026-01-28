@@ -4,7 +4,7 @@ import { classNames } from "@renderer/utils";
 import { appSettings } from "@renderer/store/1-ui-settings";
 import { PanelBottomIcon, PanelRightIcon, Crosshair } from "lucide-react";
 import { Button } from "../ui/shadcn/button";
-import { activeHandleAtom, doRefreshWindowInfosAtom } from "@renderer/store/2-atoms";
+import { activeHandleAtom, doHighlightSelectedWindowAtom, doRefreshWindowInfosAtom } from "@renderer/store/2-atoms";
 import { IconRefresh } from "../ui/icons";
 
 export function AppHeader({ className }: { className?: string; }) {
@@ -55,32 +55,12 @@ function Button_WindowTreeRefresh() {
 
 function Button_HighlightSelectedWindow() {
     const activeHandle = useAtomValue(activeHandleAtom);
-
-    const handleHighlight = async () => {
-        if (!activeHandle) return;
-
-        // Get fresh window rectangle from native API
-        const rectJson = await tmApi.getWindowRect(activeHandle);
-        const rect = JSON.parse(rectJson);
-        
-        if (!rect) return;
-
-        const { left, top, right, bottom } = rect;
-        const bounds = {
-            x: left,
-            y: top,
-            width: right - left,
-            height: bottom - top
-        };
-
-        await tmApi.highlightRect(bounds, { blinkCount: 5 });
-    };
-
+    const doHighlightSelectedWindow = useSetAtom(doHighlightSelectedWindowAtom);
     return (
         <Button
             variant="outline"
             size="xs"
-            onClick={handleHighlight}
+            onClick={doHighlightSelectedWindow}
             disabled={!activeHandle}
             title="Highlight selected window"
         >
