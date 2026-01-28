@@ -7,12 +7,13 @@ const STORAGE_ID = `${STORE_KEY}__${STORE_VER}`;
 
 export type PropertiesPanelPosition = 'bottom' | 'right';
 
+export type PanelId = "left-panel" | "right-panel" | "controls-panel" | "control-props-panel";
+export type PanelLayout = Record<PanelId, number>;
+
 export interface AppSettings {
     showFooter: boolean;
     theme: ThemeMode;
-    // Panel sizes (percentages)
-    mainPanelSize: number; // Left panel (WindowTree) size
-    controlPanelSize: number; // Control tree size (relative to control+properties area)
+    panelLayout: PanelLayout; // Panel sizes (percentages) 
     // Properties panel position
     propertiesPanelPosition: PropertiesPanelPosition;
 }
@@ -20,8 +21,12 @@ export interface AppSettings {
 const DEFAULT_SETTINGS: AppSettings = {
     showFooter: true,
     theme: "light",
-    mainPanelSize: 25,
-    controlPanelSize: 70,
+    panelLayout: {
+        "left-panel": 25,
+        "right-panel": 75,
+        "controls-panel": 20,
+        "control-props-panel": 80,
+    },
     propertiesPanelPosition: 'bottom',
 };
 
@@ -32,7 +37,8 @@ function loadSettings(): AppSettings {
         const stored = localStorage.getItem(STORAGE_ID);
         if (stored) {
             // merge stored settings with defaults to ensure new fields are present
-            return { ...DEFAULT_SETTINGS, ...JSON.parse(stored) };
+            const rv =  { ...DEFAULT_SETTINGS, ...JSON.parse(stored) };
+            return rv;
         }
     } catch (e) {
         console.error("Failed to load settings", e);

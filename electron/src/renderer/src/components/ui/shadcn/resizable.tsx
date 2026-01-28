@@ -1,29 +1,18 @@
-"use client"; // 01.26.26
+"use client"; // 01.07.26
 import * as React from "react";
 import { cn } from "@renderer/utils";
 import { GripVerticalIcon } from "lucide-react";
 import { Group, Panel, Separator } from "react-resizable-panels";
 
-interface ResizablePanelGroupProps {
-    children?: React.ReactNode;
-    className?: string;
-    orientation?: 'horizontal' | 'vertical';
-    onLayoutChange?: (layout: readonly number[]) => void;
-    onLayoutChanged?: (layout: readonly number[]) => void;
-    style?: React.CSSProperties;
-    id?: string;
-    disabled?: boolean;
-}
-
-export function ResizablePanelGroup({ className, orientation = 'horizontal', ...props }: ResizablePanelGroupProps) {
-    const groupProps = {
-        className: cn("w-full h-full flex data-[panel-group-direction=vertical]:flex-col group/panel-group", className),
-        "data-slot": "resizable-panel-group",
-        "data-panel-group-direction": orientation,
-        direction: orientation,
-        ...props
-    };
-    return <Group {...groupProps as React.ComponentProps<typeof Group>} />;
+export function ResizablePanelGroup({ className, ...props }: React.ComponentProps<typeof Group>) {
+    return (
+        <Group
+            data-slot="resizable-panel-group"
+            className={cn("w-full h-full flex data-[panel-group-direction=vertical]:flex-col group/panel-group", className)}
+            data-panel-group-direction={props.orientation}
+            {...props}
+        />
+    );
 }
 
 export function ResizablePanel({ ...props }: React.ComponentProps<typeof Panel>) {
@@ -32,7 +21,7 @@ export function ResizablePanel({ ...props }: React.ComponentProps<typeof Panel>)
 
 export function ResizableHandle({ withHandle, className, ...props }: React.ComponentProps<typeof Separator> & { withHandle?: boolean; }) {
     return (
-        <Separator data-slot="resizable-handle" className={cn(resizableLineClasses, className)} {...props}>
+        <Separator data-slot="resizable-handle" className={cn(resizableLineClasses, className)}            {...props}>
             {withHandle && (
                 <div className={resizableHandleClasses}>
                     <GripVerticalIcon className="size-2.5" />
