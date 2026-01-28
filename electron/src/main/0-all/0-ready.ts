@@ -7,6 +7,8 @@ import { setAppWindowListeners } from "../1-start-main-window/2-2-listeners-of-a
 import { iniFileOptions } from "../1-start-main-window/8-ini-file-options";
 
 app.whenReady().then(() => {
+    console.log('main-process-ready'); // This is marker for vscode to start debugger in launch.json. Don't remove this line!
+
     electronApp.setAppUserModelId('com.electron');
 
     app.on('browser-window-created', (_, window) => {

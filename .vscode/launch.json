@@ -2,20 +2,26 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug Main Process",
+            "name": "Debug Electron",
             "type": "node",
             "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "runtimeExecutable": "pnpm",
+            "cwd": "${workspaceFolder}/electron",
+            "runtimeExecutable": "${workspaceFolder}/electron/node_modules/.bin/electron-vite.cmd",
             "runtimeArgs": [
-                "run",
-                "dev"
+                "dev",
+                "--",
+                "--remote-debugging-port=9222"
             ],
             "console": "integratedTerminal",
             "autoAttachChildProcesses": true,
             "skipFiles": [
                 "<node_internals>/**"
-            ]
+            ],
+            "serverReadyAction": {
+                "action": "startDebugging",
+                "pattern": "main-process-ready",
+                "name": "Debug Renderer"
+            }
         },
         {
             "name": "Debug Renderer",
@@ -23,16 +29,10 @@
             "request": "attach",
             "port": 9222,
             "webRoot": "${workspaceFolder}/electron/src/renderer",
-            "timeout": 30000
-        }
-    ],
-    "compounds": [
-        {
-            "name": "Debug All",
-            "configurations": [
-                "Debug Main Process",
-                "Debug Renderer"
-            ]
+            "timeout": 60000,
+            "presentation": {
+                "hidden": true
+            }
         }
     ]
 }
