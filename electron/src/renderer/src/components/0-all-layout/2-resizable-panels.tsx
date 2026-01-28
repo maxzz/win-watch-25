@@ -31,7 +31,6 @@ export function MainContent({ className }: { className?: string; }) {
             {/* Right panel - Window Info, Control Tree, Properties */}
             <ResizablePanel id="right-panel" defaultSize={rightPanelSize} minSize="50px">
                 <div className="flex flex-col h-full">
-                    <WindowInfo />
 
                     <ResizablePanelGroup
                         className="flex-1"
@@ -52,6 +51,8 @@ export function MainContent({ className }: { className?: string; }) {
                             <PropertiesPanel />
                         </ResizablePanel>
                     </ResizablePanelGroup>
+
+                    <WindowInfo />
                 </div>
             </ResizablePanel>
         </ResizablePanelGroup>

@@ -68,6 +68,5 @@ export const setPanelLayoutAtom = atom(
         for (const [key, value] of Object.entries(layout)) {
             appSettings.panelLayout[key as PanelId] = value;
         }
-        console.log("Layout changed", layout);
     }
 );

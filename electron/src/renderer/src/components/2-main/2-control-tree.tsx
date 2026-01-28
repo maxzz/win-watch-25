@@ -68,7 +68,7 @@ function ControlTreeNode({ node, selectedNode, onSelect, onInvoke, depth }: {
     return (
         <div>
             <div
-                className={`px-2 1py-1 hover:bg-accent/50 cursor-pointer flex items-center ${isSelected ? 'bg-accent text-accent-foreground' : ''}`}
+                className={`px-2 h-5 hover:bg-accent/50 cursor-pointer flex items-center ${isSelected ? 'bg-accent text-accent-foreground' : ''}`}
                 style={{ paddingLeft: `${depth * 20 + 4}px` }}
                 onClick={() => onSelect(node)}
             >
@@ -84,7 +84,7 @@ function ControlTreeNode({ node, selectedNode, onSelect, onInvoke, depth }: {
 
                 <Box size={14} className="mr-2 text-blue-500" />
 
-                <span className="text-sm truncate" title={node.name}>
+                <span className="text-xs truncate" title={node.name}>
                     type: {node.controlType} {node.name ? `name: "${node.name}"` : ""}
                 </span>
 
