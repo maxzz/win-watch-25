@@ -6,6 +6,7 @@
 #include <atomic>
 #include <thread>
 #include <mutex>
+#include <sstream>
 
 static ActiveWindowChangedCallback g_Callback = nullptr;
 static HWINEVENTHOOK g_hHook = nullptr;
@@ -110,6 +111,27 @@ void HighlightRect(int x, int y, int width, int height, int color, int borderWid
 
 void HideHighlight() {
     ControlHighlighter::GetInstance().Hide();
+}
+
+const char* GetWindowRectJson(HWND hwnd) {
+    if (!IsWindow(hwnd)) {
+        return _strdup("null");
+    }
+    
+    RECT rect;
+    if (!GetWindowRect(hwnd, &rect)) {
+        return _strdup("null");
+    }
+    
+    std::ostringstream json;
+    json << "{";
+    json << "\"left\":" << rect.left << ",";
+    json << "\"top\":" << rect.top << ",";
+    json << "\"right\":" << rect.right << ",";
+    json << "\"bottom\":" << rect.bottom;
+    json << "}";
+    
+    return _strdup(json.str().c_str());
 }
 
 bool InvokeControl(HWND hwnd, const char* runtimeId) {

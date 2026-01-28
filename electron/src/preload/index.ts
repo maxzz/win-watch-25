@@ -27,6 +27,9 @@ const mainLocalApi: WinWatchApi = {
     
     // Hide the highlight rectangle
     hideHighlight: () => ipcRenderer.invoke('hide-highlight'),
+
+    // Get current window rectangle in screen coordinates
+    getWindowRect: (handle: string) => ipcRenderer.invoke('get-window-rect', handle),
 };
 
 try {

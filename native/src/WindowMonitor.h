@@ -46,6 +46,10 @@ extern "C" {
     // Hide the highlight rectangle
     WM_API void HideHighlight();
 
+    // Get current window rectangle in screen coordinates
+    // Returns JSON: {"left": number, "top": number, "right": number, "bottom": number} or null if window not found
+    WM_API const char* GetWindowRectJson(HWND hwnd);
+
     // Invoke a control (e.g. click)
     WM_API bool InvokeControl(HWND hwnd, const char* runtimeId);
     

@@ -36,6 +36,7 @@ interface WinWatchApi {
     onActiveWindowChanged: (callback: (data: string) => void) => () => void;
     highlightRect: (bounds: HighlightBounds, options?: HighlightOptions) => Promise<void>;
     hideHighlight: () => Promise<void>;
+    getWindowRect: (handle: string) => Promise<string>;
 }
 
 declare var tmApi: WinWatchApi;

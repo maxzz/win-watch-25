@@ -4,7 +4,7 @@ import { classNames } from "@renderer/utils";
 import { appSettings } from "@renderer/store/1-ui-settings";
 import { PanelBottomIcon, PanelRightIcon, Crosshair } from "lucide-react";
 import { Button } from "../ui/shadcn/button";
-import { activeHandleAtom, doRefreshWindowInfosAtom, windowInfosAtom } from "@renderer/store/2-atoms";
+import { activeHandleAtom, doRefreshWindowInfosAtom } from "@renderer/store/2-atoms";
 import { IconRefresh } from "../ui/icons";
 
 export function AppHeader({ className }: { className?: string; }) {
@@ -55,16 +55,17 @@ function Button_WindowTreeRefresh() {
 
 function Button_HighlightSelectedWindow() {
     const activeHandle = useAtomValue(activeHandleAtom);
-    const windowInfos = useAtomValue(windowInfosAtom);
 
     const handleHighlight = async () => {
         if (!activeHandle) return;
 
-        // Find the window info for the active handle
-        const windowInfo = windowInfos.find(w => w.handle === activeHandle);
-        if (!windowInfo?.rect) return;
+        // Get fresh window rectangle from native API
+        const rectJson = await tmApi.getWindowRect(activeHandle);
+        const rect = JSON.parse(rectJson);
+        
+        if (!rect) return;
 
-        const { left, top, right, bottom } = windowInfo.rect;
+        const { left, top, right, bottom } = rect;
         const bounds = {
             x: left,
             y: top,

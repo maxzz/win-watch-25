@@ -56,4 +56,10 @@ export function setListenersRenderCalls() {
         if (!winwatchPlugin) return;
         winwatchPlugin.hideHighlight();
     });
+
+    // Get current window rectangle in screen coordinates
+    ipcMain.handle('get-window-rect', (_, handle: string) => {
+        if (!winwatchPlugin) return 'null';
+        return winwatchPlugin.getWindowRect(handle);
+    });
 }

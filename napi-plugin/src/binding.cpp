@@ -136,6 +136,24 @@ Napi::Value HideHighlightWrapper(const Napi::CallbackInfo& info) {
     return info.Env().Undefined();
 }
 
+// Get current window rectangle in screen coordinates
+Napi::Value GetWindowRectWrapper(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    
+    if (info.Length() < 1 || !info[0].IsString()) {
+        Napi::TypeError::New(env, "String expected (window handle)").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+    
+    std::string handleStr = info[0].As<Napi::String>().Utf8Value();
+    HWND hwnd = (HWND)std::stoll(handleStr);
+    
+    const char* json = GetWindowRectJson(hwnd);
+    Napi::String result = Napi::String::New(env, json ? json : "null");
+    FreeString(json);
+    return result;
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     InitializeMonitor();
     
@@ -146,6 +164,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "invokeControl"), Napi::Function::New(env, InvokeControlWrapper));
     exports.Set(Napi::String::New(env, "highlightRect"), Napi::Function::New(env, HighlightRectWrapper));
     exports.Set(Napi::String::New(env, "hideHighlight"), Napi::Function::New(env, HideHighlightWrapper));
+    exports.Set(Napi::String::New(env, "getWindowRect"), Napi::Function::New(env, GetWindowRectWrapper));
     
     return exports;
 }
