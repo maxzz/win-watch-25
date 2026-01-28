@@ -4,6 +4,7 @@ export interface WindowInfo {
   processName: string;
   processId: number;
   className: string;
+  rect: { left: number; top: number; right: number; bottom: number };
   children?: WindowInfo[];
 }
 

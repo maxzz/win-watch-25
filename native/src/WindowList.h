@@ -9,6 +9,7 @@ struct WindowInfo {
     std::string processName;
     DWORD processId;
     std::string className;
+    RECT rect;  // Window rectangle in screen coordinates
     std::vector<WindowInfo> children;
 };
 

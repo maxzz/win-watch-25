@@ -20,6 +20,7 @@ BOOL CALLBACK WindowList::EnumWindowsProc(HWND hwnd, LPARAM lParam) {
     info.processName = GetWindowProcessName(hwnd);
     info.className = GetWindowClassNameStr(hwnd);
     GetWindowThreadProcessId(hwnd, &info.processId);
+    GetWindowRect(hwnd, &info.rect);  // Get window rectangle in screen coordinates
 
     // Filter out empty titles or common invisible system windows if desired
     // For now, keep most
@@ -70,7 +71,13 @@ std::string WindowList::ToJson(const std::vector<WindowInfo>& windows) {
         json << "\"title\":\"" << EscapeJson(w.title) << "\",";
         json << "\"processName\":\"" << EscapeJson(w.processName) << "\",";
         json << "\"className\":\"" << EscapeJson(w.className) << "\",";
-        json << "\"processId\":" << w.processId;
+        json << "\"processId\":" << w.processId << ",";
+        json << "\"rect\":{";
+        json << "\"left\":" << w.rect.left << ",";
+        json << "\"top\":" << w.rect.top << ",";
+        json << "\"right\":" << w.rect.right << ",";
+        json << "\"bottom\":" << w.rect.bottom;
+        json << "}";
         // children logic can be added here if we were enumerating child windows
         json << "}";
     }

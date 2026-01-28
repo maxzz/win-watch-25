@@ -1,10 +1,10 @@
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useSnapshot } from "valtio";
 import { classNames } from "@renderer/utils";
 import { appSettings } from "@renderer/store/1-ui-settings";
-import { PanelBottomIcon, PanelRightIcon } from "lucide-react";
+import { PanelBottomIcon, PanelRightIcon, Crosshair } from "lucide-react";
 import { Button } from "../ui/shadcn/button";
-import { doRefreshWindowInfosAtom } from "@renderer/store/2-atoms";
+import { activeHandleAtom, doRefreshWindowInfosAtom, windowInfosAtom } from "@renderer/store/2-atoms";
 import { IconRefresh } from "../ui/icons";
 
 export function AppHeader({ className }: { className?: string; }) {
@@ -14,7 +14,10 @@ export function AppHeader({ className }: { className?: string; }) {
                 <span className="text-xs font-medium" title="Windows UI Automation Monitor">
                     UI Automation Monitor
                 </span>
-                <Button_WindowTreeRefresh />
+                <div className="flex items-center gap-1">
+                    <Button_WindowTreeRefresh />
+                    <Button_HighlightSelectedWindow />
+                </div>
             </div>
             <Button_TogglePropertiesPosition />
         </div>
@@ -46,6 +49,41 @@ function Button_WindowTreeRefresh() {
             title="Refresh window list (refresh window tree)"
         >
             <IconRefresh className="size-3.5" />
+        </Button>
+    );
+}
+
+function Button_HighlightSelectedWindow() {
+    const activeHandle = useAtomValue(activeHandleAtom);
+    const windowInfos = useAtomValue(windowInfosAtom);
+
+    const handleHighlight = async () => {
+        if (!activeHandle) return;
+
+        // Find the window info for the active handle
+        const windowInfo = windowInfos.find(w => w.handle === activeHandle);
+        if (!windowInfo?.rect) return;
+
+        const { left, top, right, bottom } = windowInfo.rect;
+        const bounds = {
+            x: left,
+            y: top,
+            width: right - left,
+            height: bottom - top
+        };
+
+        await tmApi.highlightRect(bounds, { blinkCount: 5 });
+    };
+
+    return (
+        <Button
+            variant="outline"
+            size="xs"
+            onClick={handleHighlight}
+            disabled={!activeHandle}
+            title="Highlight selected window"
+        >
+            <Crosshair className="size-3.5" />
         </Button>
     );
 }
