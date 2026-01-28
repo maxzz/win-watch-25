@@ -1,5 +1,6 @@
 import { useAtomValue } from "jotai";
 import { selectedControlAtom } from "@renderer/store/2-atoms";
+import { formatControlType } from "@renderer/utils/uia-control-types";
 
 export function PropertiesPanel() {
     const control = useAtomValue(selectedControlAtom);
@@ -14,7 +15,7 @@ export function PropertiesPanel() {
 
     const properties = [
         { label: "Name", value: control.name },
-        { label: "Control Type", value: control.controlType },
+        { label: "Control Type", value: formatControlType(control.controlType) },
         { label: "Automation ID", value: control.automationId },
         { label: "Class Name", value: control.className },
         { label: "Runtime ID", value: control.runtimeId },
