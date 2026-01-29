@@ -5,7 +5,7 @@ import { appSettings } from "@renderer/store/1-ui-settings";
 import { PanelBottomIcon, PanelRightIcon, Crosshair } from "lucide-react";
 import { Button } from "../ui/shadcn/button";
 import { activeHandleAtom, doHighlightSelectedWindowAtom, doRefreshWindowInfosAtom } from "@renderer/store/2-atoms";
-import { IconRefresh } from "../ui/icons";
+import { IconRefresh, Symbol_uia_Toolbar, Symbol_uia_Tooltip, Symbol_uia_Tooltip2 } from "../ui/icons";
 
 export function AppHeader({ className }: { className?: string; }) {
     return (
@@ -17,6 +17,10 @@ export function AppHeader({ className }: { className?: string; }) {
                 <div className="flex items-center gap-1">
                     <Button_WindowTreeRefresh />
                     <Button_HighlightSelectedWindow />
+
+                    <Symbol_uia_Toolbar className="size-3.5" />
+                    <Symbol_uia_Tooltip className="size-3.5" />
+                    <Symbol_uia_Tooltip2 className="size-3.5" />
                 </div>
             </div>
             <Button_TogglePropertiesPosition />
