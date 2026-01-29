@@ -16,6 +16,7 @@ export const doRefreshWindowInfosAtom = atom(
             const data = JSON.parse(json);
             set(windowInfosAtom, data);
         } catch (e) {
+            notice.error("Failed to fetch windows");
             console.error("Failed to fetch windows", e);
         } finally {
             set(windowInfosLoadingAtom, false);
@@ -28,7 +29,7 @@ export const activeHandleAtom = atom<string | null>(null);
 
 // Control tree
 
-export const controlTreeAtom = atom(
+export const doGetWindowControlsTreeAtom = atom(
     async (get): Promise<ControlNode | null> => {
         const activeHandle = get(activeHandleAtom);
         if (!activeHandle) {
@@ -41,12 +42,31 @@ export const controlTreeAtom = atom(
             return tree;
         } catch (e) {
             console.error("Failed to fetch control tree", e);
+            notice.error(`Failed to fetch control tree of window (handle: ${activeHandle})`);
             return null;
         }
     }
 );
 
 export const selectedControlAtom = atom<ControlNode | null>(null);
+
+export const doInvokeControlAtom = atom(
+    null,
+    async (get, _set, control: ControlNode) => {
+        const activeHandle = get(activeHandleAtom);
+        if (!activeHandle || !control.runtimeId) {
+            return;
+        }
+
+        try {
+            console.log("Invoking", control.name);
+            await tmApi.invokeControl(activeHandle, control.runtimeId);
+        } catch (e) {
+            console.error("Failed to invoke control", e);
+            notice.error(`Failed to invoke control (handle: ${activeHandle}, runtimeId: ${control.runtimeId})`);
+        }
+    }
+);
 
 //
 
