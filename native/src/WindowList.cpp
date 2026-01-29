@@ -1,7 +1,6 @@
 #include "WindowList.h"
 #include "Utils.h"
 #include <psapi.h>
-#include <algorithm>
 
 std::vector<WindowInfo> WindowList::EnumerateTopLevelWindows() {
     std::vector<WindowInfo> windows;
@@ -32,11 +31,14 @@ BOOL CALLBACK WindowList::EnumWindowsProc(HWND hwnd, LPARAM lParam) {
 }
 
 std::string WindowList::GetWindowTitle(HWND hwnd) {
-    int len = GetWindowTextLengthA(hwnd);
+    int len = GetWindowTextLengthW(hwnd);
     if (len == 0) return "";
-    std::vector<char> buf(len + 1);
-    GetWindowTextA(hwnd, buf.data(), len + 1);
-    return std::string(buf.data());
+
+    std::wstring buf(static_cast<size_t>(len + 1), L'\0');
+    int copied = GetWindowTextW(hwnd, &buf[0], len + 1);
+    if (copied <= 0) return "";
+    buf.resize(static_cast<size_t>(copied));
+    return WideToUtf8(buf);
 }
 
 std::string WindowList::GetWindowProcessName(HWND hwnd) {
@@ -44,10 +46,11 @@ std::string WindowList::GetWindowProcessName(HWND hwnd) {
     GetWindowThreadProcessId(hwnd, &pid);
     HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
     if (hProcess) {
-        char buf[MAX_PATH];
-        if (GetModuleBaseNameA(hProcess, NULL, buf, MAX_PATH)) {
+        wchar_t buf[MAX_PATH];
+        DWORD copied = GetModuleBaseNameW(hProcess, NULL, buf, MAX_PATH);
+        if (copied > 0) {
             CloseHandle(hProcess);
-            return std::string(buf);
+            return WideToUtf8(std::wstring(buf, buf + copied));
         }
         CloseHandle(hProcess);
     }
@@ -55,9 +58,10 @@ std::string WindowList::GetWindowProcessName(HWND hwnd) {
 }
 
 std::string WindowList::GetWindowClassNameStr(HWND hwnd) {
-    char buf[256];
-    GetClassNameA(hwnd, buf, 256);
-    return std::string(buf);
+    wchar_t buf[256];
+    int copied = GetClassNameW(hwnd, buf, 256);
+    if (copied <= 0) return "";
+    return WideToUtf8(std::wstring(buf, buf + copied));
 }
 
 std::string WindowList::ToJson(const std::vector<WindowInfo>& windows) {
