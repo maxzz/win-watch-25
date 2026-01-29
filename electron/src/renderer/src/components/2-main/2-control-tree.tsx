@@ -2,8 +2,9 @@ import { useState, Suspense } from "react";
 import { useAtom, useAtomValue } from "jotai";
 import { selectedControlAtom, activeHandleAtom, controlTreeAtom } from "@renderer/store/2-atoms";
 import { ControlNode } from "@renderer/types";
-import { ChevronRight, ChevronDown, Box, MousePointerClick } from "lucide-react";
+import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
 import { getControlTypeName } from "@renderer/utils/uia-control-types";
+import { getControlTypeIcon } from "@renderer/utils/uia-control-type-icons";
 
 export function ControlTreeLoader() {
     const controlTree = useAtomValue(controlTreeAtom);
@@ -66,6 +67,8 @@ function ControlTreeNode({ node, selectedNode, onSelect, onInvoke, depth }: {
     const isSelected = selectedNode === node; // simple reference check, might need ID check
     const hasChildren = node.children && node.children.length > 0;
 
+    const ControlIcon = getControlTypeIcon(node.controlType);
+
     return (
         <div>
             <div
@@ -83,7 +86,7 @@ function ControlTreeNode({ node, selectedNode, onSelect, onInvoke, depth }: {
                     )}
                 </span>
 
-                <Box size={14} className="mr-2 text-blue-500" />
+                <ControlIcon size={14} className="mr-2 text-blue-500" />
 
                 <span className="text-xs truncate" title={node.name}>
                     {getControlTypeName(node.controlType)} {node.name ? `"${node.name}"` : ""}
