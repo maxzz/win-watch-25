@@ -1,7 +1,8 @@
 import { useAtomValue } from "jotai";
 import { activeHandleAtom, windowInfosAtom } from "@renderer/store/2-atoms";
+import { normalizeHwnd, asHexNumber } from "@renderer/utils";
 
-export function WindowInfo() {
+export function ActiveWindowInfo() {
     const windowInfos = useAtomValue(windowInfosAtom);
     const activeHandle = useAtomValue(activeHandleAtom);
 
@@ -16,30 +17,35 @@ export function WindowInfo() {
 
     if (!activeWindow) {
         return (
-            <div className="p-2 text-xs text-muted-foreground border-b">
+            <div className={panelClasses}>
                 No active window selected
             </div>
         );
     }
 
     return (
-        <div className="p-2 text-xs border-b bg-muted/10 flex gap-4">
+        <div className={panelClasses}>
             <div>
-                <span className="font-semibold">Handle:</span>
-                {activeWindow.handle}
+                <span className="font-semibold">Handle: </span>
+                {normalizeHwnd(activeWindow.handle)}
             </div>
+
             <div>
-                <span className="font-semibold">Process:</span>
-                {activeWindow.processName} ({activeWindow.processId})
+                <span className="font-semibold">Process: </span>
+                {activeWindow.processName} (PID: {asHexNumber({ value: activeWindow.processId, prefix: true })})
             </div>
+
             <div>
-                <span className="font-semibold">Class:</span>
+                <span className="font-semibold">Class: </span>
                 {activeWindow.className}
             </div>
+
             <div className="flex-1 text-right truncate">
-                <span className="font-semibold">Title:</span>
-                {activeWindow.title}
+                <span className="font-semibold">Title: </span>
+                "{activeWindow.title}"
             </div>
         </div>
     );
 }
+
+const panelClasses = "px-1 py-2 text-xs bg-muted/20 border-t border-foreground/20 flex items-center gap-2";

@@ -4,7 +4,7 @@ import { appSettings, setPanelLayoutAtom } from "@renderer/store/1-ui-settings";
 import { WindowTreePanel } from "../2-main/1-window-tree";
 import { ControlTreeLoader } from "../2-main/2-control-tree";
 import { PropertiesPanel } from "../2-main/3-properties-panel";
-import { WindowInfo } from "../2-main/4-window-info";
+import { ActiveWindowInfo } from "../2-main/4-active-window-info";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "../ui/shadcn/resizable";
 
 export function MainContent({ className }: { className?: string; }) {
@@ -22,7 +22,7 @@ export function MainContent({ className }: { className?: string; }) {
     return (
         <ResizablePanelGroup className={className} orientation="horizontal" onLayoutChanged={setPanelLayout}>
             {/* Left panel - Window Tree */}
-            <ResizablePanel id="left-panel" minSize="15px" maxSize="75%" defaultSize={mainPanelSize}>
+            <ResizablePanel id="left-panel" minSize="15px" maxSize="75%" defaultSize={mainPanelSize} className="11-full h-full">
                 <WindowTreePanel />
             </ResizablePanel>
 
@@ -52,7 +52,7 @@ export function MainContent({ className }: { className?: string; }) {
                         </ResizablePanel>
                     </ResizablePanelGroup>
 
-                    <WindowInfo />
+                    <ActiveWindowInfo />
                 </div>
             </ResizablePanel>
         </ResizablePanelGroup>

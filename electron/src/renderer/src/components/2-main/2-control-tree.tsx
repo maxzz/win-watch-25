@@ -3,39 +3,37 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { selectedControlAtom, doGetWindowControlsTreeAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
 import { ControlNode } from "@renderer/types";
 import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
-import { getControlTypeName } from "@renderer/utils/uia-control-types";
-import { getControlTypeIcon } from "@renderer/utils/uia-control-type-icons";
+import { getControlTypeName } from "@renderer/utils/uia/uia-control-types";
+import { getControlTypeIcon } from "@renderer/utils/uia/uia-control-type-icons";
 
 export function ControlTreeLoader() {
-    const controlTree = useAtomValue(doGetWindowControlsTreeAtom);
+    const windowControlsTree = useAtomValue(doGetWindowControlsTreeAtom);
     return (
         <Suspense fallback={<div className="p-4 text-muted-foreground">Loading controls...</div>}>
-            {!controlTree
+            {!windowControlsTree
                 ? (
                     <div className="p-4 text-center text-muted-foreground">
                         No control tree available
                     </div>
                 ) : (
-                    <ControlTree root={controlTree} />
+                    <ControlTree windowControlsTree={windowControlsTree} />
                 )
             }
         </Suspense>
     );
 }
 
-function ControlTree({ root }: { root: ControlNode; }) {
+function ControlTree({ windowControlsTree }: { windowControlsTree: ControlNode; }) {
     return (
         <div className="h-full bg-card flex flex-col">
-            <div className="p-2 border-b bg-muted/20">
-                <span className="text-sm font-semibold">
+            <div className="px-2 py-1 border-b bg-muted/20 flex items-center">
+                <span className="text-xs font-semibold">
                     Control Hierarchy
                 </span>
             </div>
 
             <div className="flex-1 overflow-auto">
-                <ControlTreeNode
-                    node={root}
-                    depth={0} />
+                <ControlTreeNode node={windowControlsTree} depth={0} />
             </div>
         </div>
     );

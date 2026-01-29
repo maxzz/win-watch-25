@@ -11,8 +11,8 @@ export function WindowTreePanel() {
 
     return (
         <div className="h-full bg-card border-r flex flex-col">
-            <div className="p-2 bg-muted/20 border-b flex justify-between items-center">
-                <span className="text-sm font-semibold">
+            <div className="px-2 py-1 bg-muted/20 border-b flex justify-between items-center">
+                <span className="text-xs font-semibold">
                     Windows
                 </span>
             </div>

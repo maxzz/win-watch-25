@@ -14,3 +14,5 @@ export * from "./theme-apply";
 export * from "./theme-utils";
 export * from "./web-data-transfer-item-list";
 export * from "./x-sub-error";
+
+export * from "./win32/handles";
