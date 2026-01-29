@@ -26,8 +26,8 @@ export const UIA_CONTROL_TYPE_NAMES: Record<string, string> = {
     "50018": "Tab",
     "50019": "TabItem",
     "50020": "Text",
-    "50021": "ToolBar",
-    "50022": "ToolTip",
+    "50021": "ToolBar", //Symbol_uia_Toolbar
+    "50022": "ToolTip", //Symbol_uia_Tooltip
     "50023": "Tree",
     "50024": "TreeItem",
     "50025": "Custom",
