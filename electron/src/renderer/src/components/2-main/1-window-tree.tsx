@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useAtom, useAtomValue } from "jotai";
-import { type WindowInfo } from "@renderer/types";
-import { ChevronRight as IconChevronRight, ChevronDown as IconChevronDown, Monitor as IconMonitor } from "lucide-react";
 import { classNames } from "@renderer/utils";
+import { type WindowInfo } from "@renderer/types";
+import { IconL_AppWindow, IconL_ChevronDown, IconL_ChevronRight } from "../ui/icons";
 import { activeHandleAtom, windowInfosAtom } from "@renderer/store/2-atoms";
 
 export function WindowTreePanel() {
@@ -45,12 +45,12 @@ function WindowNode({ windowInfo, selectedHandle, onSelect, depth }: { windowInf
                     onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
                 >
                     {hasChildren && (expanded
-                        ? <IconChevronDown className="size-3.5" />
-                        : <IconChevronRight className="size-3.5" />
+                        ? <IconL_ChevronDown className="size-3.5" />
+                        : <IconL_ChevronRight className="size-3.5" />
                     )}
                 </span>
 
-                <IconMonitor className="shrink-0 mr-0.5 size-3.5 text-muted-foreground" />
+                <IconL_AppWindow className="shrink-0 mr-0.5 size-3.5 text-muted-foreground" />
 
                 <span className="text-xs truncate" title={windowInfo.title || "No Title"}>
                     {/* <span className="ml-1 text-xs text-muted-foreground">
