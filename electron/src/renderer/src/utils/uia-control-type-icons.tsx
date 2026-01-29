@@ -40,16 +40,25 @@ import {
     MousePointer2,
 } from "lucide-react";
 import { Symbol_uia_Toolbar, Symbol_uia_Tooltip } from "@renderer/components/ui/icons/symbols/ui-automation";
+import { classNames } from "@renderer/utils";
 
-type IconComponent = ComponentType<SVGAttributes<SVGSVGElement> & HTMLAttributes<SVGSVGElement> & { size?: number | string }>;
+type IconComponent = ComponentType<SVGAttributes<SVGSVGElement> & HTMLAttributes<SVGSVGElement> & { size?: number | string; className?: string }>;
+
+type IconEntry =
+    | IconComponent
+    | {
+          component: IconComponent;
+          className?: string;
+          size?: number | string;
+      };
 
 /**
  * Maps UIA Control Type IDs to corresponding icon components.
  * Control Type IDs are from UIAutomationClient.h
  * https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-controltype-ids
  */
-export const UIA_CONTROL_TYPE_ICONS: Record<string, IconComponent> = {
-    "50000": MousePointer2,     // Button
+export const UIA_CONTROL_TYPE_ICONS: Record<string, IconEntry> = {
+    "50000": MousePointer2, // Button
     "50001": Calendar,          // Calendar
     "50002": CheckSquare,       // CheckBox
     "50003": ChevronDown,       // ComboBox
@@ -69,9 +78,9 @@ export const UIA_CONTROL_TYPE_ICONS: Record<string, IconComponent> = {
     "50017": PanelTop,          // StatusBar
     "50018": Columns,           // Tab
     "50019": FileText,          // TabItem
-    "50020": Text,              // Text
-    "50021": Symbol_uia_Toolbar,// ToolBar
-    "50022": Symbol_uia_Tooltip,// ToolTip
+    "50020": Text, // Text
+    "50021": { component: Symbol_uia_Toolbar, className: "size-4" }, // ToolBar
+    "50022": { component: Symbol_uia_Tooltip, className: "size-4" }, // ToolTip
     "50023": TreeDeciduous,     // Tree
     "50024": Folder,            // TreeItem
     "50025": Boxes,             // Custom
@@ -103,5 +112,27 @@ export const DefaultControlTypeIcon: IconComponent = Box;
  * @returns The icon component for the control type, or the default icon if unknown
  */
 export function getControlTypeIcon(controlTypeId: string): IconComponent {
-    return UIA_CONTROL_TYPE_ICONS[controlTypeId] ?? DefaultControlTypeIcon;
+    const entry = UIA_CONTROL_TYPE_ICONS[controlTypeId];
+
+    if (!entry) return DefaultControlTypeIcon;
+
+    let Comp: IconComponent;
+    let defaultClass: string | undefined;
+    let defaultSize: number | string | undefined;
+
+    if (typeof entry === "function") {
+        Comp = entry as IconComponent;
+    } else {
+        Comp = entry.component;
+        defaultClass = entry.className;
+        defaultSize = entry.size;
+    }
+
+    const Wrapper: IconComponent = ({ className, size, ...rest }) => {
+        const mergedClass = classNames(defaultClass ?? "", className ?? "") || undefined;
+        const appliedSize = size ?? defaultSize;
+        return <Comp className={mergedClass} size={appliedSize} {...(rest as any)} />;
+    };
+
+    return Wrapper;
 }
