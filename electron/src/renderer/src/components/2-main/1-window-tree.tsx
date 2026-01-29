@@ -41,7 +41,7 @@ function WindowNode({ windowInfo, selectedHandle, onSelect, depth }: { windowInf
                 onClick={() => onSelect(windowInfo.handle)}
             >
                 <span
-                    className="mr-1 size-4 flex items-center justify-center"
+                    className="shrink-0 mr-1 size-4 flex items-center justify-center"
                     onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
                 >
                     {hasChildren && (expanded
