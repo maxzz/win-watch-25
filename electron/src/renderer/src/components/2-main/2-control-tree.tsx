@@ -67,7 +67,7 @@ function ControlTreeNode({ node, selectedNode, onSelect, onInvoke, depth }: {
     const isSelected = selectedNode === node; // simple reference check, might need ID check
     const hasChildren = node.children && node.children.length > 0;
 
-    const ControlIcon = getControlTypeIcon(node.controlType);
+    const controlIcon = getControlTypeIcon(node.controlType);
 
     return (
         <div>
@@ -86,7 +86,7 @@ function ControlTreeNode({ node, selectedNode, onSelect, onInvoke, depth }: {
                     )}
                 </span>
 
-                <ControlIcon size={14} className="mr-2 text-blue-500" />
+                <span className="mr-2 text-blue-500">{controlIcon}</span>
 
                 <span className="text-xs truncate" title={node.name}>
                     {getControlTypeName(node.controlType)} {node.name ? `"${node.name}"` : ""}

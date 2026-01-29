@@ -1,4 +1,4 @@
-import { type ComponentType, type SVGAttributes, type HTMLAttributes } from "react";
+import type { JSX } from "react";
 import {
     Box,
     Calendar,
@@ -40,99 +40,68 @@ import {
     MousePointer2,
 } from "lucide-react";
 import { Symbol_uia_Toolbar, Symbol_uia_Tooltip } from "@renderer/components/ui/icons/symbols/ui-automation";
-import { classNames } from "@renderer/utils";
 
-type IconComponent = ComponentType<SVGAttributes<SVGSVGElement> & HTMLAttributes<SVGSVGElement> & { size?: number | string; className?: string }>;
-
-type IconEntry =
-    | IconComponent
-    | {
-          component: IconComponent;
-          className?: string;
-          size?: number | string;
-      };
+const iconClass = "size-4";
 
 /**
- * Maps UIA Control Type IDs to corresponding icon components.
+ * Maps UIA Control Type IDs to corresponding icon elements.
  * Control Type IDs are from UIAutomationClient.h
  * https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-controltype-ids
  */
-export const UIA_CONTROL_TYPE_ICONS: Record<string, IconEntry> = {
-    "50000": MousePointer2, // Button
-    "50001": Calendar,          // Calendar
-    "50002": CheckSquare,       // CheckBox
-    "50003": ChevronDown,       // ComboBox
-    "50004": Type,              // Edit
-    "50005": Link,              // Hyperlink
-    "50006": Image,             // Image
-    "50007": ListOrdered,       // ListItem
-    "50008": List,              // List
-    "50009": Menu,              // Menu
-    "50010": MenuSquare,        // MenuBar
-    "50011": LayoutList,        // MenuItem
-    "50012": Loader,            // ProgressBar
-    "50013": Circle,            // RadioButton
-    "50014": SlidersHorizontal, // ScrollBar
-    "50015": Gauge,             // Slider
-    "50016": RotateCw,          // Spinner
-    "50017": PanelTop,          // StatusBar
-    "50018": Columns,           // Tab
-    "50019": FileText,          // TabItem
-    "50020": Text, // Text
-    "50021": { component: Symbol_uia_Toolbar, className: "size-4" }, // ToolBar
-    "50022": { component: Symbol_uia_Tooltip, className: "size-4" }, // ToolTip
-    "50023": TreeDeciduous,     // Tree
-    "50024": Folder,            // TreeItem
-    "50025": Boxes,             // Custom
-    "50026": Group,             // Group
-    "50027": GripVertical,      // Thumb
-    "50028": Grid3X3,           // DataGrid
-    "50029": FileSpreadsheet,   // DataItem
-    "50030": FileText,          // Document
-    "50031": Square,            // SplitButton
-    "50032": AppWindow,         // Window
-    "50033": PanelLeft,         // Pane
-    "50034": Heading,           // Header
-    "50035": PanelTopInactive,  // HeaderItem
-    "50036": Table,             // Table
-    "50037": PanelTop,          // TitleBar
-    "50038": Minus,             // Separator
-    "50039": ZoomIn,            // SemanticZoom
-    "50040": LayoutDashboard,   // AppBar
+export const UIA_CONTROL_TYPE_ICONS: Record<string, JSX.Element> = {
+    "50000": <MousePointer2 className={iconClass} />,     // Button
+    "50001": <Calendar className={iconClass} />,          // Calendar
+    "50002": <CheckSquare className={iconClass} />,       // CheckBox
+    "50003": <ChevronDown className={iconClass} />,       // ComboBox
+    "50004": <Type className={iconClass} />,              // Edit
+    "50005": <Link className={iconClass} />,              // Hyperlink
+    "50006": <Image className={iconClass} />,             // Image
+    "50007": <ListOrdered className={iconClass} />,       // ListItem
+    "50008": <List className={iconClass} />,              // List
+    "50009": <Menu className={iconClass} />,              // Menu
+    "50010": <MenuSquare className={iconClass} />,        // MenuBar
+    "50011": <LayoutList className={iconClass} />,        // MenuItem
+    "50012": <Loader className={iconClass} />,            // ProgressBar
+    "50013": <Circle className={iconClass} />,            // RadioButton
+    "50014": <SlidersHorizontal className={iconClass} />, // ScrollBar
+    "50015": <Gauge className={iconClass} />,             // Slider
+    "50016": <RotateCw className={iconClass} />,          // Spinner
+    "50017": <PanelTop className={iconClass} />,          // StatusBar
+    "50018": <Columns className={iconClass} />,           // Tab
+    "50019": <FileText className={iconClass} />,          // TabItem
+    "50020": <Text className={iconClass} />,              // Text
+    "50021": <Symbol_uia_Toolbar className={iconClass} />,// ToolBar
+    "50022": <Symbol_uia_Tooltip className={iconClass} />,// ToolTip
+    "50023": <TreeDeciduous className={iconClass} />,     // Tree
+    "50024": <Folder className={iconClass} />,            // TreeItem
+    "50025": <Boxes className={iconClass} />,             // Custom
+    "50026": <Group className={iconClass} />,             // Group
+    "50027": <GripVertical className={iconClass} />,      // Thumb
+    "50028": <Grid3X3 className={iconClass} />,           // DataGrid
+    "50029": <FileSpreadsheet className={iconClass} />,   // DataItem
+    "50030": <FileText className={iconClass} />,          // Document
+    "50031": <Square className={iconClass} />,            // SplitButton
+    "50032": <AppWindow className={iconClass} />,         // Window
+    "50033": <PanelLeft className={iconClass} />,         // Pane
+    "50034": <Heading className={iconClass} />,           // Header
+    "50035": <PanelTopInactive className={iconClass} />,  // HeaderItem
+    "50036": <Table className={iconClass} />,             // Table
+    "50037": <PanelTop className={iconClass} />,          // TitleBar
+    "50038": <Minus className={iconClass} />,             // Separator
+    "50039": <ZoomIn className={iconClass} />,            // SemanticZoom
+    "50040": <LayoutDashboard className={iconClass} />,   // AppBar
 };
 
 /**
  * Default icon for unknown control types
  */
-export const DefaultControlTypeIcon: IconComponent = Box;
+export const DefaultControlTypeIcon: JSX.Element = <Box className={iconClass} />;
 
 /**
- * Get the icon component for a given control type ID
+ * Get the icon element for a given control type ID
  * @param controlTypeId - The numeric control type ID as string (e.g., "50000")
- * @returns The icon component for the control type, or the default icon if unknown
+ * @returns The icon element for the control type, or the default icon if unknown
  */
-export function getControlTypeIcon(controlTypeId: string): IconComponent {
-    const entry = UIA_CONTROL_TYPE_ICONS[controlTypeId];
-
-    if (!entry) return DefaultControlTypeIcon;
-
-    let Comp: IconComponent;
-    let defaultClass: string | undefined;
-    let defaultSize: number | string | undefined;
-
-    if (typeof entry === "function") {
-        Comp = entry as IconComponent;
-    } else {
-        Comp = entry.component;
-        defaultClass = entry.className;
-        defaultSize = entry.size;
-    }
-
-    const Wrapper: IconComponent = ({ className, size, ...rest }) => {
-        const mergedClass = classNames(defaultClass ?? "", className ?? "") || undefined;
-        const appliedSize = size ?? defaultSize;
-        return <Comp className={mergedClass} size={appliedSize} {...(rest as any)} />;
-    };
-
-    return Wrapper;
+export function getControlTypeIcon(controlTypeId: string): JSX.Element {
+    return UIA_CONTROL_TYPE_ICONS[controlTypeId] ?? DefaultControlTypeIcon;
 }
