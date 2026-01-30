@@ -1,8 +1,6 @@
 #include <napi.h>
 #include "WindowMonitor.h"
 #include "Utils.h"
-#include <iostream>
-#include <thread>
 #include <string>
 
 // Global thread-safe function for callback

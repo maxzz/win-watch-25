@@ -100,14 +100,26 @@ inline std::string HwndToHexString(HWND hwnd) {
 }
 
 // Parse a stringified HWND.
-// Accepts either decimal (e.g. "1234") or hex with prefix (e.g. "0x000000001234ABCD").
+// Accepts either decimal (e.g. "1234") or hex (e.g. "0x000000001234ABCD" or "000000001234ABCD").
 inline bool TryParseHwnd(const std::string& s, HWND& outHwnd) {
     if (s.empty()) return false;
+    if (s[0] == '-') return false;
     errno = 0;
+    const char* begin = s.c_str();
+    int base = 10;
+    if (s.rfind("0x", 0) == 0 || s.rfind("0X", 0) == 0) {
+        begin += 2;
+        base = 16;
+    } else if (s.find_first_of("abcdefABCDEF") != std::string::npos) {
+        // If it contains hex alpha digits, treat it as hex even without a 0x prefix.
+        // This avoids base-0 treating leading zero strings as octal.
+        base = 16;
+    }
+
     char* end = nullptr;
-    const unsigned long long value = std::strtoull(s.c_str(), &end, 0);
+    const unsigned long long value = std::strtoull(begin, &end, base);
     if (errno == ERANGE) return false;
-    if (end == s.c_str() || *end != '\0') return false;
+    if (end == begin || *end != '\0') return false;
     outHwnd = reinterpret_cast<HWND>(static_cast<std::uintptr_t>(value));
     return true;
 }
