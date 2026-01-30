@@ -72,7 +72,7 @@
       <AdditionalOptions>/LTCG:INCREMENTAL %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <Link>
-      <AdditionalDependencies>gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;uuid.lib;odbc32.lib;delayimp.lib;&quot;C:\\Users\\maxzz\\AppData\\Local\\node-gyp\\Cache\\24.6.0\\x64\\node.lib&quot;;..\..\native\x64\Release\WindowMonitor.lib;uiautomationcore.lib;ole32.lib;oleaut32.lib;user32.lib;kernel32.lib</AdditionalDependencies>
+      <AdditionalDependencies>gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;uuid.lib;odbc32.lib;delayimp.lib;&quot;C:\\Users\\maxzz\\AppData\\Local\\node-gyp\\Cache\\24.6.0\\x64\\node.lib&quot;;..\..\native\x64\Debug\WindowMonitor.lib;uiautomationcore.lib;ole32.lib;oleaut32.lib;user32.lib;kernel32.lib</AdditionalDependencies>
       <AdditionalOptions>/LTCG:INCREMENTAL /ignore:4199 %(AdditionalOptions)</AdditionalOptions>
       <DelayLoadDLLs>node.exe;%(DelayLoadDLLs)</DelayLoadDLLs>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -117,7 +117,7 @@
       <AdditionalOptions>/LTCG:INCREMENTAL %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <Link>
-      <AdditionalDependencies>gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;uuid.lib;odbc32.lib;delayimp.lib;&quot;C:\\Users\\maxzz\\AppData\\Local\\node-gyp\\Cache\\24.6.0\\x64\\node.lib&quot;;..\..\native\x64\Release\WindowMonitor.lib;uiautomationcore.lib;ole32.lib;oleaut32.lib;user32.lib;kernel32.lib</AdditionalDependencies>
+      <AdditionalDependencies>gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;uuid.lib;odbc32.lib;delayimp.lib;&quot;C:\\Users\\maxzz\\AppData\\Local\\node-gyp\\Cache\\24.6.0\\x64\\node.lib&quot;;..\..\native\x64\Debug\WindowMonitor.lib;uiautomationcore.lib;ole32.lib;oleaut32.lib;user32.lib;kernel32.lib</AdditionalDependencies>
       <AdditionalOptions>/LTCG:INCREMENTAL /ignore:4199 %(AdditionalOptions)</AdditionalOptions>
       <DelayLoadDLLs>node.exe;%(DelayLoadDLLs)</DelayLoadDLLs>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
