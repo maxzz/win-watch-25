@@ -6,7 +6,7 @@ import { UISymbolDefs } from "../ui/icons/symbols";
 import { AppHeader } from "./1-app-header";
 import { MainContent } from "./2-resizable-panels";
 import { SpyAllIcons } from "@renderer/utils/util-hooks/spy-all-icons";
-import { doRefreshWindowInfosOnAppStartAtom } from "@renderer/store/2-atoms";
+import { doOnAppStartRefreshWindowInfosAtom } from "@renderer/store/2-atoms";
 
 export function App() {
     return (<>
@@ -19,7 +19,7 @@ export function App() {
 
 export function AppContents() {
     useActiveWindow(null); // Side effects only
-    const refreshWindowInfosOnStart = useSetAtom(doRefreshWindowInfosOnAppStartAtom);
+    const refreshWindowInfosOnStart = useSetAtom(doOnAppStartRefreshWindowInfosAtom);
 
     useEffect(
         () => {

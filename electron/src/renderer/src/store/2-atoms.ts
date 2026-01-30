@@ -2,7 +2,7 @@ import { atom } from "jotai";
 import { ControlNode, WindowInfo } from "../types";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 
-// Window list
+//#region Window list
 
 export const windowInfosAtom = atom<WindowInfo[]>([]);
 export const windowInfosLoadingAtom = atom<boolean>(false);
@@ -24,11 +24,10 @@ export const doRefreshWindowInfosAtom = atom(
     }
 );
 
-let didRefreshWindowInfosOnAppStart = false;
-
 // Call this on app startup. It guarantees we only fetch the initial window list once,
 // even if the React tree mounts twice in dev (StrictMode).
-export const doRefreshWindowInfosOnAppStartAtom = atom(
+let didRefreshWindowInfosOnAppStart = false;
+export const doOnAppStartRefreshWindowInfosAtom = atom(
     null,
     (_get, set) => {
         if (didRefreshWindowInfosOnAppStart) {
@@ -42,7 +41,9 @@ export const doRefreshWindowInfosOnAppStartAtom = atom(
 export const activeWindowInfoAtom = atom<WindowInfo | null>(null);
 export const activeHandleAtom = atom<string | null>(null);
 
-// Control tree
+//#endregion Window list
+
+//#region Control tree
 
 export const doGetWindowControlsTreeAtom = atom(
     async (get): Promise<ControlNode | null> => {
@@ -83,8 +84,9 @@ export const doInvokeControlAtom = atom(
     }
 );
 
-//
+//#endregion Control tree
 
+//#region comments
 // Start monitoring this specific window if needed, or just fetch tree
 // The "StartMonitoring" in API is global for "active window changes".
 // If we want to show controls for the *currently selected* window in the tree, we just fetch controls.
@@ -109,8 +111,9 @@ export const doInvokeControlAtom = atom(
 //         console.error("Failed to fetch control tree", e);
 //     }
 // }
+//#endregion comments
 
-// Highlight selected window
+//#region Highlight selected window
 
 export const doHighlightSelectedWindowAtom = atom(
     null,
@@ -142,4 +145,4 @@ export const doHighlightSelectedWindowAtom = atom(
     }
 );
 
-//
+//#endregion Highlight selected window
