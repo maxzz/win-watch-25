@@ -8,10 +8,12 @@ export function setAppWindowListeners(appWindow: AppWindow) {
         return;
     }
     
+    // If DevTools are opened only after the first navigation is complete, React DevTools
+    // often won’t hook until the next reload. We auto-reload once (devtools enabled) so the
+    // React tabs appear without requiring the user to press Ctrl+R.
+    let didAutoReloadForDevtools = false;
+    
     appWindow.wnd.once('ready-to-show', () => {
-        if (iniFileOptions.options?.devTools && !appWindow.wnd?.webContents.isDevToolsOpened()) {
-            appWindow.wnd?.webContents.toggleDevTools();
-        }
         appWindow.wnd?.show();
     });
 
@@ -27,6 +29,14 @@ export function setAppWindowListeners(appWindow: AppWindow) {
     });
 
     appWindow.wnd.webContents.on('did-finish-load', () => {
+        if (iniFileOptions.options?.devTools && !appWindow.wnd?.webContents.isDevToolsOpened()) {
+            appWindow.wnd?.webContents.openDevTools();
+
+            if (!didAutoReloadForDevtools) {
+                didAutoReloadForDevtools = true;
+                setTimeout(() => appWindow.wnd?.webContents.reload(), 0);
+            }
+        }
         appWindow.wnd?.webContents.send('main-process-message', (new Date).toLocaleString()); // Test active push message to Renderer-process.
     });
 
