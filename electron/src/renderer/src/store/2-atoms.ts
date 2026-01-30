@@ -24,6 +24,21 @@ export const doRefreshWindowInfosAtom = atom(
     }
 );
 
+let didRefreshWindowInfosOnAppStart = false;
+
+// Call this on app startup. It guarantees we only fetch the initial window list once,
+// even if the React tree mounts twice in dev (StrictMode).
+export const doRefreshWindowInfosOnAppStartAtom = atom(
+    null,
+    (_get, set) => {
+        if (didRefreshWindowInfosOnAppStart) {
+            return;
+        }
+        didRefreshWindowInfosOnAppStart = true;
+        set(doRefreshWindowInfosAtom);
+    }
+);
+
 export const activeWindowInfoAtom = atom<WindowInfo | null>(null);
 export const activeHandleAtom = atom<string | null>(null);
 
