@@ -1,5 +1,6 @@
 #include <napi.h>
 #include "WindowMonitor.h"
+#include "Utils.h"
 #include <iostream>
 #include <thread>
 #include <string>
@@ -31,12 +32,16 @@ Napi::Value GetControlTreeWrapper(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     
     if (info.Length() < 1 || !info[0].IsString()) {
-        Napi::TypeError::New(env, "String expected (window handle as hex)").ThrowAsJavaScriptException();
+        Napi::TypeError::New(env, "String expected (window handle like 0x000000001234ABCD)").ThrowAsJavaScriptException();
         return env.Null();
     }
     
     std::string handleStr = info[0].As<Napi::String>().Utf8Value();
-    HWND hwnd = (HWND)std::stoll(handleStr); 
+    HWND hwnd = nullptr;
+    if (!TryParseHwnd(handleStr, hwnd)) {
+        Napi::TypeError::New(env, "Invalid window handle string (expected hex like 0x000000001234ABCD)").ThrowAsJavaScriptException();
+        return env.Null();
+    }
     
     const char* json = GetControlTreeJson(hwnd);
     Napi::String result = Napi::String::New(env, json ? json : "{}");
@@ -83,7 +88,11 @@ Napi::Value InvokeControlWrapper(const Napi::CallbackInfo& info) {
     
     std::string handleStr = info[0].As<Napi::String>().Utf8Value();
     std::string runtimeId = info[1].As<Napi::String>().Utf8Value();
-    HWND hwnd = (HWND)std::stoll(handleStr);
+    HWND hwnd = nullptr;
+    if (!TryParseHwnd(handleStr, hwnd)) {
+        Napi::TypeError::New(env, "Invalid window handle string (expected hex like 0x000000001234ABCD)").ThrowAsJavaScriptException();
+        return Napi::Boolean::New(env, false);
+    }
     
     bool result = InvokeControl(hwnd, runtimeId.c_str());
     return Napi::Boolean::New(env, result); 
@@ -146,7 +155,11 @@ Napi::Value GetWindowRectWrapper(const Napi::CallbackInfo& info) {
     }
     
     std::string handleStr = info[0].As<Napi::String>().Utf8Value();
-    HWND hwnd = (HWND)std::stoll(handleStr);
+    HWND hwnd = nullptr;
+    if (!TryParseHwnd(handleStr, hwnd)) {
+        Napi::TypeError::New(env, "Invalid window handle string (expected hex like 0x000000001234ABCD)").ThrowAsJavaScriptException();
+        return env.Null();
+    }
     
     const char* json = GetWindowRectJson(hwnd);
     Napi::String result = Napi::String::New(env, json ? json : "null");

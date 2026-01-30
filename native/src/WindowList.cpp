@@ -71,7 +71,7 @@ std::string WindowList::ToJson(const std::vector<WindowInfo>& windows) {
         if (i > 0) json << ",";
         const auto& w = windows[i];
         json << "{";
-        json << "\"handle\":\"" << (void*)w.handle << "\","; // Format pointer as hex string usually
+        json << "\"handle\":\"" << HwndToHexString(w.handle) << "\",";
         json << "\"title\":\"" << EscapeJson(w.title) << "\",";
         json << "\"processName\":\"" << EscapeJson(w.processName) << "\",";
         json << "\"className\":\"" << EscapeJson(w.className) << "\",";

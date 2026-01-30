@@ -1,5 +1,8 @@
 #pragma once
 #include <windows.h>
+#include <cerrno>
+#include <cstdint>
+#include <cstdlib>
 #include <string>
 #include <vector>
 #include <sstream>
@@ -79,4 +82,32 @@ inline std::string EscapeJson(const std::string& s) {
         }
     }
     return o.str();
+}
+
+// Format HWND as fixed-width uppercase hex with 0x prefix.
+// - 32-bit: 0x0012ABCD (8 hex digits)
+// - 64-bit: 0x000000001234ABCD (16 hex digits)
+inline std::string HwndToHexString(HWND hwnd) {
+    const auto handleValue = reinterpret_cast<std::uintptr_t>(hwnd);
+    std::ostringstream handleHex;
+    handleHex << "0x"
+              << std::uppercase
+              << std::hex
+              << std::setw(sizeof(std::uintptr_t) * 2)
+              << std::setfill('0')
+              << handleValue;
+    return handleHex.str();
+}
+
+// Parse a stringified HWND.
+// Accepts either decimal (e.g. "1234") or hex with prefix (e.g. "0x000000001234ABCD").
+inline bool TryParseHwnd(const std::string& s, HWND& outHwnd) {
+    if (s.empty()) return false;
+    errno = 0;
+    char* end = nullptr;
+    const unsigned long long value = std::strtoull(s.c_str(), &end, 0);
+    if (errno == ERANGE) return false;
+    if (end == s.c_str() || *end != '\0') return false;
+    outHwnd = reinterpret_cast<HWND>(static_cast<std::uintptr_t>(value));
+    return true;
 }
