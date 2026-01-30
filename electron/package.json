@@ -15,6 +15,7 @@
         "@types/react-dom": "^19.2.3",
         "@vitejs/plugin-react": "^5.1.2",
         "electron": "^40.0.0",
+        "electron-builder": "^26.0.12",
         "electron-vite": "^5.0.0",
         "tailwindcss": "^4.0.0",
         "typescript": "^5.3.3",
@@ -41,5 +42,31 @@
         "dev:debug": "electron-vite dev --inspect",
         "build": "electron-vite build",
         "preview": "electron-vite preview"
+    },
+    "build": {
+        "appId": "com.maxzz.winwatch",
+        "productName": "WinWatch",
+        "directories": {
+            "output": "dist"
+        },
+        "files": [
+            "out/**"
+        ],
+        "extraResources": [
+            {
+                "from": "../dist-electron/plugins",
+                "to": "plugins"
+            }
+        ],
+        "win": {
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ]
+        }
     }
 }

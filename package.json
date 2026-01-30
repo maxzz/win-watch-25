@@ -14,15 +14,13 @@
         "tsc": "pnpm --filter win-watch-electron run tsc",
         "dev": "pnpm --filter win-watch-electron run dev",
         "dev:debug": "pnpm --filter win-watch-electron run dev:debug",
-
         "build:all": "tsx scripts/build-plugins.ts --release",
         "build:all:debug": "tsx scripts/build-plugins.ts --debug",
-        
         "build:native": "tsx scripts/build-plugins.ts --release --native-only",
         "build:native:debug": "tsx scripts/build-plugins.ts --debug --native-only",
-
         "build:napi": "tsx scripts/build-plugins.ts --release --napi-only",
-        "build:napi:debug": "tsx scripts/build-plugins.ts --debug --napi-only"
+        "build:napi:debug": "tsx scripts/build-plugins.ts --debug --napi-only",
+        "build:exe:win": "pnpm build:all && pnpm --filter win-watch-electron run build && pnpm --filter win-watch-electron exec electron-builder --win --x64"
     },
     "devDependencies": {
         "@types/node": "^22.15.3",
@@ -30,9 +28,10 @@
     },
     "pnpm": {
         "onlyBuiltDependencies": [
-            "electron",
-            "esbuild",
-            "node-addon-api"
+            "electron-winstaller",
+            "electron@40.0.0",
+            "esbuild@0.25.12",
+            "esbuild@0.27.2"
         ]
     }
 }
