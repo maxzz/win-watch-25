@@ -3,6 +3,8 @@ import { iniFileOptions } from "./8-ini-file-options";
 import { type AppWindow } from "./9-app-window-instance";
 //import { registerZoomShortcuts } from "./5-app-menu";
 
+export const loadReactDevtools = true;
+
 export function setAppWindowListeners(appWindow: AppWindow) {
     if (!appWindow.wnd) {
         return;
@@ -32,9 +34,9 @@ export function setAppWindowListeners(appWindow: AppWindow) {
         if (iniFileOptions.options?.devTools && !appWindow.wnd?.webContents.isDevToolsOpened()) {
             appWindow.wnd?.webContents.openDevTools();
 
-            if (!didAutoReloadForDevtools) {
+            if (loadReactDevtools && !didAutoReloadForDevtools) {
                 didAutoReloadForDevtools = true;
-                setTimeout(() => appWindow.wnd?.webContents.reload(), 0);
+                setTimeout(() => appWindow.wnd?.webContents.reload(), 1000); // Wait 1 second to ensure DevTools are loaded when page is fully rendered.
             }
         }
         appWindow.wnd?.webContents.send('main-process-message', (new Date).toLocaleString()); // Test active push message to Renderer-process.
