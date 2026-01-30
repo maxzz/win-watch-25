@@ -5,7 +5,7 @@ import { createTopWindow } from "../1-start-main-window/1-create-top-window";
 import { setListenersRenderCalls } from "../1-start-main-window/2-1-listeners-render-calls";
 import { setAppWindowListeners } from "../1-start-main-window/2-2-listeners-of-app-window";
 import { iniFileOptions } from "../1-start-main-window/8-ini-file-options";
-import { loadReactDevtools } from "../1-start-main-window/2-2-listeners-of-app-window";
+import { loadReactDevtools } from "./devtools-config";
 
 app.whenReady().then(async () => {
     console.log('main-process-ready'); // This is marker for vscode to start debugger in launch.json. Don't remove this line!
@@ -16,12 +16,11 @@ app.whenReady().then(async () => {
         optimizer.watchWindowShortcuts(window);
     });
 
+    iniFileOptions.load();
     if (loadReactDevtools) {
         await installReactDevtools();
     }
     setListenersRenderCalls();
-
-    iniFileOptions.load();
     createAppWindow();
 
     app.on('activate', function () {

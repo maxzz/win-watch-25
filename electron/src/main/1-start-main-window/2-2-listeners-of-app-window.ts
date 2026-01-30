@@ -1,9 +1,8 @@
 import { shell } from "electron";
 import { iniFileOptions } from "./8-ini-file-options";
 import { type AppWindow } from "./9-app-window-instance";
+import { autoReloadOnceForReactDevtools, loadReactDevtools } from "../0-all/devtools-config";
 //import { registerZoomShortcuts } from "./5-app-menu";
-
-export const loadReactDevtools = true;
 
 export function setAppWindowListeners(appWindow: AppWindow) {
     if (!appWindow.wnd) {
@@ -31,13 +30,37 @@ export function setAppWindowListeners(appWindow: AppWindow) {
     });
 
     appWindow.wnd.webContents.on('did-finish-load', () => {
-        if (iniFileOptions.options?.devTools && !appWindow.wnd?.webContents.isDevToolsOpened()) {
-            appWindow.wnd?.webContents.openDevTools();
+        const wnd = appWindow.wnd;
+        if (iniFileOptions.options?.devTools && wnd && !wnd.webContents.isDevToolsOpened()) {
+            const wc = wnd.webContents;
 
-            if (loadReactDevtools && !didAutoReloadForDevtools) {
+            // Open DevTools after the page is loaded (your preference).
+            // If React DevTools doesn't hook on the first load, we do one automatic reload,
+            // but wait for the DevTools frontend to finish loading instead of using a fixed timeout.
+            const maybeReloadOnce = () => {
+                if (!autoReloadOnceForReactDevtools || !loadReactDevtools || didAutoReloadForDevtools) {
+                    return;
+                }
                 didAutoReloadForDevtools = true;
-                setTimeout(() => appWindow.wnd?.webContents.reload(), 1000); // Wait 1 second to ensure DevTools are loaded when page is fully rendered.
-            }
+
+                const dt = wc.devToolsWebContents;
+                if (dt && !dt.isDestroyed()) {
+                    dt.once('did-finish-load', () => {
+                        // Next tick after devtools frontend load is the most reliable moment.
+                        setTimeout(() => {
+                            if (!wc.isDestroyed()) wc.reload();
+                        }, 0);
+                    });
+                } else {
+                    // Fallback: devToolsWebContents not available yet; do a short delay.
+                    setTimeout(() => {
+                        if (!wc.isDestroyed()) wc.reload();
+                    }, 200);
+                }
+            };
+
+            wc.once('devtools-opened', maybeReloadOnce);
+            wc.openDevTools();
         }
         appWindow.wnd?.webContents.send('main-process-message', (new Date).toLocaleString()); // Test active push message to Renderer-process.
     });
