@@ -18,9 +18,7 @@ export function App() {
 }
 
 export function AppContents() {
-    // const { windowInfos } = useWindowList();
     useActiveWindow(null); // Side effects only
-    // const [activeHandle, setActiveHandle] = useAtom(activeHandleAtom);
     const refreshWindowInfosOnStart = useSetAtom(doRefreshWindowInfosOnAppStartAtom);
 
     useEffect(
@@ -28,7 +26,16 @@ export function AppContents() {
             refreshWindowInfosOnStart();
 
             // Start monitoring on mount
-            tmApi.startMonitoring("0"); // Argument ignored by current C++ impl
+            // Starts global "active window" monitoring (foreground window changes).
+            //
+            // Note on the `"0"` argument:
+            // - The renderer/preload TypeScript types currently name this parameter `handle: string`,
+            //   implying you can pass a specific window handle to monitor.
+            // - Today, that value is **not used**: the main-process IPC handler ignores it and the
+            //   native addon `startMonitoring` actually expects a callback (not a handle).
+            // - We pass `"0"` as a clear placeholder/sentinel meaning "no specific target window"
+            //   (i.e., just start emitting `tmApi.onActiveWindowChanged` events).
+            tmApi.startMonitoring("0");
             return () => {
                 tmApi.stopMonitoring();
             };
