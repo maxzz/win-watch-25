@@ -10,7 +10,8 @@
             "runtimeArgs": [
                 "dev",
                 "--",
-                "--remote-debugging-port=9222"
+                "--remote-debugging-port=9222",
+                "--user-data-dir=C:/x/settings/tm-chrome-debug-profile/.profile"
             ],
             "console": "integratedTerminal",
             "autoAttachChildProcesses": true,
