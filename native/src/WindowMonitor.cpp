@@ -7,6 +7,7 @@
 #include "ControlHighlighter.h"
 #include <mutex>
 #include <sstream>
+#include <iomanip>
 #include <cstdint>
 #include <cstdlib>
 
@@ -24,8 +25,15 @@ void CALLBACK WinEventProc(HWINEVENTHOOK hWinEventHook, DWORD event, HWND hwnd, 
             // We just send a simple JSON with the handle for now
             // The frontend can then request the full tree
             // HWND is a pointer type; serialize it via an integer type wide enough for pointers.
-            const auto handleValue = static_cast<std::uint64_t>(reinterpret_cast<std::uintptr_t>(hwnd));
-            std::string json = "{\"handle\":\"" + std::to_string(handleValue) + "\"}";
+            const auto handleValue = reinterpret_cast<std::uintptr_t>(hwnd);
+            std::ostringstream handleHex;
+            handleHex << "0x"
+                      << std::uppercase
+                      << std::hex
+                      << std::setw(sizeof(std::uintptr_t) * 2)
+                      << std::setfill('0')
+                      << handleValue;
+            std::string json = "{\"handle\":\"" + handleHex.str() + "\"}";
             // Or better, reuse WindowList logic to get quick info
             g_Callback(json.c_str());
         }

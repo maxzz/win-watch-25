@@ -48,16 +48,16 @@ export const activeHandleAtom = atom<string | null>(null);
 export const doGetWindowControlsTreeAtom = atom(
     async (get): Promise<ControlNode | null> => {
         const activeHandle = get(activeHandleAtom);
-        console.log("getWindowControlsTree", activeHandle);
+        console.log("💻doGetWindowControlsTreeAtom", activeHandle);
         if (!activeHandle) {
             return null;
         }
 
         try {
             const json = await tmApi.getControlTree(activeHandle);
-            console.log("getControlTree1", json);
+            console.log("💻💻getControlTree1", json);
             const tree: ControlNode = JSON.parse(json);
-            console.log("getControlTree2", tree);
+            console.log("💻💻💻getControlTree2", tree);
             return tree;
         } catch (e) {
             console.error("Failed to fetch control tree", e);

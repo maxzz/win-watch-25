@@ -13,6 +13,7 @@ export function useActiveWindow() {
                 (data) => {
                     try {
                         const info = JSON.parse(data);
+                        console.log("♻️useActiveWindow", info);
 
                         // We might receive partial info, or just handle
                         // Here we should update active handle
