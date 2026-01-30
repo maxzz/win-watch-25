@@ -45,7 +45,12 @@ async function installReactDevtools() {
 
     try {
         const { default: installExtension, REACT_DEVELOPER_TOOLS } = await import("electron-devtools-installer");
-        await installExtension(REACT_DEVELOPER_TOOLS);
+        const ext = await installExtension(REACT_DEVELOPER_TOOLS, {
+            // Ensure the extension is loaded each run (not just downloaded once).
+            forceDownload: false,
+            loadExtensionOptions: { allowFileAccess: true }
+        });
+        console.log(`React DevTools loaded: ${ext?.name ?? "unknown"}`);
     } catch (error) {
         console.warn("Failed to install React DevTools:", error);
     }
