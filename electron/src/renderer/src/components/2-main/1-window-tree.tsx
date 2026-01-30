@@ -38,7 +38,10 @@ function WindowNode({ windowInfo, selectedHandle, onSelect, depth }: { windowInf
             <div
                 className={classNames("px-2 py-0.5 cursor-pointer flex items-center", isSelected ? "bg-red-500 text-accent-foreground" : "hover:bg-accent/50")}
                 style={{ paddingLeft: `${depth * 12 + 4}px` }}
-                onClick={() => onSelect(windowInfo.handle)}
+                onClick={() => {
+                    onSelect(windowInfo.handle);
+                    console.log("WindowNode clicked", windowInfo.handle);
+                }}
             >
                 <span
                     className="shrink-0 mr-1 size-4 flex items-center justify-center"
