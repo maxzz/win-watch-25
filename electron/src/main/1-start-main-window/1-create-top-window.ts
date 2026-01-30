@@ -18,6 +18,13 @@ export function createTopWindow(): BrowserWindow {
         }
     });
 
+    // If DevTools are opened *after* the page has already loaded, React DevTools often needs a
+    // manual reload (Ctrl+R) to hook into React at document start. Opening DevTools before
+    // navigation avoids that.
+    if (is.dev && iniFileOptions.options?.devTools && !mainWindow.webContents.isDevToolsOpened()) {
+        mainWindow.webContents.openDevTools();
+    }
+
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
         mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']);
     } else {
