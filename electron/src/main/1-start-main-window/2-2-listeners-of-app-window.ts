@@ -3,7 +3,7 @@ import { iniFileOptions } from "./8-ini-file-options";
 import { type AppWindow } from "./9-app-window-instance";
 //import { registerZoomShortcuts } from "./5-app-menu";
 
-export const loadReactDevtools = true;
+export const needReactDevtools = true;
 
 export function setAppWindowListeners(appWindow: AppWindow) {
     if (!appWindow.wnd) {
@@ -13,7 +13,7 @@ export function setAppWindowListeners(appWindow: AppWindow) {
     // If DevTools are opened only after the first navigation is complete, React DevTools
     // often won’t hook until the next reload. We auto-reload once (devtools enabled) so the
     // React tabs appear without requiring the user to press Ctrl+R.
-    let didAutoReloadForDevtools = false;
+    let reactDevtoolsReloaded = false;
     
     appWindow.wnd.once('ready-to-show', () => {
         appWindow.wnd?.show();
@@ -34,8 +34,8 @@ export function setAppWindowListeners(appWindow: AppWindow) {
         if (iniFileOptions.options?.devTools && !appWindow.wnd?.webContents.isDevToolsOpened()) {
             appWindow.wnd?.webContents.openDevTools();
 
-            if (loadReactDevtools && !didAutoReloadForDevtools) {
-                didAutoReloadForDevtools = true;
+            if (needReactDevtools && !reactDevtoolsReloaded) {
+                reactDevtoolsReloaded = true;
                 setTimeout(() => appWindow.wnd?.webContents.reload(), 1000); // Wait 1 second to ensure DevTools are loaded when page is fully rendered.
             }
         }
