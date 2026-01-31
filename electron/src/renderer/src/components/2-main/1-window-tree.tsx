@@ -4,11 +4,11 @@ import { classNames } from "@renderer/utils";
 import { type WindowInfo } from "@renderer/store/9-tmapi-types";
 import { WindowTreeHeader } from "./headers/5-window-tree-header";
 import { IconL_AppWindow, IconL_ChevronDown, IconL_ChevronRight } from "../ui/icons";
-import { activeHandleAtom, windowInfosAtom } from "@renderer/store/2-atoms";
+import { activeHwndAtom, windowInfosAtom } from "@renderer/store/2-atoms";
 
 export function WindowTreePanel() {
     const windowInfos: WindowInfo[] = useAtomValue(windowInfosAtom);
-    const [activeHandle, setActiveHandle] = useAtom(activeHandleAtom);
+    const [activeHandle, setActiveHandle] = useAtom(activeHwndAtom);
 
     return (
         <div className="h-full bg-card border-r flex flex-col">

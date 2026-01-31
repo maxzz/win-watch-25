@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useSetAtom } from "jotai";
-import { activeHandleAtom, doOnAppStartRefreshWindowInfosAtom } from "../2-atoms";
+import { activeHwndAtom, doOnAppStartRefreshWindowInfosAtom } from "../2-atoms";
 import { useSnapshot } from "valtio";
 import { appSettings } from "../1-ui-settings";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster";
 
 export function useActiveWindow() {
-    const setActiveHandle = useSetAtom(activeHandleAtom);
+    const setActiveHandle = useSetAtom(activeHwndAtom);
     const { activeWindowMonitoringEnabled } = useSnapshot(appSettings);
 
     useEffect(
@@ -49,7 +49,7 @@ export function useActiveWindow() {
 }
 
 export function useMonitorActiveWindow() {
-    const setActiveHandle = useSetAtom(activeHandleAtom);
+    const setActiveHandle = useSetAtom(activeHwndAtom);
     const { activeWindowMonitoringEnabled } = useSnapshot(appSettings);
 
     useEffect(

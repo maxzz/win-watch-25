@@ -1,10 +1,10 @@
 import { useAtomValue } from "jotai";
-import { activeHandleAtom, windowInfosAtom } from "@renderer/store/2-atoms";
+import { activeHwndAtom, windowInfosAtom } from "@renderer/store/2-atoms";
 import { normalizeHwnd, asHexNumber } from "@renderer/utils";
 
 export function ActiveWindowInfo() {
     const windowInfos = useAtomValue(windowInfosAtom);
-    const activeHandle = useAtomValue(activeHandleAtom);
+    const activeHandle = useAtomValue(activeHwndAtom);
 
     // Find window info for active handle
     // This might be slow if list is huge, but fine for now

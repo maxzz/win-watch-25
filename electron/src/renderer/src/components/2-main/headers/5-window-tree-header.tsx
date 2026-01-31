@@ -4,7 +4,7 @@ import { appSettings } from "@renderer/store/1-ui-settings";
 import { Crosshair } from "lucide-react";
 import { Button } from "../../ui/shadcn/button";
 import { IconRefresh, Symbol_uia_Toolbar, Symbol_uia_Tooltip, Symbol_uia_Tooltip2 } from "../../ui/icons";
-import { activeHandleAtom, doHighlightSelectedWindowAtom, doRefreshWindowInfosAtom } from "@renderer/store/2-atoms";
+import { activeHwndAtom, doHighlightSelectedWindowAtom, doRefreshWindowInfosAtom } from "@renderer/store/2-atoms";
 
 export function WindowTreeHeader() {
     return (
@@ -55,7 +55,7 @@ function Button_ToggleActiveWindowMonitoring() {
 }
 
 function Button_HighlightSelectedWindow() {
-    const activeHandle = useAtomValue(activeHandleAtom);
+    const activeHandle = useAtomValue(activeHwndAtom);
     const doHighlightSelectedWindow = useSetAtom(doHighlightSelectedWindowAtom);
     return (
         <Button

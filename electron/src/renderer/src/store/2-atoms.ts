@@ -9,11 +9,11 @@ export const windowInfosLoadingAtom = atom<boolean>(false);
 
 export const doRefreshWindowInfosAtom = atom(
     null,
-    async (get, set) => {
+    async (get, set): Promise<void> => {
         set(windowInfosLoadingAtom, true);
         try {
             const json = await tmApi.getTopLevelWindows();
-            const data = JSON.parse(json);
+            const data = JSON.parse(json) as WindowInfo[];
             set(windowInfosAtom, data);
         } catch (e) {
             notice.error("Failed to fetch windows");
@@ -29,17 +29,16 @@ export const doRefreshWindowInfosAtom = atom(
 let didRefreshWindowInfosOnAppStart = false;
 export const doOnAppStartRefreshWindowInfosAtom = atom(
     null,
-    (_get, set) => {
-        if (didRefreshWindowInfosOnAppStart) {
-            return;
+    (_get, set): void => {
+        if (!didRefreshWindowInfosOnAppStart) {
+            didRefreshWindowInfosOnAppStart = true;
+            set(doRefreshWindowInfosAtom);
         }
-        didRefreshWindowInfosOnAppStart = true;
-        set(doRefreshWindowInfosAtom);
     }
 );
 
 //export const activeWindowInfoAtom = atom<WindowInfo | null>(null);
-export const activeHandleAtom = atom<string | null>(null);
+export const activeHwndAtom = atom<string | null>(null);
 
 //#endregion Window list
 
@@ -47,17 +46,14 @@ export const activeHandleAtom = atom<string | null>(null);
 
 export const doGetWindowControlsTreeAtom = atom(
     async (get): Promise<ControlNode | null> => {
-        const activeHandle = get(activeHandleAtom);
-        //console.log("💻doGetWindowControlsTreeAtom", activeHandle);
+        const activeHandle = get(activeHwndAtom);
         if (!activeHandle) {
             return null;
         }
 
         try {
             const json = await tmApi.getControlTree(activeHandle);
-            //console.log("💻💻getControlTree1", json);
-            const tree: ControlNode = JSON.parse(json);
-            //console.log("💻💻💻getControlTree2", tree);
+            const tree: ControlNode = JSON.parse(json) as ControlNode;
             return tree;
         } catch (e) {
             console.error("Failed to fetch control tree", e);
@@ -71,14 +67,15 @@ export const selectedControlAtom = atom<ControlNode | null>(null);
 
 export const doInvokeControlAtom = atom(
     null,
-    async (get, _set, control: ControlNode) => {
-        const activeHandle = get(activeHandleAtom);
+    async (get, _set, control: ControlNode): Promise<void> => {
+        const activeHandle = get(activeHwndAtom);
         if (!activeHandle || !control.runtimeId) {
             return;
         }
 
         try {
-            console.log("Invoking", control.name);
+            console.log("💻Invoking", control.name);
+
             await tmApi.invokeControl(activeHandle, control.runtimeId);
         } catch (e) {
             console.error("Failed to invoke control", e);
@@ -90,6 +87,7 @@ export const doInvokeControlAtom = atom(
 //#endregion Control tree
 
 //#region comments
+
 // Start monitoring this specific window if needed, or just fetch tree
 // The "StartMonitoring" in API is global for "active window changes".
 // If we want to show controls for the *currently selected* window in the tree, we just fetch controls.
@@ -114,14 +112,15 @@ export const doInvokeControlAtom = atom(
 //         console.error("Failed to fetch control tree", e);
 //     }
 // }
+
 //#endregion comments
 
 //#region Highlight selected window
 
 export const doHighlightSelectedWindowAtom = atom(
     null,
-    async (get, set) => {
-        const activeHandle = get(activeHandleAtom);
+    async (get, set): Promise<void> => {
+        const activeHandle = get(activeHwndAtom);
         if (!activeHandle) return;
 
         try {
@@ -133,13 +132,14 @@ export const doHighlightSelectedWindowAtom = atom(
             }
 
             const { left, top, right, bottom } = rect;
-            const bounds = {
+            const bounds: HighlightBounds = {
                 x: left,
                 y: top,
                 width: right - left,
                 height: bottom - top
             };
             await tmApi.highlightRect(bounds, { blinkCount: 3, color: 0xFF8400, borderWidth: 2 });
+
             notice.success(`Highlighted selected window (handle: ${activeHandle})`);
         } catch (e) {
             console.error(`Failed to highlight selected window (handle: ${activeHandle})`, e);
