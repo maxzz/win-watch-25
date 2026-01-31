@@ -40,15 +40,16 @@ import {
     MousePointer2,
 } from "lucide-react";
 import { Symbol_uia_Toolbar, Symbol_uia_Tooltip } from "@renderer/components/ui/icons/symbols/ui-automation";
+import { UIA_CONTROL_TYPE_FILMSTRIP_ICONS, DefaultFilmstripControlTypeIcon } from "./uia-control-type-filmstrip-icons";
+
+const USE_FILMSTRIP = true; // Set to true to use the new pixel-art filmstrip icons
 
 const iconClass = "size-4";
 
 /**
- * Maps UIA Control Type IDs to corresponding icon elements.
- * Control Type IDs are from UIAutomationClient.h
- * https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-controltype-ids
+ * Maps UIA Control Type IDs to corresponding Lucide icon elements.
  */
-export const UIA_CONTROL_TYPE_ICONS: Record<string, JSX.Element> = {
+const UIA_LUCIDE_ICONS: Record<string, JSX.Element> = {
     "50000": <MousePointer2 className={iconClass} />,     // Button
     "50001": <Calendar className={iconClass} />,          // Calendar
     "50002": <CheckSquare className={iconClass} />,       // CheckBox
@@ -92,10 +93,23 @@ export const UIA_CONTROL_TYPE_ICONS: Record<string, JSX.Element> = {
     "50040": <LayoutDashboard className={iconClass} />,   // AppBar
 };
 
+const DefaultLucideIcon: JSX.Element = <Box className={iconClass} />;
+
+/**
+ * Maps UIA Control Type IDs to corresponding icon elements.
+ * Control Type IDs are from UIAutomationClient.h
+ * https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-controltype-ids
+ */
+export const UIA_CONTROL_TYPE_ICONS: Record<string, JSX.Element> = USE_FILMSTRIP
+    ? UIA_CONTROL_TYPE_FILMSTRIP_ICONS
+    : UIA_LUCIDE_ICONS;
+
 /**
  * Default icon for unknown control types
  */
-export const DefaultControlTypeIcon: JSX.Element = <Box className={iconClass} />;
+export const DefaultControlTypeIcon: JSX.Element = USE_FILMSTRIP
+    ? DefaultFilmstripControlTypeIcon
+    : DefaultLucideIcon;
 
 /**
  * Get the icon element for a given control type ID
