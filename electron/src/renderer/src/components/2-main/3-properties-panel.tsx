@@ -4,6 +4,7 @@ import { formatControlType } from "@renderer/utils/uia/0-uia-control-type-names"
 import { useSnapshot } from "valtio/react";
 import { appSettings } from "@renderer/store/1-ui-settings";
 import { classNames } from "@renderer/utils";
+import { PropertiesPanelHeader } from "./headers/7-properties-panel-header";
 
 export function PropertiesPanel() {
     const control = useAtomValue(selectedControlAtom);
@@ -15,7 +16,7 @@ export function PropertiesPanel() {
         return (
             <div className="h-full text-xs text-muted-foreground bg-muted/10">
                 <div className="flex flex-col">
-                    <Header />
+                    <PropertiesPanelHeader />
                     <div className="px-2 flex-1 text-muted-foreground">
                         Select a control to view properties
                     </div>
@@ -37,7 +38,7 @@ export function PropertiesPanel() {
 
     return (
         <div className={classNames("h-full bg-card flex flex-col", isPropertiesOnRight ? "" : "border-t")}>
-            <Header />
+            <PropertiesPanelHeader />
 
             <div className="flex-1 p-0 overflow-auto">
                 <div className="text-xs grid grid-cols-[auto_1fr]">
@@ -51,14 +52,6 @@ export function PropertiesPanel() {
                     )}
                 </div>
             </div>
-        </div>
-    );
-}
-
-function Header() {
-    return (
-        <div className="px-2 py-1 text-xs font-semibold border-b bg-muted/20">
-            Properties
         </div>
     );
 }

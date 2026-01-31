@@ -5,6 +5,7 @@ import { ControlNode } from "@renderer/types";
 import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
 import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
 import { getControlTypeIcon } from "@renderer/utils/uia/1-uia-control-type-icons-svg";
+import { ControlTreeHeader } from "./headers/6-control-tree-header";
 
 export function ControlTreeLoader() {
     const windowControlsTree = useAtomValue(doGetWindowControlsTreeAtom);
@@ -26,7 +27,7 @@ export function ControlTreeLoader() {
 function ControlTree({ windowControlsTree }: { windowControlsTree: ControlNode; }) {
     return (
         <div className="h-full bg-card flex flex-col">
-            <Header />
+            <ControlTreeHeader />
 
             <div className="flex-1 overflow-auto">
                 <ControlTreeNode node={windowControlsTree} depth={0} />
@@ -88,14 +89,4 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
             </div>
         )}
     </>);
-}
-
-function Header() {
-    return (
-        <div className="px-2 py-1 border-b bg-muted/20 flex items-center">
-            <span className="text-xs font-semibold">
-                Control Hierarchy
-            </span>
-        </div>
-    );
 }
