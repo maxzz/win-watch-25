@@ -1,0 +1,9 @@
+CompileFlags:
+  Add:
+    # Match node-gyp + node-addon-api includes so clangd can parse `binding.cpp`.
+    - "-std=c++17"
+    - "-IC:/y/w/2-web/0-dp/win-watch-25/napi-plugin/node_modules/node-addon-api"
+    - "-IC:/y/w/2-web/0-dp/win-watch-25/native/src"
+    - "-IC:/Users/maxzz/AppData/Local/node-gyp/Cache/24.6.0/include/node"
+    - "-DNAPI_DISABLE_CPP_EXCEPTIONS"
+
