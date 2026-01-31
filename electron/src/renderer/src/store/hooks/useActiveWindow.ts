@@ -1,13 +1,21 @@
 import { useEffect } from "react";
 import { useSetAtom } from "jotai";
 import { activeHandleAtom, doOnAppStartRefreshWindowInfosAtom } from "../2-atoms";
+import { useSnapshot } from "valtio";
+import { appSettings } from "../1-ui-settings";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster";
 
 export function useActiveWindow() {
     const setActiveHandle = useSetAtom(activeHandleAtom);
+    const { activeWindowMonitoringEnabled } = useSnapshot(appSettings);
 
     useEffect(
         () => {
+            if (!activeWindowMonitoringEnabled) {
+                setActiveHandle(null);
+                return;
+            }
+
             // Listen for active window changes from backend
             const unsubscribe = tmApi.onActiveWindowChanged(
                 (data) => {
@@ -37,12 +45,26 @@ export function useActiveWindow() {
 
             return unsubscribe;
         },
-        []);
+        [activeWindowMonitoringEnabled]);
 }
 
 export function useMonitorActiveWindow() {
+    const setActiveHandle = useSetAtom(activeHandleAtom);
+    const { activeWindowMonitoringEnabled } = useSnapshot(appSettings);
+
     useEffect(
         () => {
+            if (!activeWindowMonitoringEnabled) {
+                setActiveHandle(null);
+                try {
+                    tmApi.stopMonitoring();
+                } catch (e) {
+                    console.error("Error stopping monitoring", e);
+                    // ignore - stopMonitoring may throw if not running
+                }
+                return;
+            }
+
             // Start monitoring on mount
             // Starts global "active window" monitoring (foreground window changes).
             //
@@ -60,7 +82,7 @@ export function useMonitorActiveWindow() {
                 tmApi.stopMonitoring();
             };
         },
-        []);
+        [activeWindowMonitoringEnabled]);
 }
 
 export function useAppStartInitialize() {

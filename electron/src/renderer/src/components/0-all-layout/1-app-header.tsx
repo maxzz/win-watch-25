@@ -16,6 +16,7 @@ export function AppHeader({ className }: { className?: string; }) {
                 </span>
                 <div className="flex items-center gap-1">
                     <Button_WindowTreeRefresh />
+                    <Button_ToggleActiveWindowMonitoring />
                     <Button_HighlightSelectedWindow />
 
                     <Symbol_uia_Toolbar className="size-3.5" />
@@ -53,6 +54,21 @@ function Button_WindowTreeRefresh() {
             title="Refresh window list (refresh window tree)"
         >
             <IconRefresh className="size-3.5" />
+        </Button>
+    );
+}
+
+function Button_ToggleActiveWindowMonitoring() {
+    const settings = useSnapshot(appSettings);
+    const enabled = settings.activeWindowMonitoringEnabled;
+    return (
+        <Button
+            variant="outline"
+            size="xs"
+            onClick={() => appSettings.activeWindowMonitoringEnabled = !enabled}
+            title={enabled ? "Disable active window monitoring" : "Enable active window monitoring"}
+        >
+            {enabled ? "Auto" : "Manual"}
         </Button>
     );
 }

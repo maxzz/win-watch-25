@@ -15,6 +15,7 @@ export type PanelLayout = Record<PanelId, number>;
 export interface AppSettings {
     showFooter: boolean;
     theme: ThemeMode;
+    activeWindowMonitoringEnabled: boolean;
     panelLayout: PanelLayout; // Panel sizes (percentages) 
     // Properties panel position
     propertiesPanelPosition: PropertiesPanelPosition;
@@ -23,6 +24,7 @@ export interface AppSettings {
 const DEFAULT_SETTINGS: AppSettings = {
     showFooter: true,
     theme: "light",
+    activeWindowMonitoringEnabled: true,
     panelLayout: {
         "left-panel": 25,
         "right-panel": 75,
