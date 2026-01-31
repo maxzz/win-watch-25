@@ -14,8 +14,10 @@
         "node-gyp": "^12.1.0"
     },
     "scripts": {
+        "update:clangd": "node scripts/update-clangd.mjs",
         "build": "node-gyp rebuild",
         "build:debug": "node-gyp rebuild --debug -- -Dnative_config=Debug",
-        "install": "node-gyp rebuild"
+        "install": "node-gyp rebuild",
+        "postinstall": "node scripts/update-clangd.mjs"
     }
 }

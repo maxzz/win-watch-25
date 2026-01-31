@@ -29,6 +29,24 @@ pnpm run build
 
 Verify `napi-plugin/build/Release/winwatch.node` exists.
 
+### (Optional) Fix editor errors in `napi-plugin/src/binding.cpp` (clangd)
+
+If `binding.cpp` shows red squiggles like “`napi.h` file not found”, that’s usually **clangd** missing Node/N-API include paths.
+
+We auto-generate `napi-plugin/.clangd` using:
+- `napi-plugin/scripts/update-clangd.mjs`
+
+Commands:
+
+```bash
+# Regenerate .clangd (auto-detects node-gyp header cache path)
+pnpm -C napi-plugin update:clangd
+```
+
+Notes:
+- This also runs automatically on `pnpm -C napi-plugin install` via `postinstall`.
+- If you change Node versions, re-run `pnpm -C napi-plugin update:clangd`, then reload the editor window (or restart clangd).
+
 ### Step 3: Run Electron App
 
 ```bash
