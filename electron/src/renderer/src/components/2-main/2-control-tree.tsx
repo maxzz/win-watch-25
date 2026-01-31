@@ -26,11 +26,7 @@ export function ControlTreeLoader() {
 function ControlTree({ windowControlsTree }: { windowControlsTree: ControlNode; }) {
     return (
         <div className="h-full bg-card flex flex-col">
-            <div className="px-2 py-1 border-b bg-muted/20 flex items-center">
-                <span className="text-xs font-semibold">
-                    Control Hierarchy
-                </span>
-            </div>
+            <Header />
 
             <div className="flex-1 overflow-auto">
                 <ControlTreeNode node={windowControlsTree} depth={0} />
@@ -57,7 +53,7 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
             style={{ paddingLeft: `${depth * 15 + 4}px` }}
             onClick={() => setSelectedControl(node)}
         >
-            <span className="size-4 flex items-center justify-center" onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}>
+            <span className="shrink-0 mr-1 size-4 flex items-center justify-center" onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}>
                 {hasChildren && (
                     expanded
                         ? <ChevronDown className="size-3.5" />
@@ -72,11 +68,7 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
             </span>
 
             {isSelected && (
-                <button
-                    className="ml-auto p-1 hover:bg-background rounded"
-                    title="Invoke"
-                    onClick={(e) => { e.stopPropagation(); invokeControl(node); }}
-                >
+                <button className="ml-auto p-1 hover:bg-background rounded" onClick={(e) => { e.stopPropagation(); invokeControl(node); }} title="Invoke">
                     <MousePointerClick className="size-3" />
                 </button>
             )}
@@ -96,4 +88,14 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
             </div>
         )}
     </>);
+}
+
+function Header() {
+    return (
+        <div className="px-2 py-1 border-b bg-muted/20 flex items-center">
+            <span className="text-xs font-semibold">
+                Control Hierarchy
+            </span>
+        </div>
+    );
 }

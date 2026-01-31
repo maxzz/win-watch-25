@@ -1,14 +1,25 @@
 import { useAtomValue } from "jotai";
 import { selectedControlAtom } from "@renderer/store/2-atoms";
 import { formatControlType } from "@renderer/utils/uia/0-uia-control-type-names";
+import { useSnapshot } from "valtio/react";
+import { appSettings } from "@renderer/store/1-ui-settings";
+import { classNames } from "@renderer/utils";
 
 export function PropertiesPanel() {
     const control = useAtomValue(selectedControlAtom);
 
+    const { propertiesPanelPosition } = useSnapshot(appSettings);
+    const isPropertiesOnRight = propertiesPanelPosition === 'right';
+
     if (!control) {
         return (
-            <div className="h-full p-4 flex items-center justify-center text-muted-foreground bg-muted/10">
-                Select a control to view properties
+            <div className="h-full text-xs text-muted-foreground bg-muted/10">
+                <div className="flex flex-col">
+                    <Header />
+                    <div className="px-2 flex-1 text-muted-foreground">
+                        Select a control to view properties
+                    </div>
+                </div>
             </div>
         );
     }
@@ -25,10 +36,8 @@ export function PropertiesPanel() {
     ];
 
     return (
-        <div className="h-full bg-card border-t flex flex-col">
-            <div className="p-2 text-xs font-semibold border-b bg-muted/20">
-                Properties
-            </div>
+        <div className={classNames("h-full bg-card flex flex-col", isPropertiesOnRight ? "" : "border-t")}>
+            <Header />
 
             <div className="flex-1 p-0 overflow-auto">
                 <div className="text-xs grid grid-cols-[auto_1fr]">
@@ -42,6 +51,14 @@ export function PropertiesPanel() {
                     )}
                 </div>
             </div>
+        </div>
+    );
+}
+
+function Header() {
+    return (
+        <div className="px-2 py-1 text-xs font-semibold border-b bg-muted/20">
+            Properties
         </div>
     );
 }

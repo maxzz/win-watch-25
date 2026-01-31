@@ -11,11 +11,7 @@ export function WindowTreePanel() {
 
     return (
         <div className="h-full bg-card border-r flex flex-col">
-            <div className="px-2 py-1 bg-muted/20 border-b flex justify-between items-center">
-                <span className="text-xs font-semibold">
-                    Windows
-                </span>
-            </div>
+            <Header />
 
             <div className="flex-1 overflow-auto">
                 {windowInfos.map(
@@ -72,6 +68,16 @@ function WindowNode({ windowInfo, selectedHandle, onSelect, depth }: { windowInf
                     )}
                 </div>
             )}
+        </div>
+    );
+}
+
+function Header() {
+    return (
+        <div className="px-2 py-1 bg-muted/20 border-b flex justify-between items-center">
+            <span className="text-xs font-semibold">
+                Windows
+            </span>
         </div>
     );
 }
