@@ -1,5 +1,6 @@
 #pragma once
 #include <windows.h>
+#include <oleauto.h>
 #include <cerrno>
 #include <cstdint>
 #include <cstdlib>
@@ -35,6 +36,14 @@ inline std::string WideToUtf8(const std::wstring& ws) {
         nullptr
     );
     return result;
+}
+
+inline std::string BstrToUtf8(BSTR bstr) {
+    if (!bstr) return "";
+    // BSTR is UTF-16 and may contain embedded NULs; use its explicit length.
+    const UINT len = SysStringLen(bstr);
+    if (len == 0) return "";
+    return WideToUtf8(std::wstring(bstr, bstr + len));
 }
 
 inline std::wstring Utf8ToWide(const std::string& s) {

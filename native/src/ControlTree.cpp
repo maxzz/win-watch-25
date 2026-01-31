@@ -73,17 +73,17 @@ void ControlTree::WalkTree(IUIAutomationElement* element, ControlNode& node) {
     BSTR bStr;
     
     if (SUCCEEDED(element->get_CurrentName(&bStr)) && bStr) {
-        node.name = _com_util::ConvertBSTRToString(bStr);
+        node.name = BstrToUtf8(bStr);
         SysFreeString(bStr);
     }
     
     if (SUCCEEDED(element->get_CurrentAutomationId(&bStr)) && bStr) {
-        node.automationId = _com_util::ConvertBSTRToString(bStr);
+        node.automationId = BstrToUtf8(bStr);
         SysFreeString(bStr);
     }
 
     if (SUCCEEDED(element->get_CurrentClassName(&bStr)) && bStr) {
-        node.className = _com_util::ConvertBSTRToString(bStr);
+        node.className = BstrToUtf8(bStr);
         SysFreeString(bStr);
     }
     

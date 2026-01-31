@@ -8,12 +8,12 @@ std::string ControlInfo::GetDetailsJson(IUIAutomationElement* element) {
     
     BSTR bStr;
     if (SUCCEEDED(element->get_CurrentName(&bStr)) && bStr) {
-        json << "\"name\":\"" << EscapeJson(_com_util::ConvertBSTRToString(bStr)) << "\",";
+        json << "\"name\":\"" << EscapeJson(BstrToUtf8(bStr)) << "\",";
         SysFreeString(bStr);
     }
     
     if (SUCCEEDED(element->get_CurrentAutomationId(&bStr)) && bStr) {
-        json << "\"automationId\":\"" << EscapeJson(_com_util::ConvertBSTRToString(bStr)) << "\",";
+        json << "\"automationId\":\"" << EscapeJson(BstrToUtf8(bStr)) << "\",";
         SysFreeString(bStr);
     }
     
