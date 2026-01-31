@@ -3,8 +3,8 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { selectedControlAtom, doGetWindowControlsTreeAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
 import { ControlNode } from "@renderer/types";
 import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
-import { getControlTypeName } from "@renderer/utils/uia/uia-control-types";
-import { getControlTypeIcon } from "@renderer/utils/uia/uia-control-type-icons";
+import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
+import { getControlTypeIcon } from "@renderer/utils/uia/1-uia-control-type-icons";
 
 export function ControlTreeLoader() {
     const windowControlsTree = useAtomValue(doGetWindowControlsTreeAtom);

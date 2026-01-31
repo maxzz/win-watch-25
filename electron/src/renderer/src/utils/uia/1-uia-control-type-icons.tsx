@@ -40,7 +40,7 @@ import {
     MousePointer2,
 } from "lucide-react";
 import { Symbol_uia_Toolbar, Symbol_uia_Tooltip } from "@renderer/components/ui/icons/symbols/ui-automation";
-import { UIA_CONTROL_TYPE_FILMSTRIP_ICONS, DefaultFilmstripControlTypeIcon } from "./uia-control-type-filmstrip-icons";
+import { UIA_CONTROL_TYPE_FILMSTRIP_ICONS, DefaultFilmstripControlTypeIcon } from "./2-uia-control-type-filmstrip-icons";
 
 const USE_FILMSTRIP = false; // Set to true to use the new pixel-art filmstrip icons
 

@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { UiaFilmstripIcon } from "./uia-filmstrip-icon";
+import { UiaFilmstripIcon } from "./8-uia-filmstrip-icon";
 
 const iconClass = "size-4";
 
