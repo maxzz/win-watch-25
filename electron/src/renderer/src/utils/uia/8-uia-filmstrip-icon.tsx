@@ -15,7 +15,7 @@ export interface UiaFilmstripIconProps extends SVGAttributes<SVGSVGElement> {
  * The filmstrip contains 16x16 cells. 
  * This component wraps it in a 24x24 SVG (by default) for consistency.
  */
-export function UiaFilmstripIcon({ index, size = 24, src = "/uia-icons.png", className, ...props }: UiaFilmstripIconProps) {
+export function UiaFilmstripIcon({ index, size = 24, src = "/uia-icons.png", className, ...rest }: UiaFilmstripIconProps) {
     const cellSize = 16;
     const padding = (size - cellSize) / 2;
     // Assuming the filmstrip has many icons, we don't strictly need the full width 
@@ -29,7 +29,7 @@ export function UiaFilmstripIcon({ index, size = 24, src = "/uia-icons.png", cla
             viewBox={`0 0 ${size} ${size}`}
             className={className}
             xmlns="http://www.w3.org/2000/svg"
-            {...props}
+            {...rest}
         >
             <svg
                 x={padding}

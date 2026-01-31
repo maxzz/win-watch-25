@@ -4,7 +4,7 @@ import { selectedControlAtom, doGetWindowControlsTreeAtom, doInvokeControlAtom }
 import { ControlNode } from "@renderer/types";
 import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
 import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
-import { getControlTypeIcon } from "@renderer/utils/uia/1-uia-control-type-icons";
+import { getControlTypeIcon } from "@renderer/utils/uia/1-uia-control-type-icons-svg";
 
 export function ControlTreeLoader() {
     const windowControlsTree = useAtomValue(doGetWindowControlsTreeAtom);

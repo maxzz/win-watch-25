@@ -40,7 +40,7 @@ import {
     MousePointer2,
 } from "lucide-react";
 import { Symbol_uia_Toolbar, Symbol_uia_Tooltip } from "@renderer/components/ui/icons/symbols/ui-automation";
-import { UIA_CONTROL_TYPE_FILMSTRIP_ICONS, DefaultFilmstripControlTypeIcon } from "./2-uia-control-type-filmstrip-icons";
+import { UIA_CONTROL_TYPE_FILMSTRIP_ICONS, DefaultFilmstripControlTypeIcon } from "./2-uia-control-type-icons-filmstrip";
 
 const USE_FILMSTRIP = false; // Set to true to use the new pixel-art filmstrip icons
 
@@ -100,14 +100,14 @@ const DefaultLucideIcon: JSX.Element = <Box className={iconClass} />;
  * Control Type IDs are from UIAutomationClient.h
  * https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-controltype-ids
  */
-export const UIA_CONTROL_TYPE_ICONS: Record<string, JSX.Element> = USE_FILMSTRIP
+const UIA_CONTROL_TYPE_ICONS: Record<string, JSX.Element> = USE_FILMSTRIP
     ? UIA_CONTROL_TYPE_FILMSTRIP_ICONS
     : UIA_LUCIDE_ICONS;
 
 /**
  * Default icon for unknown control types
  */
-export const DefaultControlTypeIcon: JSX.Element = USE_FILMSTRIP
+const DefaultControlTypeIcon: JSX.Element = USE_FILMSTRIP
     ? DefaultFilmstripControlTypeIcon
     : DefaultLucideIcon;
 
