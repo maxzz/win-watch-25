@@ -15,7 +15,7 @@ export function ActiveWindowInfo() {
         windowInfos.find(w => parseInt(w.handle) == parseInt(activeHandle || "0")) ||
         null;
 
-    console.log("ActiveWindowInfo", activeHandle, activeWindow, windowInfos);
+    //console.log("ActiveWindowInfo", activeHandle, activeWindow, windowInfos);
 
     if (!activeWindow) {
         return (
