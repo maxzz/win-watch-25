@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
-import { type ControlNode, type WindowInfo } from "../types";
+import { type ControlNode, type WindowInfo } from "./9-tmapi-types";
 
 //#region Window list
 

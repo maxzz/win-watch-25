@@ -43,15 +43,29 @@ export function PropertiesPanel() {
             <div className="flex-1 p-0 overflow-auto">
                 <div className="text-xs grid grid-cols-[auto_1fr]">
                     {properties.map(
-                        (prop, i) => (
-                            <div key={i} className="contents border-b hover:bg-muted/30">
-                                <div className="px-2 py-0.5 font-medium text-muted-foreground border-r">{prop.label}</div>
-                                <div className="px-2 py-0.5 break-all">{prop.value || <span className="text-muted-foreground italic">empty</span>}</div>
-                            </div>
-                        )
+                        (prop, idx) => {
+                            const nameValue = prop.label === "Bounds" ? boundsValue(prop.value) : prop.value;
+                            return (
+                                <div className="contents border-b hover:bg-muted/30" key={idx}>
+                                    <div className="px-2 py-0.5 font-medium text-muted-foreground border-r cursor-default select-none" title={prop.label}>{prop.label}</div>
+                                    <div className="px-2 py-0.5 break-all truncate cursor-default" title={nameValue}>
+                                        {nameValue || <span className="text-muted-foreground italic">empty</span>}
+                                    </div>
+                                </div>
+                            );
+                        }
                     )}
                 </div>
             </div>
         </div>
     );
+}
+
+function boundsValue(boundsStr?: string): string { // remove [] and split into x, y, w, h
+    if (!boundsStr) {
+        return '';
+    }
+    const bounds = boundsStr.slice(1, -1).split(",").map(Number);
+    const [x, y, w, h] = bounds;
+    return `x:${x}, y:${y}, r:${x+w}, b:${y+h}`; // the same as in the Microsoft Inspector: https://learn.microsoft.com/en-us/windows/win32/api/uiautomationclient/nf-uiautomationclient-getelementrect
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAtom, useAtomValue } from "jotai";
 import { classNames } from "@renderer/utils";
-import { type WindowInfo } from "@renderer/types";
+import { type WindowInfo } from "@renderer/store/9-tmapi-types";
 import { WindowTreeHeader } from "./headers/5-window-tree-header";
 import { IconL_AppWindow, IconL_ChevronDown, IconL_ChevronRight } from "../ui/icons";
 import { activeHandleAtom, windowInfosAtom } from "@renderer/store/2-atoms";

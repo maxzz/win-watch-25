@@ -27,27 +27,27 @@ export function ActiveWindowInfo() {
 
     return (
         <div className={panelClasses}>
-            <div>
-                <span className="font-semibold">Handle: </span>
+            <div className="min-w-[132px]">
+                <span className="font-semibold">HWND: </span>
                 {normalizeHwnd(activeWindow.handle)}
             </div>
 
             <div>
-                <span className="font-semibold">Process: </span>
-                {activeWindow.processName} (PID: {asHexNumber({ value: activeWindow.processId, prefix: true })})
+                <span className="font-semibold">PID: </span>
+                {asHexNumber({ value: activeWindow.processId, prefix: true })} ({activeWindow.processName})
             </div>
 
             <div>
-                <span className="font-semibold">Class: </span>
+                <span className="font-semibold">class: </span>
                 {activeWindow.className}
             </div>
 
-            <div className="flex-1 text-right truncate">
+            {/* <div className="flex-1 text-right truncate">
                 <span className="font-semibold">Title: </span>
                 "{activeWindow.title}"
-            </div>
+            </div> */}
         </div>
     );
 }
 
-const panelClasses = "px-1 py-2 text-xs bg-muted/20 border-t border-foreground/20 flex items-center gap-2";
+const panelClasses = "px-1 py-2 text-[.65rem] bg-muted/20 border-t border-foreground/20 flex items-center gap-2";

@@ -1,7 +1,7 @@
 import { useState, Suspense } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { selectedControlAtom, doGetWindowControlsTreeAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
-import { ControlNode } from "@renderer/types";
+import { ControlNode } from "@renderer/store/9-tmapi-types";
 import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
 import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
 import { getControlTypeIcon } from "@renderer/utils/uia/1-uia-control-type-icons-svg";

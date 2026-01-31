@@ -16,7 +16,7 @@ export function normalizeHwnd(hwnd: string): string {
 }
 
 export function asHexNumber({ value, prefix, digits }: { value: number; prefix?: boolean; digits?: number }): string {
-    let rv = value.toString(16);
+    let rv = value.toString(16).toUpperCase();
     if (digits) {
         rv = rv.padStart(digits, '0');
     }
