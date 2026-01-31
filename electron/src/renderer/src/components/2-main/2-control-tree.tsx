@@ -51,53 +51,49 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
 
     const controlIcon = getControlTypeIcon(node.controlType);
 
-    return (
-        <div>
-            <div
-                className={`px-2 h-5 hover:bg-accent/50 cursor-pointer flex items-center ${isSelected ? 'bg-accent text-accent-foreground' : ''}`}
-                style={{ paddingLeft: `${depth * 20 + 4}px` }}
-                onClick={() => setSelectedControl(node)}
-            >
-                <span
-                    className="mr-1 size-4 flex items-center justify-center"
-                    onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
-                >
-                    {hasChildren && (expanded
+    return (<>
+        <div
+            className={`px-2 h-5 hover:bg-accent/50 cursor-pointer flex items-center ${isSelected ? 'bg-accent text-accent-foreground' : ''}`}
+            style={{ paddingLeft: `${depth * 15 + 4}px` }}
+            onClick={() => setSelectedControl(node)}
+        >
+            <span className="size-4 flex items-center justify-center" onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}>
+                {hasChildren && (
+                    expanded
                         ? <ChevronDown className="size-3.5" />
                         : <ChevronRight className="size-3.5" />
-                    )}
-                </span>
-
-                <span className="mr-2 text-blue-500">{controlIcon}</span>
-
-                <span className="text-xs truncate" title={node.name}>
-                    {getControlTypeName(node.controlType)} {node.name ? `"${node.name}"` : ""}
-                </span>
-
-                {isSelected && (
-                    <button
-                        className="ml-auto p-1 hover:bg-background rounded"
-                        title="Invoke"
-                        onClick={(e) => { e.stopPropagation(); invokeControl(node); }}
-                    >
-                        <MousePointerClick className="size-3" />
-                    </button>
                 )}
-            </div>
+            </span>
 
-            {expanded && hasChildren && (
-                <div>
-                    {node.children!.map(
-                        (child, i) => (
-                            <ControlTreeNode
-                                key={i}
-                                node={child}
-                                depth={depth + 1}
-                            />
-                        )
-                    )}
-                </div>
+            {controlIcon}
+
+            <span className="ml-1 text-xs truncate" title={node.name}>
+                {getControlTypeName(node.controlType)} {node.name ? `"${node.name}"` : ""}
+            </span>
+
+            {isSelected && (
+                <button
+                    className="ml-auto p-1 hover:bg-background rounded"
+                    title="Invoke"
+                    onClick={(e) => { e.stopPropagation(); invokeControl(node); }}
+                >
+                    <MousePointerClick className="size-3" />
+                </button>
             )}
         </div>
-    );
+
+        {expanded && hasChildren && (
+            <div>
+                {node.children!.map(
+                    (child, i) => (
+                        <ControlTreeNode
+                            key={i}
+                            node={child}
+                            depth={depth + 1}
+                        />
+                    )
+                )}
+            </div>
+        )}
+    </>);
 }
