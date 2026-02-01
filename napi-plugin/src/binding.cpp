@@ -97,21 +97,41 @@ Napi::Value InvokeControlWrapper(const Napi::CallbackInfo& info) {
 }
 
 // Highlight a rectangle on screen
-// Parameters: bounds object {x, y, width, height}, optional options {color, borderWidth, blinkCount}
+// Parameters: bounds object {left, top, right, bottom} (preferred),
+// or legacy {x, y, width, height}; optional options {color, borderWidth, blinkCount}
 Napi::Value HighlightRectWrapper(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     
     if (info.Length() < 1 || !info[0].IsObject()) {
-        Napi::TypeError::New(env, "Expected bounds object {x, y, width, height}").ThrowAsJavaScriptException();
+        Napi::TypeError::New(env, "Expected bounds object {left, top, right, bottom}").ThrowAsJavaScriptException();
         return env.Undefined();
     }
     
     Napi::Object bounds = info[0].As<Napi::Object>();
     
-    int x = bounds.Has("x") ? bounds.Get("x").As<Napi::Number>().Int32Value() : 0;
-    int y = bounds.Has("y") ? bounds.Get("y").As<Napi::Number>().Int32Value() : 0;
-    int width = bounds.Has("width") ? bounds.Get("width").As<Napi::Number>().Int32Value() : 0;
-    int height = bounds.Has("height") ? bounds.Get("height").As<Napi::Number>().Int32Value() : 0;
+    int left = 0;
+    int top = 0;
+    int right = 0;
+    int bottom = 0;
+
+    // Preferred Rect4 shape
+    if (bounds.Has("left") && bounds.Has("top") && bounds.Has("right") && bounds.Has("bottom")) {
+        left = bounds.Get("left").As<Napi::Number>().Int32Value();
+        top = bounds.Get("top").As<Napi::Number>().Int32Value();
+        right = bounds.Get("right").As<Napi::Number>().Int32Value();
+        bottom = bounds.Get("bottom").As<Napi::Number>().Int32Value();
+    } else {
+        // Legacy {x, y, width, height}
+        const int x = bounds.Has("x") ? bounds.Get("x").As<Napi::Number>().Int32Value() : 0;
+        const int y = bounds.Has("y") ? bounds.Get("y").As<Napi::Number>().Int32Value() : 0;
+        const int width = bounds.Has("width") ? bounds.Get("width").As<Napi::Number>().Int32Value() : 0;
+        const int height = bounds.Has("height") ? bounds.Get("height").As<Napi::Number>().Int32Value() : 0;
+
+        left = x;
+        top = y;
+        right = x + width;
+        bottom = y + height;
+    }
     
     // Default values
     int color = 0;          // 0 means use default (red)
@@ -133,7 +153,12 @@ Napi::Value HighlightRectWrapper(const Napi::CallbackInfo& info) {
         }
     }
     
-    HighlightRect(x, y, width, height, color, borderWidth, blinkCount);
+    if (right - left <= 0 || bottom - top <= 0) {
+        // Nothing to draw.
+        return env.Undefined();
+    }
+
+    HighlightRect(left, top, right, bottom, color, borderWidth, blinkCount);
     return env.Undefined();
 }
 

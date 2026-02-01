@@ -231,10 +231,18 @@ void ControlHighlighter::OnTimer() {
 
 void ControlHighlighter::UpdateHighlightWindow(const HighlightParams& params) {
     int borderWidth = params.borderWidth;
-    int windowWidth = params.width + borderWidth * 2;
-    int windowHeight = params.height + borderWidth * 2;
-    int windowX = params.x - borderWidth;
-    int windowY = params.y - borderWidth;
+    const int rectWidth = params.right - params.left;
+    const int rectHeight = params.bottom - params.top;
+    if (rectWidth <= 0 || rectHeight <= 0) {
+        // Invalid rectangle
+        ShowWindow(m_hwnd, SW_HIDE);
+        return;
+    }
+
+    int windowWidth = rectWidth + borderWidth * 2;
+    int windowHeight = rectHeight + borderWidth * 2;
+    int windowX = params.left - borderWidth;
+    int windowY = params.top - borderWidth;
     
     // Create a compatible DC and bitmap for drawing
     HDC hdcScreen = GetDC(nullptr);

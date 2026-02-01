@@ -95,12 +95,12 @@ WM_API const char* GetControlDetailsJson(HWND hwnd, const char* runtimeId) {
     return _strdup("{}");
 }
 
-WM_API void HighlightRect(int x, int y, int width, int height, int color, int borderWidth, int blinkCount) {
+WM_API void HighlightRect(int left, int top, int right, int bottom, int color, int borderWidth, int blinkCount) {
     HighlightParams params;
-    params.x = x;
-    params.y = y;
-    params.width = width;
-    params.height = height;
+    params.left = left;
+    params.top = top;
+    params.right = right;
+    params.bottom = bottom;
     
     // Color is passed as RGB, convert if needed (Windows uses BGR internally but we use RGB for API consistency)
     if (color != 0) {

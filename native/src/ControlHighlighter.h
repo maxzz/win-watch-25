@@ -4,10 +4,10 @@
 
 // Parameters for highlighting a control
 struct HighlightParams {
-    int x = 0;
-    int y = 0;
-    int width = 0;
-    int height = 0;
+    int left = 0;
+    int top = 0;
+    int right = 0;
+    int bottom = 0;
     int borderWidth = 5;
     COLORREF highlightColor = RGB(255, 0, 0);  // Red
     COLORREF transparentColor = RGB(0, 128, 128);  // For color key

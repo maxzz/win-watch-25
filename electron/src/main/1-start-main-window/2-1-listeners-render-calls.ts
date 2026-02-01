@@ -48,15 +48,7 @@ export function setListenersRenderCalls() {
     // options: {color?, borderWidth?, blinkCount?}
     ipcMain.handle('highlight-rect', (_, bounds: { left: number; top: number; right: number; bottom: number }, options?: { color?: number; borderWidth?: number; blinkCount?: number }) => {
         if (!winwatchPlugin) return;
-        winwatchPlugin.highlightRect(
-            {
-                x: bounds.left,
-                y: bounds.top,
-                width: bounds.right - bounds.left,
-                height: bounds.bottom - bounds.top
-            },
-            options
-        );
+        winwatchPlugin.highlightRect(bounds, options);
     });
 
     // Hide the highlight rectangle
