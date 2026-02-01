@@ -34,7 +34,7 @@ interface WinWatchApi {
     stopMonitoring: () => Promise<boolean>;
     invokeControl: (handle: string, runtimeId: string) => Promise<boolean>;
     onActiveWindowChanged: (callback: (data: string) => void) => () => void;
-    highlightRect: (bounds: HighlightBounds, options?: HighlightOptions) => Promise<void>;
+    highlightRect: (bounds: Rect4, options?: HighlightOptions) => Promise<void>;
     hideHighlight: () => Promise<void>;
     getWindowRect: (handle: string) => Promise<string>;
 }

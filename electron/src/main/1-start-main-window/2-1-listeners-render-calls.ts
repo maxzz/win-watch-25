@@ -44,11 +44,19 @@ export function setListenersRenderCalls() {
     });
 
     // Highlight a rectangle on screen
-    // bounds: {x, y, width, height}
+    // bounds: {left, top, right, bottom}
     // options: {color?, borderWidth?, blinkCount?}
-    ipcMain.handle('highlight-rect', (_, bounds: { x: number; y: number; width: number; height: number }, options?: { color?: number; borderWidth?: number; blinkCount?: number }) => {
+    ipcMain.handle('highlight-rect', (_, bounds: { left: number; top: number; right: number; bottom: number }, options?: { color?: number; borderWidth?: number; blinkCount?: number }) => {
         if (!winwatchPlugin) return;
-        winwatchPlugin.highlightRect(bounds, options);
+        winwatchPlugin.highlightRect(
+            {
+                x: bounds.left,
+                y: bounds.top,
+                width: bounds.right - bounds.left,
+                height: bounds.bottom - bounds.top
+            },
+            options
+        );
     });
 
     // Hide the highlight rectangle

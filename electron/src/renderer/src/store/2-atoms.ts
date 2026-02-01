@@ -97,21 +97,11 @@ export const setSelectedControlAtom = atom(
             return; // no bounds, no highlight
         }
 
-        const width = b.right - b.left;
-        const height = b.bottom - b.top;
-        if (width <= 0 || height <= 0) {
-            return; // no width or height, no highlight
-        }
-
-        const bounds: HighlightBounds = {
-            x: b.left,
-            y: b.top,
-            width,
-            height
-        };
-
         try {
-            await tmApi.highlightRect(bounds, { blinkCount: 1, color: 0x00D4FF, borderWidth: 2 });
+            await tmApi.highlightRect(
+                { left: b.left, top: b.top, right: b.right, bottom: b.bottom },
+                { blinkCount: 1, color: 0x00D4FF, borderWidth: 2 }
+            );
         } catch (e) {
             console.warn("Failed to highlight selected control", e);
         }
@@ -185,13 +175,7 @@ export const doHighlightSelectedWindowAtom = atom(
             }
 
             const { left, top, right, bottom } = rect;
-            const bounds: HighlightBounds = {
-                x: left,
-                y: top,
-                width: right - left,
-                height: bottom - top
-            };
-            await tmApi.highlightRect(bounds, { blinkCount: 3, color: 0xFF8400, borderWidth: 2 });
+            await tmApi.highlightRect({ left, top, right, bottom }, { blinkCount: 3, color: 0xFF8400, borderWidth: 2 });
 
             notice.success(`Highlighted selected window (handle: ${activeHandle})`);
         } catch (e) {

@@ -23,7 +23,7 @@ const mainLocalApi: WinWatchApi = {
     },
 
     // Highlight a rectangle on screen
-    highlightRect: (bounds: HighlightBounds, options?: HighlightOptions) => ipcRenderer.invoke('highlight-rect', bounds, options),
+    highlightRect: (bounds: Rect4, options?: HighlightOptions) => ipcRenderer.invoke('highlight-rect', bounds, options),
     
     // Hide the highlight rectangle
     hideHighlight: () => ipcRenderer.invoke('hide-highlight'),
