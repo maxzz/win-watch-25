@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { type ControlNode, type WindowInfo } from "./9-tmapi-types";
+import { appSettings } from "./1-ui-settings";
 
 //#region Window list
 
@@ -65,30 +66,13 @@ export const doGetWindowControlsTreeAtom = atom(
 
 export const selectedControlAtom = atom<ControlNode | null>(null);
 
-export const autoHighlightSelectedControlAtom = atom<boolean>(false);
-
-export const setAutoHighlightSelectedControlAtom = atom(
-    null,
-    async (_get, set, enabled: boolean): Promise<void> => {
-        set(autoHighlightSelectedControlAtom, enabled);
-
-        if (!enabled) {
-            try {
-                await tmApi.hideHighlight();
-            } catch (e) {
-                console.warn("Failed to hide highlight", e);
-            }
-        }
-    }
-);
-
 export const setSelectedControlAtom = atom(
     null,
     async (get, set, control: ControlNode | null): Promise<void> => {
         set(selectedControlAtom, control);
 
         // Highlight the selected control if auto-highlight is enabled
-        if (!control || !get(autoHighlightSelectedControlAtom)) {
+        if (!control || !appSettings.autoHighlightSelectedControl) {
             return;
         }
 

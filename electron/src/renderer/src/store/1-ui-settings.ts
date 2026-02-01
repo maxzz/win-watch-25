@@ -16,6 +16,7 @@ export interface AppSettings {
     showFooter: boolean;
     theme: ThemeMode;
     activeWindowMonitoringEnabled: boolean;
+    autoHighlightSelectedControl: boolean;
     panelLayout: PanelLayout; // Panel sizes (percentages) 
     // Properties panel position
     propertiesPanelPosition: PropertiesPanelPosition;
@@ -25,6 +26,7 @@ const DEFAULT_SETTINGS: AppSettings = {
     showFooter: true,
     theme: "light",
     activeWindowMonitoringEnabled: true,
+    autoHighlightSelectedControl: false,
     panelLayout: {
         "left-panel": 25,
         "right-panel": 75,
