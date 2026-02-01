@@ -25,12 +25,7 @@ function compareSemver(a, b) {
   return a.patch - b.patch;
 }
 
-function pickBestNodeCacheVersion(cacheRoot) {
-  const preferred = process.versions.node; // e.g. "24.6.0"
-  const preferredPath = path.join(cacheRoot, preferred, "include", "node");
-  if (fs.existsSync(preferredPath)) return preferred;
-
-  // Fallback: pick highest semver present.
+function listNodeCacheIncludeDirs(cacheRoot) {
   const dirs = fs
     .readdirSync(cacheRoot, { withFileTypes: true })
     .filter((d) => d.isDirectory())
@@ -39,13 +34,26 @@ function pickBestNodeCacheVersion(cacheRoot) {
     .filter((x) => x.ver !== null)
     .sort((x, y) => compareSemver(x.ver, y.ver));
 
+  // Prefer the current runtime Node version, then include all other cached versions (newest first).
+  const preferred = process.versions.node; // e.g. "24.6.0"
+  const orderedVersions = [];
+  if (preferred) orderedVersions.push(preferred);
+
   for (let i = dirs.length - 1; i >= 0; i--) {
-    const candidate = dirs[i].name;
-    const inc = path.join(cacheRoot, candidate, "include", "node");
-    if (fs.existsSync(inc)) return candidate;
+    const v = dirs[i].name;
+    if (v !== preferred) orderedVersions.push(v);
   }
 
-  return null;
+  const includeDirs = [];
+  for (const v of orderedVersions) {
+    const inc = path.join(cacheRoot, v, "include", "node");
+    if (fs.existsSync(inc)) {
+      includeDirs.push(inc);
+    }
+  }
+
+  // De-dupe while preserving order.
+  return [...new Set(includeDirs)];
 }
 
 const __filename = fileURLToPath(import.meta.url);
@@ -59,11 +67,12 @@ if (!localAppData) process.exit(0);
 const cacheRoot = path.join(localAppData, "node-gyp", "Cache");
 if (!fs.existsSync(cacheRoot)) process.exit(0);
 
-const version = pickBestNodeCacheVersion(cacheRoot);
-if (!version) process.exit(0);
+const nodeIncludeDirs = listNodeCacheIncludeDirs(cacheRoot);
+if (nodeIncludeDirs.length === 0) process.exit(0);
 
-const nodeInclude = path.join(cacheRoot, version, "include", "node");
-const nodeIncludePosix = toPosix(nodeInclude);
+const nodeIncludeDirsPosix = nodeIncludeDirs.map((p) => toPosix(p));
+
+const nodeIncludeLines = nodeIncludeDirsPosix.map((p) => `    - "-I${p}"`).join("\n");
 
 const content = `CompileFlags:
   Add:
@@ -72,7 +81,7 @@ const content = `CompileFlags:
     - "-std=c++17"
     - "-I./node_modules/node-addon-api"
     - "-I../native/src"
-    - "-I${nodeIncludePosix}"
+${nodeIncludeLines}
     - "-DNAPI_DISABLE_CPP_EXCEPTIONS"
 `;
 
