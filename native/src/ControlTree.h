@@ -10,7 +10,7 @@ struct ControlNode {
     std::string automationId;
     std::string className;
     std::string runtimeId;
-    long left, top, width, height;
+    long left, top, right, bottom;
     bool isEnabled;
     bool isVisible;
     std::vector<ControlNode> children;

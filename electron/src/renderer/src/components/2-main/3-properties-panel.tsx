@@ -33,7 +33,7 @@ export function PropertiesPanel() {
         { label: "Runtime ID", value: control.runtimeId },
         { label: "Enabled", value: String(control.isEnabled) },
         { label: "Visible", value: String(control.isVisible) },
-        { label: "Bounds", value: control.bounds ? `[${control.bounds.x}, ${control.bounds.y}, ${control.bounds.width}, ${control.bounds.height}]` : "N/A" }
+        { label: "Bounds", value: control.bounds ? `[${control.bounds.left}, ${control.bounds.top}, ${control.bounds.right}, ${control.bounds.bottom}]` : "N/A" }
     ];
 
     return (
@@ -61,11 +61,11 @@ export function PropertiesPanel() {
     );
 }
 
-function boundsValue(boundsStr?: string): string { // remove [] and split into x, y, w, h
+function boundsValue(boundsStr?: string): string { // remove [] and split into l, t, r, b
     if (!boundsStr) {
         return '';
     }
     const bounds = boundsStr.slice(1, -1).split(",").map(Number);
-    const [x, y, w, h] = bounds;
-    return `x:${x}, y:${y}, r:${x+w}, b:${y+h}`; // the same as in the Microsoft Inspector
+    const [left, top, right, bottom] = bounds;
+    return `l:${left}, t:${top}, r:${right}, b:${bottom}`; // the same style as in the Microsoft Inspector
 }

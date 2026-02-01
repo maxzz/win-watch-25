@@ -14,7 +14,7 @@ export interface ControlNode {
   automationId: string;
   className: string;
   runtimeId: string;
-  bounds: { x: number; y: number; width: number; height: number };
+  bounds: { left: number; top: number; right: number; bottom: number };
   isEnabled: boolean;
   isVisible: boolean;
   children?: ControlNode[];

@@ -99,8 +99,8 @@ void ControlTree::WalkTree(IUIAutomationElement* element, ControlNode& node) {
     if (SUCCEEDED(element->get_CurrentBoundingRectangle(&rect))) {
         node.left = rect.left;
         node.top = rect.top;
-        node.width = rect.right - rect.left;
-        node.height = rect.bottom - rect.top;
+        node.right = rect.right;
+        node.bottom = rect.bottom;
     }
 
     BOOL enabled;
@@ -145,7 +145,7 @@ std::string ControlTree::ToJson(const ControlNode& node) {
     json << "\"automationId\":\"" << EscapeJson(node.automationId) << "\",";
     json << "\"className\":\"" << EscapeJson(node.className) << "\",";
     json << "\"runtimeId\":\"" << EscapeJson(node.runtimeId) << "\",";
-    json << "\"bounds\":{\"x\":" << node.left << ",\"y\":" << node.top << ",\"width\":" << node.width << ",\"height\":" << node.height << "},";
+    json << "\"bounds\":{\"left\":" << node.left << ",\"top\":" << node.top << ",\"right\":" << node.right << ",\"bottom\":" << node.bottom << "},";
     json << "\"isEnabled\":" << (node.isEnabled ? "true" : "false") << ",";
     json << "\"isVisible\":" << (node.isVisible ? "true" : "false") << ",";
     
