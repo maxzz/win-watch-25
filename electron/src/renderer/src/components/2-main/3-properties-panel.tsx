@@ -67,5 +67,5 @@ function boundsValue(boundsStr?: string): string { // remove [] and split into x
     }
     const bounds = boundsStr.slice(1, -1).split(",").map(Number);
     const [x, y, w, h] = bounds;
-    return `x:${x}, y:${y}, r:${x+w}, b:${y+h}`; // the same as in the Microsoft Inspector: https://learn.microsoft.com/en-us/windows/win32/api/uiautomationclient/nf-uiautomationclient-getelementrect
+    return `x:${x}, y:${y}, r:${x+w}, b:${y+h}`; // the same as in the Microsoft Inspector
 }
