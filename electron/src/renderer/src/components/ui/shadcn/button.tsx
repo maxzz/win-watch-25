@@ -1,9 +1,9 @@
-import * as React from "react"; // 01.06.26; 01.28.26
+import * as React from "react"; // 01.06.26; 01.28.26, 01.31.26
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps, cva } from "class-variance-authority";
 import { cn } from "@renderer/utils";
 
-export function Button({ className, variant, size, asChild = false, ...rest }: React.ComponentProps<"button"> & VariantProps<typeof buttonVariants> & { asChild?: boolean; }) {
+export function Button({ className, variant, size, asChild = false, ...rest }: React.ComponentPropsWithoutRef<"button"> & VariantProps<typeof buttonVariants> & { asChild?: boolean; }) {
     const Comp = asChild ? Slot : "button";
     return (
         <Comp
