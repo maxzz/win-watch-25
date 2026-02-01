@@ -48,7 +48,7 @@ export function PropertiesPanel() {
                             return (
                                 <div className="contents border-b hover:bg-muted/30" key={idx}>
                                     <div className="px-2 py-0.5 font-medium text-muted-foreground border-r cursor-default select-none" title={prop.label}>{prop.label}</div>
-                                    <div className="px-2 py-0.5 break-all truncate cursor-default" title={nameValue}>
+                                    <div className="px-2 py-0.5 break-all truncate cursor-default" title={prop.value}>
                                         {nameValue || <span className="text-muted-foreground italic">empty</span>}
                                     </div>
                                 </div>
@@ -61,11 +61,11 @@ export function PropertiesPanel() {
     );
 }
 
-function boundsValue(boundsStr?: string): string { // remove [] and split into l, t, r, b
+function boundsValue(boundsStr?: string): string {
     if (!boundsStr) {
         return '';
     }
-    const bounds = boundsStr.slice(1, -1).split(",").map(Number);
+    const bounds = boundsStr.slice(1, -1).split(",").map(Number); // remove [] and split into l, t, r, b
     const [left, top, right, bottom] = bounds;
     return `l:${left}, t:${top}, r:${right}, b:${bottom}`; // the same style as in the Microsoft Inspector
 }

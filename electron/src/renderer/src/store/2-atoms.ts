@@ -65,6 +65,59 @@ export const doGetWindowControlsTreeAtom = atom(
 
 export const selectedControlAtom = atom<ControlNode | null>(null);
 
+export const autoHighlightSelectedControlAtom = atom<boolean>(false);
+
+export const setAutoHighlightSelectedControlAtom = atom(
+    null,
+    async (_get, set, enabled: boolean): Promise<void> => {
+        set(autoHighlightSelectedControlAtom, enabled);
+
+        if (!enabled) {
+            try {
+                await tmApi.hideHighlight();
+            } catch (e) {
+                console.warn("Failed to hide highlight", e);
+            }
+        }
+    }
+);
+
+export const setSelectedControlAtom = atom(
+    null,
+    async (get, set, control: ControlNode | null): Promise<void> => {
+        set(selectedControlAtom, control);
+
+        // Highlight the selected control if auto-highlight is enabled
+        if (!control || !get(autoHighlightSelectedControlAtom)) {
+            return;
+        }
+
+        const b = control.bounds;
+        if (!b) {
+            return; // no bounds, no highlight
+        }
+
+        const width = b.right - b.left;
+        const height = b.bottom - b.top;
+        if (width <= 0 || height <= 0) {
+            return; // no width or height, no highlight
+        }
+
+        const bounds: HighlightBounds = {
+            x: b.left,
+            y: b.top,
+            width,
+            height
+        };
+
+        try {
+            await tmApi.highlightRect(bounds, { blinkCount: 1, color: 0x00D4FF, borderWidth: 2 });
+        } catch (e) {
+            console.warn("Failed to highlight selected control", e);
+        }
+    }
+);
+
 export const doInvokeControlAtom = atom(
     null,
     async (get, _set, control: ControlNode): Promise<void> => {

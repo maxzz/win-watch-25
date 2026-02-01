@@ -1,6 +1,6 @@
 import { useState, Suspense } from "react";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { selectedControlAtom, doGetWindowControlsTreeAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
+import { useAtomValue, useSetAtom } from "jotai";
+import { selectedControlAtom, setSelectedControlAtom, doGetWindowControlsTreeAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
 import { ControlNode } from "@renderer/store/9-tmapi-types";
 import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
 import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
@@ -38,7 +38,8 @@ function ControlTree({ windowControlsTree }: { windowControlsTree: ControlNode; 
 
 function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; }) {
 
-    const [selectedControl, setSelectedControl] = useAtom(selectedControlAtom);
+    const selectedControl = useAtomValue(selectedControlAtom);
+    const setSelectedControl = useSetAtom(setSelectedControlAtom);
     const invokeControl = useSetAtom(doInvokeControlAtom);
 
     const [expanded, setExpanded] = useState(true);
