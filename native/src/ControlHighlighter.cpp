@@ -239,10 +239,23 @@ void ControlHighlighter::UpdateHighlightWindow(const HighlightParams& params) {
         return;
     }
 
-    int windowWidth = rectWidth + borderWidth * 2;
-    int windowHeight = rectHeight + borderWidth * 2;
-    int windowX = params.left - borderWidth;
-    int windowY = params.top - borderWidth;
+    // Keep the highlight window exactly within the requested rectangle.
+    // The border is drawn *inside* the rectangle so it never extends beyond it
+    // (important for multi-monitor setups and small rects).
+    const int windowWidth = rectWidth;
+    const int windowHeight = rectHeight;
+    const int windowX = params.left;
+    const int windowY = params.top;
+
+    // Clamp border thickness so it always fits inside the rectangle.
+    // If the rect is smaller than the border, we reduce thickness rather than drawing outside.
+    const int maxThicknessX = windowWidth / 2;
+    const int maxThicknessY = windowHeight / 2;
+    const int thickness = max(0, min(borderWidth, min(maxThicknessX, maxThicknessY)));
+    if (thickness <= 0) {
+        ShowWindow(m_hwnd, SW_HIDE);
+        return;
+    }
     
     // Create a compatible DC and bitmap for drawing
     HDC hdcScreen = GetDC(nullptr);
@@ -250,21 +263,27 @@ void ControlHighlighter::UpdateHighlightWindow(const HighlightParams& params) {
     HBITMAP hBitmap = CreateCompatibleBitmap(hdcScreen, windowWidth, windowHeight);
     HBITMAP hOldBitmap = (HBITMAP)SelectObject(hdcMem, hBitmap);
     
-    // Fill with the highlight color (border)
-    RECT rcFull = { 0, 0, windowWidth, windowHeight };
-    HBRUSH hBrushBorder = CreateSolidBrush(params.highlightColor);
-    FillRect(hdcMem, &rcFull, hBrushBorder);
-    DeleteObject(hBrushBorder);
-    
-    // Fill the center with the transparent color
-    RECT rcCenter = { 
-        borderWidth, 
-        borderWidth, 
-        windowWidth - borderWidth, 
-        windowHeight - borderWidth 
-    };
     HBRUSH hBrushTransparent = CreateSolidBrush(params.transparentColor);
-    FillRect(hdcMem, &rcCenter, hBrushTransparent);
+    // Start fully transparent, then draw an inset border.
+    RECT rcFull = { 0, 0, windowWidth, windowHeight };
+    FillRect(hdcMem, &rcFull, hBrushTransparent);
+
+    HBRUSH hBrushBorder = CreateSolidBrush(params.highlightColor);
+
+    // Top
+    RECT rcTop = { 0, 0, windowWidth, thickness };
+    FillRect(hdcMem, &rcTop, hBrushBorder);
+    // Bottom
+    RECT rcBottom = { 0, windowHeight - thickness, windowWidth, windowHeight };
+    FillRect(hdcMem, &rcBottom, hBrushBorder);
+    // Left
+    RECT rcLeft = { 0, thickness, thickness, windowHeight - thickness };
+    FillRect(hdcMem, &rcLeft, hBrushBorder);
+    // Right
+    RECT rcRight = { windowWidth - thickness, thickness, windowWidth, windowHeight - thickness };
+    FillRect(hdcMem, &rcRight, hBrushBorder);
+
+    DeleteObject(hBrushBorder);
     DeleteObject(hBrushTransparent);
     
     // Position and size
