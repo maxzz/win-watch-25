@@ -87,6 +87,7 @@ export const setAutoHighlightSelectedControlAtom = atom(
         try {
             await tmApi.highlightRect(
                 { left: b.left, top: b.top, right: b.right, bottom: b.bottom },
+                // { blinkCount: 1, color: 0xFFD400, borderWidth: 2 }
                 { blinkCount: 1, color: 0x00D4FF, borderWidth: 2 }
             );
         } catch (e) {

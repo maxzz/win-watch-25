@@ -102,9 +102,13 @@ WM_API void HighlightRect(int left, int top, int right, int bottom, int color, i
     params.right = right;
     params.bottom = bottom;
     
-    // Color is passed as RGB, convert if needed (Windows uses BGR internally but we use RGB for API consistency)
+    // Color is passed as 0xRRGGBB (RGB). Windows COLORREF is 0x00BBGGRR (BGR),
+    // so convert before using it with GDI APIs.
     if (color != 0) {
-        params.highlightColor = color;
+        const int r = (color >> 16) & 0xFF;
+        const int g = (color >> 8) & 0xFF;
+        const int b = color & 0xFF;
+        params.highlightColor = RGB(r, g, b);
     }
     
     if (borderWidth > 0) {
