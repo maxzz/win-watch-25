@@ -85,11 +85,7 @@ export const setAutoHighlightSelectedControlAtom = atom(
         if (!b) return;
 
         try {
-            await tmApi.highlightRect(
-                { left: b.left, top: b.top, right: b.right, bottom: b.bottom },
-                // { blinkCount: 1, color: 0xFFD400, borderWidth: 2 }
-                { blinkCount: 1, color: 0x00D4FF, borderWidth: 2 }
-            );
+            await tmApi.highlightRect({ ...b }, { blinkCount: 3, color: 0xFF0000, borderWidth: 2 }); // TODO: need to put these into options dialog
         } catch (e) {
             console.warn("Failed to highlight selected control", e);
         }
@@ -112,10 +108,7 @@ export const setSelectedControlAtom = atom(
         }
 
         try {
-            await tmApi.highlightRect(
-                { left: b.left, top: b.top, right: b.right, bottom: b.bottom },
-                { blinkCount: 1, color: 0x00D4FF, borderWidth: 2 }
-            );
+            await tmApi.highlightRect({ ...b }, { blinkCount: 3, color: 0xFF0000, borderWidth: 2 }); // TODO: need to put these into options dialog
         } catch (e) {
             console.warn("Failed to highlight selected control", e);
         }
