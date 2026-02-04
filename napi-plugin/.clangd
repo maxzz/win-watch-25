@@ -5,5 +5,7 @@ CompileFlags:
     - "-std=c++17"
     - "-I./node_modules/node-addon-api"
     - "-I../native/src"
-    - "-IC:/Users/maxzz/AppData/Local/node-gyp/Cache/24.6.0/include/node"
+    - "-IC:/Users/makzak/AppData/Local/node-gyp/Cache/25.5.0/include/node"
+    - "-IC:/Users/makzak/AppData/Local/node-gyp/Cache/25.2.1/include/node"
+    - "-IC:/Users/makzak/AppData/Local/node-gyp/Cache/25.1.0/include/node"
     - "-DNAPI_DISABLE_CPP_EXCEPTIONS"

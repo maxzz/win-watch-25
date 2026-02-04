@@ -108,3 +108,34 @@ Then attach VS Code debugger to Node.js process.
 
 ### Debug Renderer (React)
 Press `Ctrl+Shift+I` in the app window to open DevTools.
+
+## Packaging (Windows)
+
+This repo packages the Windows app using **electron-builder** with an **NSIS** installer.
+
+Build the installer from the repo root:
+```bash
+pnpm run build:exe:win
+```
+
+Output is written to `electron/dist/`.
+
+### UIAccess support (Windows only)
+
+If you need `uiAccess=true` (assistive technology / UI Automation scenarios), Windows requires:
+1. The app EXE has an embedded manifest with `uiAccess="true"`.
+2. The EXE is **code-signed** (Authenticode).
+3. The app is installed in a **secure location** such as **Program Files**.
+
+This repo configures NSIS to install **per-machine** (Program Files) and runs a post-pack step that embeds the UIAccess manifest.
+
+#### Code signing (optional but required for UIAccess to actually work)
+
+The `afterPack` hook will sign the final EXE if you provide these environment variables:
+- `WINWATCH_PFX` - path to a `.pfx` code-signing certificate
+- `WINWATCH_PFX_PASSWORD` - password for the `.pfx`
+- `WINWATCH_TIMESTAMP_URL` - optional RFC3161 timestamp server URL
+
+You also need Windows SDK tools available on `PATH`:
+- `mt.exe` (Manifest Tool)
+- `signtool.exe` (SignTool) when signing is enabled

@@ -61,6 +61,7 @@
         "directories": {
             "output": "dist"
         },
+        "afterPack": "build/afterPack-uiaccess.cjs",
         "files": [
             "out/**"
         ],
@@ -79,6 +80,10 @@
                     ]
                 }
             ]
+        },
+        "nsis": {
+            "perMachine": true,
+            "allowToChangeInstallationDirectory": false
         }
     }
 }
