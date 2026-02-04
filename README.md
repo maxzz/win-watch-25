@@ -139,3 +139,11 @@ The `afterPack` hook will sign the final EXE if you provide these environment va
 You also need Windows SDK tools available on `PATH`:
 - `mt.exe` (Manifest Tool)
 - `signtool.exe` (SignTool) when signing is enabled
+
+Troubleshooting:
+- If you installed Windows SDK but `mt.exe` / `signtool.exe` aren’t on `PATH`, they’re usually under:
+	- `C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64\mt.exe`
+	- `C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64\signtool.exe`
+- You can also explicitly point the build hook at the tools:
+	- `WINWATCH_MT_EXE` (full path to `mt.exe`)
+	- `WINWATCH_SIGNTOOL_EXE` (full path to `signtool.exe`)

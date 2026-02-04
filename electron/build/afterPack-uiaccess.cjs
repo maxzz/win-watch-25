@@ -38,6 +38,91 @@ function whichWindows(exeName) {
   return null;
 }
 
+function listSubdirs(dir) {
+  try {
+    return fs
+      .readdirSync(dir, { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => d.name);
+  } catch {
+    return [];
+  }
+}
+
+function parseVersionLike(name) {
+  // Windows Kits uses version-like folder names, e.g. "10.0.26100.0".
+  const parts = name.split('.').map((p) => Number.parseInt(p, 10));
+  if (parts.some((n) => Number.isNaN(n))) return null;
+  return parts;
+}
+
+function compareVersionPartsDesc(a, b) {
+  const len = Math.max(a.length, b.length);
+  for (let i = 0; i < len; i += 1) {
+    const av = a[i] ?? 0;
+    const bv = b[i] ?? 0;
+    if (av !== bv) return bv - av;
+  }
+  return 0;
+}
+
+function findInWindowsKits(toolExeName) {
+  const programFilesX86 = process.env['ProgramFiles(x86)'] || process.env.ProgramFiles;
+  if (!programFilesX86) return null;
+
+  const candidates = [];
+
+  // Common locations:
+  // - C:\Program Files (x86)\Windows Kits\10\bin\10.0.x.y\x64\mt.exe
+  // - C:\Program Files (x86)\Windows Kits\10\bin\x64\mt.exe (older)
+  // - C:\Program Files (x86)\Windows Kits\8.1\bin\x64\mt.exe
+  const roots = [
+    path.join(programFilesX86, 'Windows Kits', '10', 'bin'),
+    path.join(programFilesX86, 'Windows Kits', '8.1', 'bin'),
+  ];
+
+  for (const root of roots) {
+    // First, try non-versioned layout.
+    for (const arch of ['x64', 'arm64', 'x86']) {
+      const p = path.join(root, arch, toolExeName);
+      if (fs.existsSync(p)) candidates.push(p);
+    }
+
+    // Then, versioned layout (Windows Kits 10).
+    const versions = listSubdirs(root)
+      .map((name) => ({ name, ver: parseVersionLike(name) }))
+      .filter((x) => x.ver)
+      .sort((a, b) => compareVersionPartsDesc(a.ver, b.ver));
+
+    for (const v of versions) {
+      for (const arch of ['x64', 'arm64', 'x86']) {
+        const p = path.join(root, v.name, arch, toolExeName);
+        if (fs.existsSync(p)) return p;
+      }
+    }
+  }
+
+  return candidates[0] || null;
+}
+
+function resolveTool(envVar, exeName) {
+  const explicit = process.env[envVar];
+  if (explicit) {
+    if (!fs.existsSync(explicit)) {
+      throw new Error(`${envVar} was set but does not exist: ${explicit}`);
+    }
+    return explicit;
+  }
+
+  const onPath = whichWindows(exeName);
+  if (onPath) return onPath;
+
+  const inKits = findInWindowsKits(exeName);
+  if (inKits) return inKits;
+
+  return null;
+}
+
 function pickMainExe(appOutDir, preferredBaseNames = []) {
   const entries = fs.readdirSync(appOutDir);
   const exes = entries.filter((f) => f.toLowerCase().endsWith('.exe'));
@@ -91,10 +176,10 @@ module.exports = async function afterPack(context) {
 
   const exePath = pickMainExe(appOutDir, preferredNames);
 
-  const mt = whichWindows('mt.exe');
+  const mt = resolveTool('WINWATCH_MT_EXE', 'mt.exe');
   if (!mt) {
     throw new Error(
-      'mt.exe not found in PATH. Install Windows SDK (includes Manifest Tool), or add mt.exe to PATH.'
+      'mt.exe not found. Install Windows SDK (Manifest Tool), add it to PATH, or set WINWATCH_MT_EXE to the full path.'
     );
   }
 
@@ -114,10 +199,10 @@ module.exports = async function afterPack(context) {
     return;
   }
 
-  const signtool = whichWindows('signtool.exe');
+  const signtool = resolveTool('WINWATCH_SIGNTOOL_EXE', 'signtool.exe');
   if (!signtool) {
     throw new Error(
-      'signtool.exe not found in PATH. Install Windows SDK (includes SignTool), or add signtool.exe to PATH.'
+      'signtool.exe not found. Install Windows SDK (SignTool), add it to PATH, or set WINWATCH_SIGNTOOL_EXE to the full path.'
     );
   }
 
