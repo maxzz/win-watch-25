@@ -158,6 +158,19 @@ Important:
 - This is **not** suitable for public distribution. Other machines won’t trust your EXE unless you install your certificate into their trust stores.
 - For `uiAccess=true`, Windows requires the EXE to be trusted. With a self-signed cert, that means you must add it to **Trusted Root Certification Authorities** and **Trusted Publishers** on the machine.
 
+Quick start (recommended): use the helper script
+
+Run PowerShell as **Administrator** in the repo root:
+```powershell
+./scripts/setup-dev-codesign.ps1 -OutputDir (Resolve-Path .)
+```
+
+It will:
+- Create (or reuse) a LocalMachine code-signing cert
+- Export `winwatch-dev-codesign.pfx` + `winwatch-dev-codesign.cer` into `-OutputDir`
+- Trust the cert by importing it into LocalMachine `Root` and `TrustedPublisher`
+- Print the exact env vars to set for `pnpm run build:exe:win`
+
 #### 1) Create a code-signing certificate (PowerShell as Administrator)
 
 Open **Windows Terminal / PowerShell** as **Administrator** and run:
