@@ -176,6 +176,24 @@ module.exports = async function afterPack(context) {
 
   const exePath = pickMainExe(appOutDir, preferredNames);
 
+  // Optional signing. UIAccess requires signing to actually work on default Windows policy.
+  const pfxPath = process.env.WINWATCH_PFX;
+  const pfxPassword = process.env.WINWATCH_PFX_PASSWORD;
+  const timestampUrl = process.env.WINWATCH_TIMESTAMP_URL;
+
+  const willSign = Boolean(pfxPath && pfxPassword);
+
+  // IMPORTANT: An EXE with uiAccess="true" that is not properly Authenticode-signed will fail to launch
+  // on Windows with an error like "A referral was returned from the server.".
+  // So we only embed the UIAccess manifest when we are also signing the EXE.
+  if (!willSign) {
+    console.log(
+      'UIAccess manifest embedding is skipped because code signing is not configured. ' +
+        'Set WINWATCH_PFX and WINWATCH_PFX_PASSWORD to enable signing (required for uiAccess=true).'
+    );
+    return;
+  }
+
   const mt = resolveTool('WINWATCH_MT_EXE', 'mt.exe');
   if (!mt) {
     throw new Error(
@@ -185,19 +203,6 @@ module.exports = async function afterPack(context) {
 
   console.log(`Embedding UIAccess manifest into: ${exePath}`);
   run(mt, ['-nologo', '-manifest', manifestPath, `-outputresource:${exePath};#1`]);
-
-  // Optional signing. UIAccess requires signing to actually work on default Windows policy.
-  const pfxPath = process.env.WINWATCH_PFX;
-  const pfxPassword = process.env.WINWATCH_PFX_PASSWORD;
-  const timestampUrl = process.env.WINWATCH_TIMESTAMP_URL;
-
-  if (!pfxPath || !pfxPassword) {
-    console.log(
-      'Skipping code signing (set WINWATCH_PFX and WINWATCH_PFX_PASSWORD to enable). ' +
-        'Note: UIAccess will not be granted by Windows unless the EXE is signed and installed under Program Files.'
-    );
-    return;
-  }
 
   const signtool = resolveTool('WINWATCH_SIGNTOOL_EXE', 'signtool.exe');
   if (!signtool) {

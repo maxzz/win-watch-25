@@ -140,6 +140,16 @@ You also need Windows SDK tools available on `PATH`:
 - `mt.exe` (Manifest Tool)
 - `signtool.exe` (SignTool) when signing is enabled
 
+Note: If you embed `uiAccess="true"` but the EXE is not signed with a certificate trusted by the machine, Windows may refuse to start it with the message:
+"A referral was returned from the server."
+
+To avoid that, this repo only embeds the `uiAccess="true"` manifest when code signing is configured (WINWATCH_PFX + WINWATCH_PFX_PASSWORD).
+
+To verify a built EXE is properly signed:
+```bat
+signtool verify /pa /v "path\to\WinWatch.exe"
+```
+
 Troubleshooting:
 - If you installed Windows SDK but `mt.exe` / `signtool.exe` aren’t on `PATH`, they’re usually under:
 	- `C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64\mt.exe`
