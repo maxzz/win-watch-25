@@ -25,7 +25,26 @@ const NAPI_DIR = join(ROOT_DIR, 'napi-plugin');
 const OUTPUT_DIR = join(ROOT_DIR, 'dist-electron', 'plugins');
 
 // vswhere.exe is installed with Visual Studio and can locate VS installations
-const VSWHERE_PATH = 'C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\vswhere.exe';
+const DEFAULT_VSWHERE_PATH = 'C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\vswhere.exe';
+
+function getVswherePath(): string {
+    return process.env.VSWHERE_PATH || DEFAULT_VSWHERE_PATH;
+}
+
+function getMsbuildOverride(): string | undefined {
+    // Allows CI/local overrides without requiring Visual Studio detection.
+    return process.env.MSBUILD_PATH || process.env.MSBUILD;
+}
+
+function tryWhereMsbuild(): string | null {
+    try {
+        const output = execSync('where msbuild', { encoding: 'utf8' }).trim();
+        const first = output.split(/\r?\n/)[0]?.trim();
+        return first && existsSync(first) ? first : null;
+    } catch {
+        return null;
+    }
+}
 
 interface VSInfo {
     msbuildPath: string;
@@ -51,26 +70,67 @@ function getPlatformToolset(vsMajorVersion: number): string {
  * Returns MSBuild path and platform toolset
  */
 function findVSInfo(): VSInfo | null {
-    if (!existsSync(VSWHERE_PATH)) {
-        console.warn('vswhere.exe not found. Make sure Visual Studio is installed.');
+    const msbuildOverride = getMsbuildOverride();
+    if (msbuildOverride) {
+        if (!existsSync(msbuildOverride)) {
+            console.warn(`MSBUILD_PATH was set but does not exist: ${msbuildOverride}`);
+            return null;
+        }
+
+        console.log(`Using MSBuild from MSBUILD_PATH: ${msbuildOverride}`);
+        return {
+            msbuildPath: msbuildOverride,
+            platformToolset: 'v143',
+            version: 'unknown',
+        };
+    }
+
+    const msbuildFromPath = tryWhereMsbuild();
+    if (msbuildFromPath) {
+        console.log(`Found MSBuild on PATH: ${msbuildFromPath}`);
+        return {
+            msbuildPath: msbuildFromPath,
+            platformToolset: 'v143',
+            version: 'unknown',
+        };
+    }
+
+    const vswherePath = getVswherePath();
+    if (!existsSync(vswherePath)) {
+        console.warn(`vswhere.exe not found at: ${vswherePath}`);
+        console.warn('Install Visual Studio or Visual Studio Build Tools, or set VSWHERE_PATH to your vswhere.exe path.');
         return null;
     }
 
     try {
         // Find the latest VS installation
         const vsPath = execSync(
-            `"${VSWHERE_PATH}" -latest -requires Microsoft.Component.MSBuild -property installationPath`,
+            `"${vswherePath}" -latest -products * -requires Microsoft.Component.MSBuild -property installationPath`,
             { encoding: 'utf8' }
         ).trim();
 
         if (!vsPath) {
-            console.warn('No Visual Studio installation with MSBuild found.');
+            console.warn('No Visual Studio installation with the MSBuild component was found.');
+            try {
+                const anyVs = execSync(
+                    `"${vswherePath}" -latest -products * -property installationPath`,
+                    { encoding: 'utf8' }
+                ).trim();
+                if (anyVs) {
+                    console.warn(`Visual Studio was detected at: ${anyVs}`);
+                    console.warn('But the MSBuild component is missing. In Visual Studio Installer, add:');
+                    console.warn('- Workload: "Desktop development with C++" (recommended)');
+                    console.warn('- Or Individual component: "MSBuild" (Microsoft.Component.MSBuild)');
+                }
+            } catch {
+                // ignore
+            }
             return null;
         }
 
         // Get VS version
         const vsVersion = execSync(
-            `"${VSWHERE_PATH}" -latest -requires Microsoft.Component.MSBuild -property installationVersion`,
+            `"${vswherePath}" -latest -products * -requires Microsoft.Component.MSBuild -property installationVersion`,
             { encoding: 'utf8' }
         ).trim();
 
