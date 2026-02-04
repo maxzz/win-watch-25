@@ -150,6 +150,99 @@ To verify a built EXE is properly signed:
 signtool verify /pa /v "path\to\WinWatch.exe"
 ```
 
+### Dev signing with a self-signed certificate (Windows)
+
+If you don’t have a commercial CA code-signing certificate yet, you can create a **self-signed** certificate for **development/testing on your own machine(s)**.
+
+Important:
+- This is **not** suitable for public distribution. Other machines won’t trust your EXE unless you install your certificate into their trust stores.
+- For `uiAccess=true`, Windows requires the EXE to be trusted. With a self-signed cert, that means you must add it to **Trusted Root Certification Authorities** and **Trusted Publishers** on the machine.
+
+#### 1) Create a code-signing certificate (PowerShell as Administrator)
+
+Open **Windows Terminal / PowerShell** as **Administrator** and run:
+
+```powershell
+$subject = "CN=WinWatch Dev Code Signing"
+
+$cert = New-SelfSignedCertificate \
+	-Subject $subject \
+	-Type CodeSigningCert \
+	-KeyAlgorithm RSA \
+	-KeyLength 2048 \
+	-HashAlgorithm SHA256 \
+	-KeyExportPolicy Exportable \
+	-CertStoreLocation "Cert:\LocalMachine\My" \
+	-NotAfter (Get-Date).AddYears(3)
+
+$cert.Thumbprint
+```
+
+This creates the cert in the Local Machine “Personal” store.
+
+#### 2) Export it to a PFX file (for electron-builder hook)
+
+```powershell
+$pfxPath = Join-Path $PWD "winwatch-dev-codesign.pfx"
+$pfxPassword = Read-Host -AsSecureString "PFX password"
+
+Export-PfxCertificate -Cert ("Cert:\LocalMachine\My\" + $cert.Thumbprint) -FilePath $pfxPath -Password $pfxPassword
+
+$pfxPath
+```
+
+#### 3) Trust the certificate on the machine
+
+Export the public certificate (.cer) and import it into the two trust stores:
+
+```powershell
+$cerPath = Join-Path $PWD "winwatch-dev-codesign.cer"
+
+Export-Certificate -Cert ("Cert:\LocalMachine\My\" + $cert.Thumbprint) -FilePath $cerPath | Out-Null
+
+# Trust chain
+Import-Certificate -FilePath $cerPath -CertStoreLocation "Cert:\LocalMachine\Root" | Out-Null
+
+# Trust publisher (important for Authenticode trust decisions)
+Import-Certificate -FilePath $cerPath -CertStoreLocation "Cert:\LocalMachine\TrustedPublisher" | Out-Null
+
+$cerPath
+```
+
+If you prefer GUI:
+- Run `certlm.msc`
+- Import the `.cer` into:
+	- Local Computer → **Trusted Root Certification Authorities**
+	- Local Computer → **Trusted Publishers**
+
+#### 4) Build with signing enabled
+
+From `cmd.exe` (recommended if PowerShell blocks pnpm scripts), set env vars and build:
+
+```bat
+set WINWATCH_PFX=C:\path\to\winwatch-dev-codesign.pfx
+set WINWATCH_PFX_PASSWORD=yourPfxPassword
+
+REM Optional (recommended): your timestamp server URL
+REM set WINWATCH_TIMESTAMP_URL=https://timestamp.digicert.com
+
+pnpm run build:exe:win
+```
+
+Notes:
+- Timestamping is optional for dev. For production, always timestamp.
+- The build hook will also auto-locate `mt.exe` / `signtool.exe` in Windows Kits; if that fails you can set:
+	- `WINWATCH_MT_EXE`
+	- `WINWATCH_SIGNTOOL_EXE`
+
+#### 5) Verify the signature on the installed EXE
+
+```bat
+signtool verify /pa /v "C:\Program Files\WinWatch\WinWatch.exe"
+```
+
+If you see signature verification failures, the cert may not be trusted (repeat step 3) or you may be running the EXE built without signing.
+
 Troubleshooting:
 - If you installed Windows SDK but `mt.exe` / `signtool.exe` aren’t on `PATH`, they’re usually under:
 	- `C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64\mt.exe`
