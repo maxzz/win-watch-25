@@ -1,5 +1,6 @@
 onlyBuiltDependencies:
   - electron
+  - electron-winstaller
   - electron@28.3.3
   - esbuild
   - esbuild@0.21.5
