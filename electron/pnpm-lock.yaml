@@ -59,6 +59,9 @@ importers:
       lucide-react:
         specifier: ^0.563.0
         version: 0.563.0(react@19.2.4)
+      pm-manifest-icons:
+        specifier: ^1.0.6
+        version: 1.0.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -2400,6 +2403,12 @@ packages:
   plist@3.1.0:
     resolution: {integrity: sha512-uysumyrvkUX0rX/dEVqt8gC3sTBzd4zoWfLeS29nb53imdaXVvLINYXTI2GNqzaMuvacNx4uJQ8+b3zXR0pkgQ==}
     engines: {node: '>=10.4.0'}
+
+  pm-manifest-icons@1.0.6:
+    resolution: {integrity: sha512-kRjpuvvM13GruEFd7B9DCUt8GDc/9S8XChBfPU4EscOOSkc1txok7yNOpYfiuOdmE9zjDlVEbj1aqnXncmadsg==}
+    peerDependencies:
+      react: ^18.2.0 || ^19
+      react-dom: ^18.2.0 || ^19
 
   postcss@8.5.6:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
@@ -5237,6 +5246,11 @@ snapshots:
       '@xmldom/xmldom': 0.8.11
       base64-js: 1.5.1
       xmlbuilder: 15.1.1
+
+  pm-manifest-icons@1.0.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+    dependencies:
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
 
   postcss@8.5.6:
     dependencies:
