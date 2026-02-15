@@ -39,6 +39,7 @@ import {
     Square,
     MousePointer2,
 } from "lucide-react";
+import { SymbolFieldBtn, SymbolFieldLst, SymbolFieldTxt } from "pm-manifest-icons";
 import { Symbol_uia_Toolbar, Symbol_uia_Tooltip } from "@renderer/components/ui/icons/symbols/ui-automation";
 import { UIA_CONTROL_TYPE_FILMSTRIP_ICONS, DefaultFilmstripControlTypeIcon } from "./2-uia-control-type-icons-filmstrip";
 
@@ -50,10 +51,10 @@ const iconClasses = "shrink-0 size-3 text-blue-700";
  * Maps UIA Control Type IDs to corresponding Lucide icon elements.
  */
 const UIA_LUCIDE_ICONS: Record<string, JSX.Element> = {
-    "50000": <MousePointer2 className={iconClasses} />,     // Button
+    "50000": <SymbolFieldBtn className={iconClasses} />,    // Button
     "50001": <Calendar className={iconClasses} />,          // Calendar
     "50002": <CheckSquare className={iconClasses} />,       // CheckBox
-    "50003": <ChevronDown className={iconClasses} />,       // ComboBox
+    "50003": <SymbolFieldLst className={iconClasses} />,    // ComboBox
     "50004": <Type className={iconClasses} />,              // Edit
     "50005": <Link className={iconClasses} />,              // Hyperlink
     "50006": <Image className={iconClasses} />,             // Image
@@ -70,7 +71,7 @@ const UIA_LUCIDE_ICONS: Record<string, JSX.Element> = {
     "50017": <PanelTop className={iconClasses} />,          // StatusBar
     "50018": <Columns className={iconClasses} />,           // Tab
     "50019": <FileText className={iconClasses} />,          // TabItem
-    "50020": <Text className={iconClasses} />,              // Text
+    "50020": <SymbolFieldTxt className={iconClasses} />,    // Text
     "50021": <Symbol_uia_Toolbar className={iconClasses} />,// ToolBar
     "50022": <Symbol_uia_Tooltip className={iconClasses} />,// ToolTip
     "50023": <TreeDeciduous className={iconClasses} />,     // Tree
