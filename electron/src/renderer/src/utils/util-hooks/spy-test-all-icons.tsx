@@ -1,9 +1,10 @@
-import { type HTMLAttributes, useEffect, useState } from "react";
+import { type ComponentType, type HTMLAttributes, type SVGProps, useEffect, useState } from "react"; // 02.14.26
 import { classNames } from "../classnames";
 
-type AllIcons = Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>;
+type AllIcons = Record<string, ComponentType<SVGProps<SVGSVGElement>>>;
 
 export function SpyTestAllIcons({ allIcons, className, ...rest }: { allIcons: AllIcons; } & HTMLAttributes<HTMLDivElement>) {
+    
     const [printIcons, setPrintIcons] = useState(false);
     useEffect(
         () => {
@@ -46,7 +47,11 @@ function printIconsLocation(allIcons: AllIcons) {
     // * or we can use plugin at build time to access file location, but that will be too much for this task
 
     const msg = 'Each icon has [[FunctionLocation]] property, but it is accessible from trace only (i.e. devtools-protocol), not from code.';
-    const entries = Object.entries(allIcons);
+    const entries = Object.keys(allIcons);
 
-    console.log(`%c${msg}`, 'font-size: 0.55rem', { entries });
+    const text = entries.map((name, idx) => ` ${`${idx}`.padStart(3, ' ')}: ${name}`).join('\n');
+
+    console.group('Icons');    
+    console.log(`%c${msg}\n%c${text}`, 'font-size: 0.65rem; color: darkblue;', 'font-size: 0.55rem; color: darkgreen;');
+    console.groupEnd();
 }
