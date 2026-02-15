@@ -1,22 +1,23 @@
-import { type ComponentType, type HTMLAttributes, type SVGProps, useEffect, useState } from "react"; // 02.14.26
+import { type ComponentType, type HTMLAttributes, type SVGProps, useEffect } from "react"; // 02.14.26
 import { classNames } from "../classnames";
 
 type AllIcons = Record<string, ComponentType<SVGProps<SVGSVGElement>>>;
 
+const PRINT_ONCE_KEY = "__win_watch_25_spy_test_all_icons_printed__";
+
 export function SpyTestAllIcons({ allIcons, className, ...rest }: { allIcons: AllIcons; } & HTMLAttributes<HTMLDivElement>) {
     
-    const [printIcons, setPrintIcons] = useState(false);
-    useEffect(
-        () => {
-            setPrintIcons((v) => {
-                if (!v) {
-                    printIconsLocation(allIcons);
-                    return !v;
-                }
-                return v;
-            });
-        }, [printIcons, allIcons]
-    );
+    useEffect(() => {
+        // In React 18 dev + StrictMode, effects run twice (mount/unmount/mount) to detect unsafe side effects.
+        // Use a dev-only global guard so this prints exactly once in debug builds.
+        if (!import.meta.env.DEV) return;
+
+        const g = globalThis as typeof globalThis & Record<string, unknown>;
+        if (g[PRINT_ONCE_KEY]) return;
+        g[PRINT_ONCE_KEY] = true;
+
+        printIconsLocation(allIcons);
+    }, [allIcons]);
 
     return (
         <div className={classNames("flex flex-wrap gap-2", className)} {...rest}>
