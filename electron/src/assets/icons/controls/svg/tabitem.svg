@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #ccc;
+        stroke: #000;
+      }
+
+      .cls-1, .cls-2 {
+        stroke-miterlimit: 10;
+        stroke-width: 1.5px;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #999;
+      }
+
+      .cls-3 {
+        fill: #b3b3b3;
+      }
+    </style>
+  </defs>
+  <g id="Renders">
+    <rect class="cls-3" width="24" height="24"/>
+    <g id="tab">
+      <path class="cls-2" d="M15.8,6.37v2.69h-3.99v-2.69c0-1.37-1.11-2.47-2.47-2.47h3.98c1.37,0,2.48,1.1,2.48,2.47Z"/>
+      <path class="cls-2" d="M11.81,6.37v2.69H2.7v-2.69c0-1.37,1.11-2.47,2.48-2.47h4.16c1.36,0,2.47,1.1,2.47,2.47Z"/>
+      <path class="cls-1" d="M2.71,9.06h16.74c1.02,0,1.85.83,1.85,1.85v7.34c0,1.02-.83,1.85-1.85,1.85H4.56c-1.02,0-1.85-.83-1.85-1.85v-9.19h0Z"/>
+    </g>
+  </g>
+</svg>

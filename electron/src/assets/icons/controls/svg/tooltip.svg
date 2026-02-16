@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: none;
+      }
+
+      .cls-2 {
+        stroke: #000;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.5px;
+      }
+
+      .cls-3 {
+        fill: #b3b3b3;
+      }
+    </style>
+  </defs>
+  <g id="Renders">
+    <rect class="cls-3" width="24" height="24"/>
+    <g id="tooltip">
+      <path class="cls-1" d="M0,0h24v24H0V0Z"/>
+      <path class="cls-2" d="M10,18c0,1.1.9,2,2,2s2-.9,2-2-.9-2-2-2-2,.9-2,2"/>
+      <path class="cls-2" d="M12,13l-1.71-1.71c-.19-.19-.44-.29-.71-.29h-2.59c-1.1,0-2-.9-2-2v-3c0-1.1.9-2,2-2h10c1.1,0,2,.9,2,2v3c0,1.1-.9,2-2,2h-2.59c-.27,0-.52.11-.71.29l-1.71,1.71"/>
+    </g>
+  </g>
+</svg>

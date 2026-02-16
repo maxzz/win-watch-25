@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #3fa9f5;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        stroke: #000;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-1, .cls-3 {
+        stroke-width: 1.5px;
+      }
+
+      .cls-2 {
+        stroke-width: 2px;
+      }
+
+      .cls-2, .cls-3 {
+        fill: none;
+      }
+
+      .cls-4 {
+        fill: #b3b3b3;
+      }
+    </style>
+  </defs>
+  <g id="Renders">
+    <rect class="cls-4" width="24" height="24"/>
+    <g id="titlebar">
+      <line class="cls-3" x1="2.37" y1="18.6" x2="2.37" y2="14.23"/>
+      <line class="cls-2" x1="4.93" y1="9.83" x2="7.69" y2="9.83"/>
+      <path class="cls-3" d="M3.69,5.4h6.82v8.87H2.37v-7.55c0-.73.59-1.33,1.33-1.33Z"/>
+      <rect id="title" class="cls-1" x="10.52" y="5.4" width="11.11" height="8.87"/>
+    </g>
+  </g>
+</svg>
