@@ -1,4 +1,4 @@
-import { type HTMLAttributes, useEffect, useState } from "react";
+import { type HTMLAttributes, useEffect, useState } from "react"; // 02.15.26
 import { classNames } from "../classnames";
 
 type SymbolItem = {
@@ -13,8 +13,7 @@ export function SpyTestAllSvgSymbols({ fontID = "svgfont", idPrefix, className, 
 
     useEffect(
         () => {
-            const defsChildren = document.querySelector(`#${fontID} > defs`)?.children;
-            const raw = (defsChildren ? [...defsChildren] : []);
+            const raw = getRawDefs(fontID);
             const next = getNextFromRaw(raw, idPrefix);
             setItems(next);
         },
@@ -80,6 +79,12 @@ function getNextFromRaw(raw: Element[], idPrefix?: string): SymbolItem[] {
         .filter((v): v is SymbolItem => Boolean(v))
         .filter((v) => (idPrefix ? v.id.startsWith(idPrefix) : true))
         .sort((a, b) => a.id.localeCompare(b.id));
+}
+
+function getRawDefs(fontID: string): Element[] {
+    const defsChildren = document.querySelector(`#${fontID} > defs`)?.children;
+    const raw = (defsChildren ? [...defsChildren] : []);
+    return raw;
 }
 
 function groupItemsByPrefix(items: SymbolItem[], idPrefix?: string): Record<string, SymbolItem[]> {
