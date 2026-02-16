@@ -15,21 +15,7 @@ export function SpyTestAllSvgSymbols({ fontID = "svgfont", idPrefix, className, 
         () => {
             const defsChildren = document.querySelector(`#${fontID} > defs`)?.children;
             const raw = (defsChildren ? [...defsChildren] : []);
-
-            const next = raw
-                .map((el) => {
-                    const id = (el as Element).id;
-                    if (!id) return null;
-                    return {
-                        id,
-                        viewBox: (el as Element).getAttribute("viewBox"),
-                        tagName: (el as Element).tagName.toLowerCase(),
-                    } satisfies SymbolItem;
-                })
-                .filter((v): v is SymbolItem => Boolean(v))
-                .filter((v) => (idPrefix ? v.id.startsWith(idPrefix) : true))
-                .sort((a, b) => a.id.localeCompare(b.id));
-
+            const next = getNextFromRaw(raw, idPrefix);
             setItems(next);
         },
         [fontID, idPrefix]
@@ -84,6 +70,22 @@ export function SpyTestAllSvgSymbols({ fontID = "svgfont", idPrefix, className, 
             )}
         </div>
     );
+}
+
+function getNextFromRaw(raw: Element[], idPrefix?: string): SymbolItem[] {
+    return raw
+        .map((el) => {
+            const id = el.id;
+            if (!id) return null;
+            return {
+                id,
+                viewBox: el.getAttribute("viewBox"),
+                tagName: el.tagName.toLowerCase(),
+            } satisfies SymbolItem;
+        })
+        .filter((v): v is SymbolItem => Boolean(v))
+        .filter((v) => (idPrefix ? v.id.startsWith(idPrefix) : true))
+        .sort((a, b) => a.id.localeCompare(b.id));
 }
 
 function getIdPrefixBucket(id: string) {
