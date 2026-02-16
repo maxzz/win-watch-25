@@ -22,7 +22,7 @@ export function SpyTestAllSvgSymbols({ fontID = "svgfont", className, ...rest  }
             {ids.map(
                 (id, idx) => (
                     <div key={idx}>
-                        <div className="size-16 bg-[#6c7a6a] border-gray-700 border-4 rounded">
+                        <div className="size-16 1bg-[#6c7a6a] border-gray-700 border-4 rounded">
                             <svg className="w-full h-full fill-[#deb8f7] stroke-black stroke-[.5]">
                                 <title>{`${id}`}</title>
                                 <use xlinkHref={`#${id}`} />
