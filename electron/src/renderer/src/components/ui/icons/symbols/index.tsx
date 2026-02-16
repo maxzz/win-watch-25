@@ -1,11 +1,13 @@
 import { UISymbolDefsInject } from "pm-manifest-icons";
 import { DefFieldTypes } from "pm-manifest-icons/src/symbols/fields";
 // import { DefAppTypes } from "./app";
+import { DefControlTypes } from "./controls";
 import { DefAllOtherTypes } from "./all-other";
 import { DefUiAutomationTypes } from "./ui-automation";
 
 export * from "pm-manifest-icons/src/symbols/fields";
 // export * from "./app";
+export * from "./controls";
 export * from "./all-other";
 export * from "./ui-automation";
 
@@ -14,6 +16,7 @@ export function UISymbolDefs() {
         <UISymbolDefsInject>
             {DefFieldTypes()}
             {/* {DefAppTypes()} */}
+            {DefControlTypes()}
             {DefAllOtherTypes()}
             {DefUiAutomationTypes()}
         </UISymbolDefsInject>
