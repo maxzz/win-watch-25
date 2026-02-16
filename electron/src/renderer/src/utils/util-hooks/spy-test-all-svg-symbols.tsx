@@ -7,6 +7,11 @@ type SymbolItem = {
     tagName: string;
 };
 
+function getIdPrefixBucket(id: string) {
+    const idx = id.indexOf("-");
+    return idx > 0 ? id.slice(0, idx) : "(no-prefix)";
+}
+
 export function SpyTestAllSvgSymbols({
     fontID = "svgfont",
     idPrefix,
@@ -44,24 +49,44 @@ export function SpyTestAllSvgSymbols({
         return null;
     }
 
-    return (
-        <div className={classNames("grid grid-cols-[repeat(auto-fill,minmax(0,64px))] gap-2", className)} {...rest}>
-            {items.map(
-                ({ id, viewBox }, idx) => (
-                    <div key={idx}>
-                        <div className="size-16 1bg-[#6c7a6a] border-gray-700 border-4 rounded">
-                            <svg viewBox={viewBox ?? "0 0 24 24"} className="w-full h-full fill-[#deb8f7] stroke-black stroke-[.5]">
-                                <title>{`${id}`}</title>
-                                <use xlinkHref={`#${id}`} />
-                            </svg>
-                        </div>
+    const groups = items.reduce((acc, item) => {
+        const key = idPrefix ? idPrefix : getIdPrefixBucket(item.id);
+        (acc[key] ??= []).push(item);
+        return acc;
+    }, {} as Record<string, SymbolItem[]>);
 
-                        <div className="min-h-8 text-[.65rem] text-foreground text-center">
-                            {id}
+    const groupEntries = Object.entries(groups)
+        .map(([prefix, groupItems]) => [prefix, groupItems.sort((a, b) => a.id.localeCompare(b.id))] as const)
+        .sort(([a], [b]) => a.localeCompare(b));
+
+    return (
+        <div className={classNames("flex flex-col gap-4", className)} {...rest}>
+            {groupEntries.map(([prefix, groupItems]) => (
+                <div key={prefix}>
+                    {!idPrefix && (
+                        <div className="px-2 pb-1 text-xs font-semibold text-muted-foreground">
+                            {prefix} <span className="font-normal">({groupItems.length})</span>
                         </div>
+                    )}
+
+                    <div className="grid grid-cols-[repeat(auto-fill,minmax(0,64px))] gap-2">
+                        {groupItems.map(({ id, viewBox }) => (
+                            <div key={id}>
+                                <div className="size-16 1bg-[#6c7a6a] border-gray-700 border-4 rounded">
+                                    <svg viewBox={viewBox ?? "0 0 24 24"} className="w-full h-full fill-[#deb8f7] stroke-black stroke-[.5]">
+                                        <title>{`${id}`}</title>
+                                        <use xlinkHref={`#${id}`} />
+                                    </svg>
+                                </div>
+
+                                <div className="min-h-8 text-[.65rem] text-foreground text-center">
+                                    {id}
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                ))
-            }
+                </div>
+            ))}
         </div>
     );
 }
