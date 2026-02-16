@@ -25,13 +25,7 @@ export function SpyTestAllSvgSymbols({ fontID = "svgfont", idPrefix, className, 
         return null;
     }
 
-    const groups = items.reduce(
-        (acc, item) => {
-            const key = idPrefix ? idPrefix : getIdPrefixBucket(item.id);
-            (acc[key] ??= []).push(item);
-            return acc;
-        }, {} as Record<string, SymbolItem[]>
-    );
+    const groups = groupItemsByPrefix(items, idPrefix);
 
     const groupEntries = Object
         .entries(groups)
@@ -86,6 +80,17 @@ function getNextFromRaw(raw: Element[], idPrefix?: string): SymbolItem[] {
         .filter((v): v is SymbolItem => Boolean(v))
         .filter((v) => (idPrefix ? v.id.startsWith(idPrefix) : true))
         .sort((a, b) => a.id.localeCompare(b.id));
+}
+
+function groupItemsByPrefix(items: SymbolItem[], idPrefix?: string): Record<string, SymbolItem[]> {
+    return items.reduce(
+        (acc, item) => {
+            const key = idPrefix ? idPrefix : getIdPrefixBucket(item.id);
+            (acc[key] ??= []).push(item);
+            return acc;
+        },
+        {} as Record<string, SymbolItem[]>
+    );
 }
 
 function getIdPrefixBucket(id: string) {
