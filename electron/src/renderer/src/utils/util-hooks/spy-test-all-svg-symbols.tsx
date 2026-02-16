@@ -96,9 +96,9 @@ function groupItemsByPrefix(items: SymbolItem[], idPrefix?: string): Record<stri
         },
         {} as Record<string, SymbolItem[]>
     );
-}
 
-function getIdPrefixBucket(id: string) {
-    const idx = id.indexOf("-");
-    return idx > 0 ? id.slice(0, idx) : "(no-prefix)";
+    function getIdPrefixBucket(id: string) {
+        const idx = id.indexOf("-");
+        return idx > 0 ? id.slice(0, idx) : "(no-prefix)";
+    }
 }
