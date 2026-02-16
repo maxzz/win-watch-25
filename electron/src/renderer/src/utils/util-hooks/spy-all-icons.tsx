@@ -14,7 +14,10 @@ export function SpyAllIcons({ includeSvgSymbols }: { includeSvgSymbols?: boolean
                 <SpyTestAllIcons className="mx-auto px-2 py-2" allIcons={allIcons} />
 
                 {includeSvgSymbols && <>
-                    <div className="mt-4 px-2 text-sm font-semibold">SVG symbols</div>
+                    <div className="mt-4 px-2 text-sm font-semibold">SVG symbols (controls)</div>
+                    <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" idPrefix="control-" />
+
+                    <div className="mt-4 px-2 text-sm font-semibold">SVG symbols (all)</div>
                     <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" />
                 </>}
             </div>
