@@ -40,6 +40,19 @@ import {
     MousePointer2,
 } from "lucide-react";
 import { SymbolFieldBtn, SymbolFieldLst, SymbolFieldTxt } from "pm-manifest-icons";
+import {
+    SymbolControlButton,
+    SymbolControlScrollbar,
+    SymbolControlSlider,
+    SymbolControlStatusbar,
+    SymbolControlTab,
+    SymbolControlTabItem,
+    SymbolControlThumb,
+    SymbolControlTitlebar,
+    SymbolControlTooltip,
+    SymbolControlWindow,
+    SymbolControlPane,
+} from "@renderer/components/ui/icons/symbols/controls";
 import { Symbol_uia_Toolbar, Symbol_uia_Tooltip } from "@renderer/components/ui/icons/symbols/ui-automation";
 import { UIA_CONTROL_TYPE_FILMSTRIP_ICONS, DefaultFilmstripControlTypeIcon } from "./2-uia-control-type-icons-filmstrip";
 
@@ -51,7 +64,7 @@ const iconClasses = "shrink-0 size-3 text-blue-700";
  * Maps UIA Control Type IDs to corresponding Lucide icon elements.
  */
 const UIA_LUCIDE_ICONS: Record<string, JSX.Element> = {
-    "50000": <SymbolFieldBtn className={"shrink-0 size-5 text-blue-700"} />,      // Button
+    "50000": <SymbolControlButton className={"shrink-0 size-5 text-blue-700"} />,      // Button
     "50001": <Calendar className={iconClasses} />,                                // Calendar
     "50002": <CheckSquare className={iconClasses} />,                             // CheckBox
     "50003": <SymbolFieldLst className={iconClasses} />,                          // ComboBox
@@ -65,30 +78,30 @@ const UIA_LUCIDE_ICONS: Record<string, JSX.Element> = {
     "50011": <LayoutList className={iconClasses} />,                              // MenuItem
     "50012": <Loader className={iconClasses} />,                                  // ProgressBar
     "50013": <Circle className={iconClasses} />,                                  // RadioButton
-    "50014": <SlidersHorizontal className={iconClasses} />,                       // ScrollBar
-    "50015": <Gauge className={iconClasses} />,                                   // Slider
+    "50014": <SymbolControlScrollbar className={iconClasses} />,                   // ScrollBar
+    "50015": <SymbolControlSlider className={iconClasses} />,                      // Slider
     "50016": <RotateCw className={iconClasses} />,                                // Spinner
-    "50017": <PanelTop className={iconClasses} />,                                // StatusBar
-    "50018": <Columns className={iconClasses} />,                                 // Tab
-    "50019": <FileText className={iconClasses} />,                                // TabItem
+    "50017": <SymbolControlStatusbar className={iconClasses} />,                   // StatusBar
+    "50018": <SymbolControlTab className={iconClasses} />,                         // Tab
+    "50019": <SymbolControlTabItem className={iconClasses} />,                     // TabItem
     "50020": <SymbolFieldTxt className={"shrink-0 size-4 text-blue-700"} />,      // Text
     "50021": <Symbol_uia_Toolbar className={iconClasses} />,                      // ToolBar
-    "50022": <Symbol_uia_Tooltip className={iconClasses} />,                      // ToolTip
+    "50022": <SymbolControlTooltip className={iconClasses} />,                    // ToolTip
     "50023": <TreeDeciduous className={iconClasses} />,                           // Tree
     "50024": <Folder className={iconClasses} />,                                  // TreeItem
     "50025": <Boxes className={iconClasses} />,                                   // Custom
     "50026": <Group className={iconClasses} />,                                   // Group
-    "50027": <GripVertical className={iconClasses} />,                            // Thumb
+    "50027": <SymbolControlThumb className={iconClasses} />,                      // Thumb
     "50028": <Grid3X3 className={iconClasses} />,                                 // DataGrid
     "50029": <FileSpreadsheet className={iconClasses} />,                         // DataItem
     "50030": <FileText className={iconClasses} />,                                // Document
     "50031": <Square className={iconClasses} />,                                  // SplitButton
-    "50032": <AppWindow className={iconClasses} />,                               // Window
-    "50033": <PanelLeft className={iconClasses} />,                               // Pane
+    "50032": <SymbolControlWindow className={iconClasses} />,                     // Window
+    "50033": <SymbolControlPane className={iconClasses} />,                       // Pane
     "50034": <Heading className={iconClasses} />,                                 // Header
     "50035": <PanelTopInactive className={iconClasses} />,                        // HeaderItem
     "50036": <Table className={iconClasses} />,                                   // Table
-    "50037": <PanelTop className={iconClasses} />,                                // TitleBar
+    "50037": <SymbolControlTitlebar className={iconClasses} />,                   // TitleBar
     "50038": <Minus className={iconClasses} />,                                   // Separator
     "50039": <ZoomIn className={iconClasses} />,                                  // SemanticZoom
     "50040": <LayoutDashboard className={iconClasses} />,                         // AppBar
