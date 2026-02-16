@@ -52,7 +52,7 @@ function printIconsLocation(allIcons: AllIcons) {
 
     const text = entries.map((name, idx) => ` ${`${idx}`.padStart(3, ' ')}: ${name}`).join('\n');
 
-    console.group('Icons');    
+    console.groupCollapsed('Icons');    
     console.log(`%c${msg}\n%c${text}`, 'font-size: 0.65rem; color: darkblue;', 'font-size: 0.55rem; color: darkgreen;');
     console.groupEnd();
 }
