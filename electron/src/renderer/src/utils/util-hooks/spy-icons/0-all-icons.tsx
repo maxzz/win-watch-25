@@ -13,7 +13,7 @@ const idPrefix = "control-";
 
 export function SpyAllIcons({ includeSvgSymbols }: { includeSvgSymbols?: boolean; }) {
     const symbols = useAtomValue(svgSymbolsAtom);
-    const groups = useAtomValue(svgSymbolGroupsAtom);
+    const groups = useAtomValue(svgSymbolGroupsAtom(idPrefix));
     const setSymbols = useSetAtom(setSvgSymbolsAtom);
 
     const allSymbolGroups = useMemo(() => groupSymbolsByPrefix(symbols), [symbols]);
@@ -22,7 +22,7 @@ export function SpyAllIcons({ includeSvgSymbols }: { includeSvgSymbols?: boolean
         () => {
             setSymbols({ fontID });
         },
-        [fontID, idPrefix]
+        [fontID]
     );
     
     return (

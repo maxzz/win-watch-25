@@ -1,10 +1,9 @@
 import { atom } from "jotai";
+import { atomFamily } from "jotai/utils";
 
 // Collected symbols atom for svg symbols
 
 export const svgSymbolsAtom = atom<SymbolItem[]>([]);
-
-export const svgSymbolsIdPrefixAtom = atom<string | undefined>(undefined);
 
 export const setSvgSymbolsAtom = atom(
     null,
@@ -15,12 +14,14 @@ export const setSvgSymbolsAtom = atom(
     }
 );
 
-export const svgSymbolGroupsAtom = atom(
-    (get): Record<string, SymbolItem[]> => { // group name and symbols
-        const symbols = get(svgSymbolsAtom);
-        const idPrefix = get(svgSymbolsIdPrefixAtom);
-        return groupSymbolsByPrefix(symbols, idPrefix);
-    }
+export const svgSymbolGroupsAtom = atomFamily(
+    (idPrefix?: string) =>
+        atom(
+            (get): Record<string, SymbolItem[]> => { // group name and symbols
+                const symbols = get(svgSymbolsAtom);
+                return groupSymbolsByPrefix(symbols, idPrefix);
+            }
+        )
 );
 
 /**
