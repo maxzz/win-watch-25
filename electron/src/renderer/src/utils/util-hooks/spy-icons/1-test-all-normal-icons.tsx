@@ -5,7 +5,7 @@ type AllIcons = Record<string, ComponentType<SVGProps<SVGSVGElement>>>;
 
 const PRINT_ONCE_KEY = "__win_watch_25_spy_test_all_icons_printed__";
 
-export function SpyTestAllIcons({ allIcons, className, ...rest }: { allIcons: AllIcons; } & HTMLAttributes<HTMLDivElement>) {
+export function SpyTestAllNormalIcons({ allIcons, className, ...rest }: { allIcons: AllIcons; } & HTMLAttributes<HTMLDivElement>) {
     
     useEffect(() => {
         // In React 18 dev + StrictMode, effects run twice (mount/unmount/mount) to detect unsafe side effects.
