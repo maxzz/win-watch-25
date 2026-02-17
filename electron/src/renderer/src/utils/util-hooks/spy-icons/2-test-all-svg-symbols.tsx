@@ -1,11 +1,6 @@
 import { type HTMLAttributes, useEffect, useState } from "react"; // 02.15.26
 import { classNames } from "../../classnames";
-
-type SymbolItem = {
-    id: string;
-    viewBox: string | null;
-    tagName: string;
-};
+import { getNextFromRaw, getRawDefs, groupItemsByPrefix, type SymbolItem } from "./8-collect-svg-symbols";
 
 export function SpyTestAllSvgSymbols({ fontID = "svgfont", idPrefix, className, ...rest }: { fontID?: string; idPrefix?: string; } & HTMLAttributes<HTMLDivElement>) {
 
@@ -63,42 +58,4 @@ export function SpyTestAllSvgSymbols({ fontID = "svgfont", idPrefix, className, 
             )}
         </div>
     );
-}
-
-function getNextFromRaw(raw: Element[], idPrefix?: string): SymbolItem[] {
-    return raw
-        .map((el) => {
-            const id = el.id;
-            if (!id) return null;
-            return {
-                id,
-                viewBox: el.getAttribute("viewBox"),
-                tagName: el.tagName.toLowerCase(),
-            } satisfies SymbolItem;
-        })
-        .filter((v): v is SymbolItem => Boolean(v))
-        .filter((v) => (idPrefix ? v.id.startsWith(idPrefix) : true))
-        .sort((a, b) => a.id.localeCompare(b.id));
-}
-
-function getRawDefs(fontID: string): Element[] {
-    const defsChildren = document.querySelector(`#${fontID} > defs`)?.children;
-    const raw = (defsChildren ? [...defsChildren] : []);
-    return raw;
-}
-
-function groupItemsByPrefix(items: SymbolItem[], idPrefix?: string): Record<string, SymbolItem[]> {
-    return items.reduce(
-        (acc, item) => {
-            const key = idPrefix ? idPrefix : getIdPrefixBucket(item.id);
-            (acc[key] ??= []).push(item);
-            return acc;
-        },
-        {} as Record<string, SymbolItem[]>
-    );
-
-    function getIdPrefixBucket(id: string) {
-        const idx = id.indexOf("-");
-        return idx > 0 ? id.slice(0, idx) : "(no-prefix)";
-    }
 }
