@@ -9,18 +9,12 @@ export function SpyTestAllSvgSymbols({ groups, idPrefix, className, ...rest }: {
                 ([prefix, groupSymbols]) => (
                     <div key={prefix}>
                         {!idPrefix && (
-                            <div className="px-2 pb-1 text-xs font-semibold text-muted-foreground">
-                                {prefix}
-
-                                <span className="font-normal">
-                                    ({groupSymbols.length})
-                                </span>
-                            </div>
+                            <GroupHeader prefix={prefix} count={groupSymbols.length} />
                         )}
 
                         <div className="grid grid-cols-[repeat(auto-fill,minmax(0,64px))] gap-2">
                             {groupSymbols.map(
-                                ({ id, viewBox }) => <SvgSymbolItem key={id} id={id} viewBox={viewBox} />
+                                ({ id, viewBox }) => <GroupSymbolItem key={id} id={id} viewBox={viewBox} />
                             )}
                         </div>
                     </div>
@@ -30,7 +24,19 @@ export function SpyTestAllSvgSymbols({ groups, idPrefix, className, ...rest }: {
     );
 }
 
-function SvgSymbolItem({ id, viewBox }: Pick<SymbolItem, "id" | "viewBox">) {
+function GroupHeader({ prefix, count }: { prefix: string; count: number; }) {
+    return (
+        <div className="pb-1 text-xs font-semibold text-foreground">
+            {prefix}{' '}
+
+            <span className="font-normal">
+                ({count})
+            </span>
+        </div>
+    );
+}
+
+function GroupSymbolItem({ id, viewBox }: Pick<SymbolItem, "id" | "viewBox">) {
     return (
         <div>
             <div className="size-16 1bg-[#6c7a6a] border-gray-700 border-4 rounded">

@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { atomFamily } from "jotai/utils";
+import { atomFamily } from "jotai-family";
 
 // Collected symbols atom for svg symbols
 
@@ -71,7 +71,9 @@ export function symbolsFromRawElements(raw: Element[], idPrefix?: string): Symbo
  * // ]}
  */
 export function groupSymbolsByPrefix(symbols: SymbolItem[], idPrefix?: string): Record<string, SymbolItem[]> {
-    return symbols.reduce(
+    const filtered = idPrefix ? symbols.filter((s) => s.id.startsWith(idPrefix)) : symbols;
+
+    return filtered.reduce(
         (acc, item) => {
             const key = idPrefix ? idPrefix : getIdPrefixBucket(item.id);
             (acc[key] ??= []).push(item);
