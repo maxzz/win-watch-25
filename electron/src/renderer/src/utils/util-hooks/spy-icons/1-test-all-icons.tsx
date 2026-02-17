@@ -1,5 +1,5 @@
 import { type ComponentType, type HTMLAttributes, type SVGProps, useEffect } from "react"; // 02.14.26
-import { classNames } from "../classnames";
+import { classNames } from "../../classnames";
 
 type AllIcons = Record<string, ComponentType<SVGProps<SVGSVGElement>>>;
 

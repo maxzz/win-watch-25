@@ -1,5 +1,5 @@
 import { type HTMLAttributes, useEffect, useState } from "react"; // 02.15.26
-import { classNames } from "../classnames";
+import { classNames } from "../../classnames";
 
 type SymbolItem = {
     id: string;

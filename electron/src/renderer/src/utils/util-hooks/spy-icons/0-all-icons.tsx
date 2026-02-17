@@ -1,6 +1,6 @@
 import { type ReactNode, useState } from "react"; // 02.14.26
-import { SpyTestAllIcons } from "./spy-test-all-icons";
-import { SpyTestAllSvgSymbols } from "./spy-test-all-svg-symbols";
+import { SpyTestAllIcons } from "./1-test-all-icons";
+import { SpyTestAllSvgSymbols } from "./2-test-all-svg-symbols";
 import * as allIcons from "@renderer/components/ui/icons/normal";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronDown } from "lucide-react";
