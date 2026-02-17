@@ -8,11 +8,10 @@ export const svgSymbolsIdPrefixAtom = atom<string | undefined>(undefined);
 
 export const setSvgSymbolsAtom = atom(
     null,
-    (_get, set, { fontID, idPrefix }: { fontID: string; idPrefix?: string; }) => {
+    (_get, set, { fontID }: { fontID: string; }) => {
         const raw = getRawDefs(fontID);
-        const symbols = symbolsFromRawElements(raw, idPrefix);
+        const symbols = symbolsFromRawElements(raw);
         set(svgSymbolsAtom, symbols);
-        set(svgSymbolsIdPrefixAtom, idPrefix);
     }
 );
 

@@ -1,20 +1,8 @@
-import { type HTMLAttributes, useEffect } from "react"; // 02.15.26
-import { useAtomValue, useSetAtom } from "jotai";
+import { type HTMLAttributes } from "react"; // 02.15.26
 import { classNames } from "../../classnames";
-import { setSvgSymbolsAtom, svgSymbolGroupsAtom, type SymbolItem } from "./7-collect-svg-symbols";
+import { type SymbolItem } from "./7-collect-svg-symbols";
 
-export function SpyTestAllSvgSymbols({ fontID = "svgfont", idPrefix, className, ...rest }: { fontID?: string; idPrefix?: string; } & HTMLAttributes<HTMLDivElement>) {
-
-    const groups = useAtomValue(svgSymbolGroupsAtom);
-    const setSymbols = useSetAtom(setSvgSymbolsAtom);
-
-    useEffect(
-        () => {
-            setSymbols({ fontID, idPrefix });
-        },
-        [fontID, idPrefix]
-    );
-
+export function SpyTestAllSvgSymbols({ groups, idPrefix, className, ...rest }: { groups: Record<string, SymbolItem[]>; idPrefix?: string; } & HTMLAttributes<HTMLDivElement>) {
     return (
         <div className={classNames("flex flex-col gap-4", className)} {...rest}>
             {Object.entries(groups).map(

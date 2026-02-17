@@ -1,12 +1,30 @@
-import { type ReactNode, useState } from "react"; // 02.14.26
+import { type ReactNode, useEffect, useMemo, useState } from "react"; // 02.14.26
+import { useAtomValue, useSetAtom } from "jotai";
 import { SpyTestAllNormalIcons } from "./1-test-all-normal-icons";
 import { SpyTestAllSvgSymbols } from "./2-test-all-svg-symbols";
 import * as allIcons from "@renderer/components/ui/icons/normal";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronDown } from "lucide-react";
 import { SpyPrintIconsLocationOnce } from "./8-print-icons-location-once";
+import { groupSymbolsByPrefix, setSvgSymbolsAtom, svgSymbolGroupsAtom, svgSymbolsAtom } from "./7-collect-svg-symbols";
+
+const fontID = "svgfont";
+const idPrefix = "control-";
 
 export function SpyAllIcons({ includeSvgSymbols }: { includeSvgSymbols?: boolean; }) {
+    const symbols = useAtomValue(svgSymbolsAtom);
+    const groups = useAtomValue(svgSymbolGroupsAtom);
+    const setSymbols = useSetAtom(setSvgSymbolsAtom);
+
+    const allSymbolGroups = useMemo(() => groupSymbolsByPrefix(symbols), [symbols]);
+
+    useEffect(
+        () => {
+            setSymbols({ fontID });
+        },
+        [fontID, idPrefix]
+    );
+    
     return (
         <IconsAndSymbolsAccordion>
             <SpyPrintIconsLocationOnce allIcons={allIcons} />
@@ -18,10 +36,10 @@ export function SpyAllIcons({ includeSvgSymbols }: { includeSvgSymbols?: boolean
 
                 {includeSvgSymbols && <>
                     <div className="mt-4 px-2 text-sm font-semibold">SVG symbols (controls)</div>
-                    <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" idPrefix="control-" />
+                    <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" groups={groups} idPrefix="control-" />
 
-                    {/* <div className="mt-4 px-2 text-sm font-semibold">SVG symbols (all)</div>
-                    <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" /> */}
+                    <div className="mt-4 px-2 text-sm font-semibold">SVG symbols (all)</div>
+                    <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" groups={allSymbolGroups} />
                 </>}
             </div>
         </IconsAndSymbolsAccordion>
