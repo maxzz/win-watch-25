@@ -16,11 +16,13 @@ export const setSvgSymbolsAtom = atom(
     }
 );
 
-export const svgSymbolGroupsAtom = atom((get) => {
-    const symbols = get(svgSymbolsAtom);
-    const idPrefix = get(svgSymbolsIdPrefixAtom);
-    return groupSymbolsByPrefix(symbols, idPrefix);
-});
+export const svgSymbolGroupsAtom = atom(
+    (get): Record<string, SymbolItem[]> => { // group name and symbols
+        const symbols = get(svgSymbolsAtom);
+        const idPrefix = get(svgSymbolsIdPrefixAtom);
+        return groupSymbolsByPrefix(symbols, idPrefix);
+    }
+);
 
 /**
  * Get raw defs elements from font ID

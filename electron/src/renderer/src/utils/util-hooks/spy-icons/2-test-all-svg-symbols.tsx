@@ -1,11 +1,11 @@
 import { type HTMLAttributes, useEffect } from "react"; // 02.15.26
 import { useAtomValue, useSetAtom } from "jotai";
 import { classNames } from "../../classnames";
-import { setSvgSymbolsAtom, svgSymbolGroupsAtom, svgSymbolsAtom, type SymbolItem } from "./7-collect-svg-symbols";
+import { setSvgSymbolsAtom, svgSymbolGroupsAtom, type SymbolItem } from "./7-collect-svg-symbols";
 
 export function SpyTestAllSvgSymbols({ fontID = "svgfont", idPrefix, className, ...rest }: { fontID?: string; idPrefix?: string; } & HTMLAttributes<HTMLDivElement>) {
 
-    const symbols = useAtomValue(svgSymbolsAtom);
+    const groups = useAtomValue(svgSymbolGroupsAtom);
     const setSymbols = useSetAtom(setSvgSymbolsAtom);
 
     useEffect(
@@ -15,20 +15,9 @@ export function SpyTestAllSvgSymbols({ fontID = "svgfont", idPrefix, className, 
         [fontID, idPrefix]
     );
 
-    if (!symbols.length) {
-        return null;
-    }
-
-    const groups = useAtomValue(svgSymbolGroupsAtom);
-
-    const groupEntries = Object
-        .entries(groups)
-        .map(([prefix, groupSymbols]) => [prefix, groupSymbols.sort((a, b) => a.id.localeCompare(b.id))] as const)
-        .sort(([a], [b]) => a.localeCompare(b));
-
     return (
         <div className={classNames("flex flex-col gap-4", className)} {...rest}>
-            {groupEntries.map(
+            {Object.entries(groups).map(
                 ([prefix, groupSymbols]) => (
                     <div key={prefix}>
                         {!idPrefix && (
