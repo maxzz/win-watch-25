@@ -17,8 +17,8 @@ export function SpyAllIcons({ includeSvgSymbols }: { includeSvgSymbols?: boolean
                     <div className="mt-4 px-2 text-sm font-semibold">SVG symbols (controls)</div>
                     <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" idPrefix="control-" />
 
-                    <div className="mt-4 px-2 text-sm font-semibold">SVG symbols (all)</div>
-                    <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" />
+                    {/* <div className="mt-4 px-2 text-sm font-semibold">SVG symbols (all)</div>
+                    <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" /> */}
                 </>}
             </div>
         </IconsAndSymbolsAccordion>
@@ -29,16 +29,18 @@ function IconsAndSymbolsAccordion({ children }: { children: ReactNode; }) {
     const [open, setOpen] = useState(false);
 
     return (
-        <div className="m-2 rounded border bg-card/30 shadow-sm">
+        <div className="m-2 rounded border bg-card/30 shadow-sm overflow-y-auto">
             <button
                 type="button"
-                className="w-full px-2 py-1 border-b bg-muted/20 flex items-center select-none text-left"
+                className="w-full px-2 py-1 text-left border-b bg-muted/20 flex items-center select-none"
                 onClick={() => setOpen((v) => !v)}
                 aria-expanded={open}
             >
-                <span className="text-xs font-semibold">Icons and symbols</span>
+                <span className="text-xs font-semibold">
+                    Icons and symbols
+                </span>
                 <motion.span
-                    className="ml-auto inline-flex items-center justify-center text-muted-foreground"
+                    className="ml-auto text-muted-foreground inline-flex items-center justify-center"
                     animate={{ rotate: open ? 180 : 0 }}
                     transition={{ duration: 0.15 }}
                 >
