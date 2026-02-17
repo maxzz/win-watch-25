@@ -1,16 +1,16 @@
-import { type HTMLAttributes, useEffect, useState } from "react"; // 02.15.26
+import { type HTMLAttributes, useEffect } from "react"; // 02.15.26
+import { useAtomValue, useSetAtom } from "jotai";
 import { classNames } from "../../classnames";
-import { symbolsFromRawElements, getRawDefs, type SymbolItem, groupSymbolsByPrefix } from "./7-collect-svg-symbols";
+import { groupSymbolsByPrefix, setSvgSymbolsAtom, svgSymbolsAtom, type SymbolItem } from "./7-collect-svg-symbols";
 
 export function SpyTestAllSvgSymbols({ fontID = "svgfont", idPrefix, className, ...rest }: { fontID?: string; idPrefix?: string; } & HTMLAttributes<HTMLDivElement>) {
 
-    const [symbols, setSymbols] = useState<SymbolItem[]>([]);
+    const symbols = useAtomValue(svgSymbolsAtom);
+    const setSymbols = useSetAtom(setSvgSymbolsAtom);
 
     useEffect(
         () => {
-            const raw = getRawDefs(fontID);
-            const symbols = symbolsFromRawElements(raw, idPrefix);
-            setSymbols(symbols);
+            setSymbols({ fontID, idPrefix });
         },
         [fontID, idPrefix]
     );
@@ -34,7 +34,7 @@ export function SpyTestAllSvgSymbols({ fontID = "svgfont", idPrefix, className, 
                         {!idPrefix && (
                             <div className="px-2 pb-1 text-xs font-semibold text-muted-foreground">
                                 {prefix}
-                                
+
                                 <span className="font-normal">
                                     ({groupSymbols.length})
                                 </span>

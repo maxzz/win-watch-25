@@ -1,3 +1,18 @@
+import { atom } from "jotai";
+
+// Collected symbols atom for svg symbols
+
+export const svgSymbolsAtom = atom<SymbolItem[]>([]);
+
+export const setSvgSymbolsAtom = atom(
+    null,
+    (_get, set, { fontID, idPrefix }: { fontID: string; idPrefix?: string; }) => {
+        const raw = getRawDefs(fontID);
+        const symbols = symbolsFromRawElements(raw, idPrefix);
+        set(svgSymbolsAtom, symbols);
+    }
+);
+
 /**
  * Get raw defs elements from font ID
  */
