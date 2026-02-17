@@ -47,7 +47,8 @@ function CopyToClipboardButton({ text, className, title, children }: { text: str
                 if (timeoutIdRef.current != null) {
                     window.clearTimeout(timeoutIdRef.current);
                 }
-                timeoutIdRef.current = window.setTimeout(() => setCopied(false), 1000);
+                // Keep the whole feedback (in+out) around ~0.4s.
+                timeoutIdRef.current = window.setTimeout(() => setCopied(false), 250);
             }}
         >
             {children}
@@ -60,18 +61,18 @@ function CopyToClipboardButton({ text, className, title, children }: { text: str
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                        transition={{ duration: 0.12 }}
                     >
                         <motion.div
                             className="flex flex-col items-center gap-0.5"
                             initial={{ scale: 0.75, opacity: 0, rotate: -6 }}
                             animate={{ scale: 1, opacity: 1, rotate: 0 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            transition={{ type: "spring", stiffness: 520, damping: 22, mass: 0.7 }}
+                            transition={{ type: "spring", stiffness: 750, damping: 28, mass: 0.55 }}
                         >
                             <motion.div
                                 animate={{ scale: [1, 1.06, 1] }}
-                                transition={{ duration: 0.3, times: [0, 0.35, 1] }}
+                                transition={{ duration: 0.25, times: [0, 0.4, 1] }}
                                 className="relative"
                             >
                                 <Check className="size-5" />
