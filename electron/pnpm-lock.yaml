@@ -56,6 +56,12 @@ importers:
       jotai:
         specifier: ^2.17.1
         version: 2.17.1(@babel/core@7.28.6)(@babel/template@7.28.6)(@types/react@19.2.13)(react@19.2.4)
+      jotai-effect:
+        specifier: ^2.2.3
+        version: 2.2.3(jotai@2.17.1(@babel/core@7.28.6)(@babel/template@7.28.6)(@types/react@19.2.13)(react@19.2.4))
+      jotai-valtio:
+        specifier: ^0.6.0
+        version: 0.6.0(jotai@2.17.1(@babel/core@7.28.6)(@babel/template@7.28.6)(@types/react@19.2.13)(react@19.2.4))(valtio@2.3.0(@types/react@19.2.13)(react@19.2.4))
       lucide-react:
         specifier: ^0.563.0
         version: 0.563.0(react@19.2.4)
@@ -2066,6 +2072,18 @@ packages:
   jiti@2.6.1:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
+
+  jotai-effect@2.2.3:
+    resolution: {integrity: sha512-MKw5eUydU6aL+fGtrMbdWLB+KFHc4R1AfQcCnXYpvc2AN+tiE/qS0yZwuL2HEBQoEm6quGPb5M1Uib6viK2Eeg==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      jotai: '>=2.16.0'
+
+  jotai-valtio@0.6.0:
+    resolution: {integrity: sha512-ohn1On9O8dUZRfl04BFdJk1JcFjYmjLV8UZWNNypxpyzrx0nKKqbnu7mvAZjE8430obnqYQX1KRb+4CluFVPeA==}
+    peerDependencies:
+      jotai: '>=2.0.0'
+      valtio: '>=2.0.0'
 
   jotai@2.17.1:
     resolution: {integrity: sha512-TFNZZDa/0ewCLQyRC/Sq9crtixNj/Xdf/wmj9631xxMuKToVJZDbqcHIYN0OboH+7kh6P6tpIK7uKWClj86PKw==}
@@ -4974,6 +4992,15 @@ snapshots:
       picocolors: 1.1.1
 
   jiti@2.6.1: {}
+
+  jotai-effect@2.2.3(jotai@2.17.1(@babel/core@7.28.6)(@babel/template@7.28.6)(@types/react@19.2.13)(react@19.2.4)):
+    dependencies:
+      jotai: 2.17.1(@babel/core@7.28.6)(@babel/template@7.28.6)(@types/react@19.2.13)(react@19.2.4)
+
+  jotai-valtio@0.6.0(jotai@2.17.1(@babel/core@7.28.6)(@babel/template@7.28.6)(@types/react@19.2.13)(react@19.2.4))(valtio@2.3.0(@types/react@19.2.13)(react@19.2.4)):
+    dependencies:
+      jotai: 2.17.1(@babel/core@7.28.6)(@babel/template@7.28.6)(@types/react@19.2.13)(react@19.2.4)
+      valtio: 2.3.0(@types/react@19.2.13)(react@19.2.4)
 
   jotai@2.17.1(@babel/core@7.28.6)(@babel/template@7.28.6)(@types/react@19.2.13)(react@19.2.4):
     optionalDependencies:

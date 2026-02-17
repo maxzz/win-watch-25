@@ -4,14 +4,23 @@ import { atom } from "jotai";
 
 export const svgSymbolsAtom = atom<SymbolItem[]>([]);
 
+export const svgSymbolsIdPrefixAtom = atom<string | undefined>(undefined);
+
 export const setSvgSymbolsAtom = atom(
     null,
     (_get, set, { fontID, idPrefix }: { fontID: string; idPrefix?: string; }) => {
         const raw = getRawDefs(fontID);
         const symbols = symbolsFromRawElements(raw, idPrefix);
         set(svgSymbolsAtom, symbols);
+        set(svgSymbolsIdPrefixAtom, idPrefix);
     }
 );
+
+export const svgSymbolGroupsAtom = atom((get) => {
+    const symbols = get(svgSymbolsAtom);
+    const idPrefix = get(svgSymbolsIdPrefixAtom);
+    return groupSymbolsByPrefix(symbols, idPrefix);
+});
 
 /**
  * Get raw defs elements from font ID
