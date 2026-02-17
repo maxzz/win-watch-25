@@ -11,7 +11,7 @@ export function SpyTestAllNormalIcons({ allIcons, className, ...rest }: { allIco
             {Object.entries(allIcons).map(
                 ([name, Icon]) => (
                     <div className="flex flex-col items-center" key={name}>
-                        <CopyToClipboardButton text={name} className="border-sky-500 border rounded" title={name}>
+                        <CopyToClipboardButton text={name} className="border-sky-500 border rounded" title={`${name}\nClick to copy`}>
                             <Icon className="size-6" />
                         </CopyToClipboardButton>
                     </div>
@@ -25,13 +25,15 @@ function CopyToClipboardButton({ text, className, title, children }: { text: str
     const [copied, setCopied] = useState(false);
     const timeoutIdRef = useRef<number | null>(null);
 
-    useEffect(() => {
-        return () => {
-            if (timeoutIdRef.current != null) {
-                window.clearTimeout(timeoutIdRef.current);
-            }
-        };
-    }, []);
+    useEffect(
+        () => {
+            return () => {
+                if (timeoutIdRef.current != null) {
+                    window.clearTimeout(timeoutIdRef.current);
+                }
+            };
+        },
+        []);
 
     return (
         <button
@@ -54,19 +56,26 @@ function CopyToClipboardButton({ text, className, title, children }: { text: str
                 {copied && (
                     <motion.div
                         key="copied"
-                        className="absolute inset-0 grid place-items-center bg-emerald-600/85 text-white"
+                        className="absolute inset-0 grid place-items-center bg-emerald-600 text-white"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.15 }}
+                        transition={{ duration: 0.2 }}
                     >
                         <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.98, opacity: 0 }}
-                            transition={{ duration: 0.15 }}
+                            className="flex flex-col items-center gap-0.5"
+                            initial={{ scale: 0.75, opacity: 0, rotate: -6 }}
+                            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            transition={{ type: "spring", stiffness: 520, damping: 22, mass: 0.7 }}
                         >
-                            <Check className="size-5" />
+                            <motion.div
+                                animate={{ scale: [1, 1.06, 1] }}
+                                transition={{ duration: 0.3, times: [0, 0.35, 1] }}
+                                className="relative"
+                            >
+                                <Check className="size-5" />
+                            </motion.div>
                         </motion.div>
                     </motion.div>
                 )}
