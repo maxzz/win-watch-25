@@ -1,5 +1,7 @@
-import { type ComponentType, type HTMLAttributes, type SVGProps } from "react"; // 02.16.26
+import { type ComponentType, type HTMLAttributes, type SVGProps, type ReactNode, useEffect, useRef, useState } from "react"; // 02.16.26
 import { classNames } from "../../classnames";
+import { AnimatePresence, motion } from "motion/react";
+import { Check } from "lucide-react";
 
 type AllIcons = Record<string, ComponentType<SVGProps<SVGSVGElement>>>;
 
@@ -9,13 +11,67 @@ export function SpyTestAllNormalIcons({ allIcons, className, ...rest }: { allIco
             {Object.entries(allIcons).map(
                 ([name, Icon]) => (
                     <div className="flex flex-col items-center" key={name}>
-                        <button className="border-sky-500 border rounded" type="button" onClick={() => copyToClipboard(name)} title={name}>
+                        <CopyToClipboardButton text={name} className="border-sky-500 border rounded" title={name}>
                             <Icon className="size-6" />
-                        </button>
+                        </CopyToClipboardButton>
                     </div>
                 ))
             }
         </div>
+    );
+}
+
+function CopyToClipboardButton({ text, className, title, children }: { text: string; className?: string; title?: string; children: ReactNode; }) {
+    const [copied, setCopied] = useState(false);
+    const timeoutIdRef = useRef<number | null>(null);
+
+    useEffect(() => {
+        return () => {
+            if (timeoutIdRef.current != null) {
+                window.clearTimeout(timeoutIdRef.current);
+            }
+        };
+    }, []);
+
+    return (
+        <button
+            type="button"
+            title={title}
+            className={classNames("relative overflow-hidden", className)}
+            onClick={async () => {
+                await copyToClipboard(text);
+
+                setCopied(true);
+                if (timeoutIdRef.current != null) {
+                    window.clearTimeout(timeoutIdRef.current);
+                }
+                timeoutIdRef.current = window.setTimeout(() => setCopied(false), 1000);
+            }}
+        >
+            {children}
+
+            <AnimatePresence>
+                {copied && (
+                    <motion.div
+                        key="copied"
+                        className="absolute inset-0 grid place-items-center bg-emerald-600/85 text-white"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.15 }}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.98, opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                        >
+                            <Check className="size-5" />
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </button>
     );
 }
 
