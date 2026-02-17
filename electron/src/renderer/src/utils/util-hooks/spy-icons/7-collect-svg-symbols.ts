@@ -1,10 +1,18 @@
+/**
+ * Get raw defs elements from font ID
+ */
+export function getRawDefs(fontID: string): Element[] {
+    const defsChildren = document.querySelector(`#${fontID} > defs`)?.children;
+    const raw = (defsChildren ? [...defsChildren] : []);
+    return raw;
+}
+
 export type SymbolItem = {
     id: string;
     viewBox: string | null;
-    tagName: string;
 };
 
-export function getNextFromRaw(raw: Element[], idPrefix?: string): SymbolItem[] {
+export function symbolsFromRawElements(raw: Element[], idPrefix?: string): SymbolItem[] {
     return raw
         .map((el) => {
             const id = el.id;
@@ -12,18 +20,11 @@ export function getNextFromRaw(raw: Element[], idPrefix?: string): SymbolItem[] 
             return {
                 id,
                 viewBox: el.getAttribute("viewBox"),
-                tagName: el.tagName.toLowerCase(),
             } satisfies SymbolItem;
         })
         .filter((v): v is SymbolItem => Boolean(v))
         .filter((v) => (idPrefix ? v.id.startsWith(idPrefix) : true))
         .sort((a, b) => a.id.localeCompare(b.id));
-}
-
-export function getRawDefs(fontID: string): Element[] {
-    const defsChildren = document.querySelector(`#${fontID} > defs`)?.children;
-    const raw = (defsChildren ? [...defsChildren] : []);
-    return raw;
 }
 
 /**
@@ -43,8 +44,8 @@ export function getRawDefs(fontID: string): Element[] {
  * //      { id: "control-button-2", viewBox: "0 0 24 24", tagName: "svg" }
  * // ]}
  */
-export function groupItemsByPrefix(items: SymbolItem[], idPrefix?: string): Record<string, SymbolItem[]> {
-    return items.reduce(
+export function groupSymbolsByPrefix(symbols: SymbolItem[], idPrefix?: string): Record<string, SymbolItem[]> {
+    return symbols.reduce(
         (acc, item) => {
             const key = idPrefix ? idPrefix : getIdPrefixBucket(item.id);
             (acc[key] ??= []).push(item);

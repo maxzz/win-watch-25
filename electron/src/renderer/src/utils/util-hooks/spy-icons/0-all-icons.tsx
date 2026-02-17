@@ -4,10 +4,13 @@ import { SpyTestAllSvgSymbols } from "./2-test-all-svg-symbols";
 import * as allIcons from "@renderer/components/ui/icons/normal";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronDown } from "lucide-react";
+import { SpyPrintIconsLocationOnce } from "./8-print-icons-location-once";
 
 export function SpyAllIcons({ includeSvgSymbols }: { includeSvgSymbols?: boolean; }) {
     return (
         <IconsAndSymbolsAccordion>
+            <SpyPrintIconsLocationOnce allIcons={allIcons} />
+            
             <div className="m-2 bg-sky-50/70 border-sky-500 border rounded shadow-sm">
 
                 <div className="px-2 mt-1 text-sm font-semibold">Normal icons</div>
