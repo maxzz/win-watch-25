@@ -1,22 +1,21 @@
 import { type ReactNode, useEffect, useMemo, useState } from "react"; // 02.14.26
 import { useAtomValue, useSetAtom } from "jotai";
-import { SpyTestAllNormalIcons } from "./1-test-all-normal-icons";
-import { SpyTestAllSvgSymbols } from "./2-test-all-svg-symbols";
-import * as allIcons from "@renderer/components/ui/icons/normal";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronDown } from "lucide-react";
-import { SpyPrintIconsLocationOnce } from "./8-print-icons-location-once";
+import { SpyTestAllNormalIcons } from "./1-test-all-normal-icons";
+import { SpyTestAllSvgSymbols } from "./2-test-all-svg-symbols";
+import * as allNormalIcons from "@renderer/components/ui/icons/normal";
 import { groupSymbolsByPrefix, setSvgSymbolsAtom, svgSymbolGroupsAtom, svgSymbolsAtom } from "./7-collect-svg-symbols";
+//import { SpyPrintIconsLocationOnce } from "./8-print-icons-location-once";
 
 const fontID = "svgfont";
 const idPrefix = "control-";
 
 export function SpyAllIcons({ includeSvgSymbols }: { includeSvgSymbols?: boolean; }) {
     const symbols = useAtomValue(svgSymbolsAtom);
-    const groups = useAtomValue(svgSymbolGroupsAtom(idPrefix));
-    const setSymbols = useSetAtom(setSvgSymbolsAtom);
-
+    const groupControls = useAtomValue(svgSymbolGroupsAtom(idPrefix));
     const allSymbolGroups = useMemo(() => groupSymbolsByPrefix(symbols), [symbols]);
+    const setSymbols = useSetAtom(setSvgSymbolsAtom);
 
     useEffect(
         () => {
@@ -24,30 +23,31 @@ export function SpyAllIcons({ includeSvgSymbols }: { includeSvgSymbols?: boolean
         },
         [fontID]
     );
-    
-    return (
+
+    return (<>
+        {/* <SpyPrintIconsLocationOnce allIcons={allNormalIcons} /> */}
+
         <IconsAndSymbolsAccordion>
-            <SpyPrintIconsLocationOnce allIcons={allIcons} />
-            
+
             <div className="m-2 bg-sky-50/70 border-sky-500 border rounded shadow-sm">
 
                 <div className="px-2 mt-1 text-sm font-semibold">Normal icons</div>
-                <SpyTestAllNormalIcons className="mx-auto px-2 py-2" allIcons={allIcons} />
+                <SpyTestAllNormalIcons className="mx-auto px-2 py-2" allIcons={allNormalIcons} />
 
                 {includeSvgSymbols && <>
                     <div className="mt-4 px-2 text-sm font-semibold">SVG symbols (controls)</div>
-                    <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" groups={groups} idPrefix="control-" />
+                    <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" groups={groupControls} idPrefix="control-" />
 
-                    <div className="mt-4 px-2 text-sm font-semibold">SVG symbols (all)</div>
-                    <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" groups={allSymbolGroups} />
+                    {/* <div className="mt-4 px-2 text-sm font-semibold">SVG symbols (all)</div>
+                    <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" groups={allSymbolGroups} /> */}
                 </>}
             </div>
         </IconsAndSymbolsAccordion>
-    );
+    </>);
 }
 
 function IconsAndSymbolsAccordion({ children }: { children: ReactNode; }) {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
 
     return (
         <div className="m-2 rounded border bg-card/30 shadow-sm overflow-y-auto">

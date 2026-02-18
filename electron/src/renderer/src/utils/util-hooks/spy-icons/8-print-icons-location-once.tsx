@@ -37,7 +37,7 @@ function printIconsLocation(allIcons: AllIcons) {
 
     const text = entries.map((name, idx) => ` ${`${idx}`.padStart(3, " ")}: ${name}`).join("\n");
 
-    console.groupCollapsed("Icons");
+    console.groupCollapsed("Normal icon names");
     console.log(`%c${msg}\n%c${text}`, "font-size: 0.65rem; color: darkblue;", "font-size: 0.55rem; color: darkgreen;");
     console.groupEnd();
 }
