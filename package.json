@@ -25,6 +25,7 @@
     "scripts": {
         "tsc": "pnpm --filter win-watch-electron run tsc",
         "dev": "pnpm --filter win-watch-electron run dev",
+        "gen": "pnpm --filter win-watch-electron run gen:icons-temp",
         "dev:debug": "pnpm --filter win-watch-electron run dev:debug",
         "build:all": "tsx scripts/build-plugins.ts --release",
         "build:all:debug": "tsx scripts/build-plugins.ts --debug",

@@ -89,10 +89,12 @@ function parseArgs(argv: string[]): Args {
     if (!args.inDir) {
         throw new Error(
             [
+                "\n",
                 "Missing required argument --in <folder>.",
                 "",
                 "Example:",
                 '  pnpm --filter win-watch-electron run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls"',
+                `\n`,
             ].join("\n")
         );
     }
