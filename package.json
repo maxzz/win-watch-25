@@ -10,6 +10,18 @@
         "electron",
         "napi-plugin"
     ],
+    "pnpm": {
+        "onlyBuiltDependencies": [
+            "electron-winstaller",
+            "electron@40.0.0",
+            "esbuild@0.25.12",
+            "esbuild@0.27.2"
+        ]
+    },
+    "devDependencies": {
+        "@types/node": "^22.15.3",
+        "tsx": "^4.19.2"
+    },
     "scripts": {
         "tsc": "pnpm --filter win-watch-electron run tsc",
         "dev": "pnpm --filter win-watch-electron run dev",
@@ -21,17 +33,5 @@
         "build:napi": "tsx scripts/build-plugins.ts --release --napi-only",
         "build:napi:debug": "tsx scripts/build-plugins.ts --debug --napi-only",
         "build:exe:win": "pnpm build:all && pnpm --filter win-watch-electron run build && pnpm --filter win-watch-electron exec electron-builder --win --x64"
-    },
-    "devDependencies": {
-        "@types/node": "^22.15.3",
-        "tsx": "^4.19.2"
-    },
-    "pnpm": {
-        "onlyBuiltDependencies": [
-            "electron-winstaller",
-            "electron@40.0.0",
-            "esbuild@0.25.12",
-            "esbuild@0.27.2"
-        ]
     }
 }

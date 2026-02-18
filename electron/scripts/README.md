@@ -16,10 +16,23 @@ From repo root:
 pnpm --filter win-watch-electron run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls"
 ```
 
-Optional:
+#### CLI arguments
 
-- `--out "<folder>"`: override output folder (default is `<in>-temp`)
-- `--no-clean`: do not delete existing output folder contents before generating
+- `--in <folder>` / `-i <folder>` (**required**): input folder containing `*.tsx` files with a `<symbol ...>` block
+- `--out <folder>` / `-o <folder>` (optional): output folder  
+  Default: `<in>-temp`
+- `--clean` (default): delete output folder before generating
+- `--no-clean`: keep existing output folder contents and overwrite only generated files
+
+Examples:
+
+```bash
+# default output: <in>-temp
+pnpm --filter win-watch-electron run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls"
+
+# custom output folder + keep existing files
+pnpm --filter win-watch-electron run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls" --out "src/renderer/src/components/ui/icons/symbols/controls-temp" --no-clean
+```
 
 #### Notes
 
