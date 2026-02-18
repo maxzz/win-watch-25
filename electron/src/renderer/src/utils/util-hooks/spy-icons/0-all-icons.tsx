@@ -6,7 +6,6 @@ import { SpyTestAllNormalIcons } from "./1-test-all-normal-icons";
 import { SpyTestAllSvgSymbols } from "./2-test-all-svg-symbols";
 import * as allNormalIcons from "@renderer/components/ui/icons/normal";
 import { groupSymbolsByPrefix, setSvgSymbolsAtom, svgSymbolGroupsAtom, svgSymbolsAtom } from "./7-collect-svg-symbols";
-import { SpyHmrWatchExistingSvgFontDefs } from "./3-hmr-watch-existing-svgfont-defs";
 //import { SpyPrintIconsLocationOnce } from "./8-print-icons-location-once";
 
 const fontID = "svgfont";
@@ -36,8 +35,6 @@ export function SpyAllIcons({ includeSvgSymbols }: { includeSvgSymbols?: boolean
                 <SpyTestAllNormalIcons className="mx-auto px-2 py-2" allIcons={allNormalIcons} />
 
                 {includeSvgSymbols && <>
-                    <SpyHmrWatchExistingSvgFontDefs fontID={fontID} />
-
                     <div className="mt-4 px-2 text-sm font-semibold">SVG symbols (controls)</div>
                     <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" groups={groupControls} idPrefix="control-" />
 
