@@ -15,10 +15,19 @@ export function SvgSymbolControlStatusbar() {
                 strokeWidth="1.5"
                 strokeMiterlimit="10"
             />
-            {/* background */}
+            {/* background fill */}
             <path
                 d="M1.96,9.66h20.07v9.24H3.78c-1,0-1.82-.81-1.82-1.82v-7.42h0Z"
                 fill="currentColor"
+                opacity="0.12"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeMiterlimit="10"
+            />
+            {/* background border */}
+            <path
+                d="M1.96,9.66h20.07v9.24H3.78c-1,0-1.82-.81-1.82-1.82v-7.42h0Z"
+                fill="none"
                 //opacity="0.12"
                 stroke="currentColor"
                 strokeWidth="1.5"
