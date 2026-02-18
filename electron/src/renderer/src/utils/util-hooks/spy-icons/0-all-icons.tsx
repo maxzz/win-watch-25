@@ -5,6 +5,7 @@ import { ChevronDown } from "lucide-react";
 import { SpyTestAllNormalIcons } from "./1-test-all-normal-icons";
 import { SpyTestAllSvgSymbols } from "./2-test-all-svg-symbols";
 import * as allNormalIcons from "@renderer/components/ui/icons/normal";
+import * as allTempIcons from "@renderer/components/ui/icons/symbols/controls-temp";
 import { groupSymbolsByPrefix, setSvgSymbolsAtom, svgSymbolGroupsAtom, svgSymbolsAtom } from "./7-collect-svg-symbols";
 //import { SpyPrintIconsLocationOnce } from "./8-print-icons-location-once";
 
@@ -33,6 +34,9 @@ export function SpyAllIcons({ includeSvgSymbols }: { includeSvgSymbols?: boolean
 
                 <div className="px-2 mt-1 text-sm font-semibold">Normal icons</div>
                 <SpyTestAllNormalIcons className="mx-auto px-2 py-2" allIcons={allNormalIcons} />
+
+                <div className="px-2 mt-1 text-sm font-semibold">Temp icons</div>
+                <SpyTestAllNormalIcons className="mx-auto px-2 py-2" allIcons={allTempIcons} iconsSizeClasses="size-16" />
 
                 {includeSvgSymbols && <>
                     <div className="mt-4 px-2 text-sm font-semibold">SVG symbols (controls)</div>

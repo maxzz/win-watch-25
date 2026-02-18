@@ -4,14 +4,14 @@ import { CopyToClipboardButton } from "./copy-to-clipboard-button";
 
 type AllIcons = Record<string, ComponentType<SVGProps<SVGSVGElement>>>;
 
-export function SpyTestAllNormalIcons({ allIcons, className, ...rest }: { allIcons: AllIcons; } & HTMLAttributes<HTMLDivElement>) {
+export function SpyTestAllNormalIcons({ allIcons, className, iconsSizeClasses = "size-6", ...rest }: { allIcons: AllIcons; iconsSizeClasses?: string; } & HTMLAttributes<HTMLDivElement>) {
     return (
         <div className={classNames("flex flex-wrap gap-2", className)} {...rest}>
             {Object.entries(allIcons).map(
                 ([name, Icon]) => (
                     <div className="flex flex-col items-center" key={name}>
                         <CopyToClipboardButton text={name} className="border-sky-500 border rounded" title={`${name}\nClick to copy`}>
-                            <Icon className="size-6" />
+                            <Icon className={iconsSizeClasses} />
                         </CopyToClipboardButton>
                     </div>
                 ))
