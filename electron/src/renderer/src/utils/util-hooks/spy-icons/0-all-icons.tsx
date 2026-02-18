@@ -6,6 +6,7 @@ import { SpyTestAllNormalIcons } from "./1-test-all-normal-icons";
 import { SpyTestAllSvgSymbols } from "./2-test-all-svg-symbols";
 import * as allNormalIcons from "@renderer/components/ui/icons/normal";
 import { groupSymbolsByPrefix, setSvgSymbolsAtom, svgSymbolGroupsAtom, svgSymbolsAtom } from "./7-collect-svg-symbols";
+import { DevHmrSvgSymbolDefsPortal } from "./dev-hmr-svg-symbol";
 //import { SpyPrintIconsLocationOnce } from "./8-print-icons-location-once";
 
 const fontID = "svgfont";
@@ -40,6 +41,13 @@ export function SpyAllIcons({ includeSvgSymbols }: { includeSvgSymbols?: boolean
 
                     {/* <div className="mt-4 px-2 text-sm font-semibold">SVG symbols (all)</div>
                     <SpyTestAllSvgSymbols className="mx-auto px-2 pt-2" groups={allSymbolGroups} /> */}
+
+                    {/* <DevHmrSvgSymbolDefsPortal>
+                        <symbol id="control-button" viewBox="0 0 24 24">
+                            <path d="..." />
+                        </symbol>
+                    </DevHmrSvgSymbolDefsPortal> */}
+
                 </>}
             </div>
         </IconsAndSymbolsAccordion>

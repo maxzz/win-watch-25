@@ -53,13 +53,6 @@
         "tailwindcss-animate": "^1.0.7",
         "valtio": "^2.3.0"
     },
-    "scripts": {
-        "tsc": "tsc --noEmit -w",
-        "dev": "electron-vite dev",
-        "dev:debug": "electron-vite dev --inspect",
-        "build": "electron-vite build",
-        "preview": "electron-vite preview"
-    },
     "build": {
         "appId": "com.maxzz.winwatch",
         "productName": "WinWatch",
@@ -90,5 +83,12 @@
             "perMachine": true,
             "allowToChangeInstallationDirectory": false
         }
+    },
+    "scripts": {
+        "tsc": "tsc --noEmit -w",
+        "dev": "electron-vite dev",
+        "dev:debug": "electron-vite dev --inspect",
+        "build": "electron-vite build",
+        "preview": "electron-vite preview"
     }
 }
