@@ -4,6 +4,7 @@ import { classNames } from "@renderer/utils";
 export function SvgSymbolControlStatusbar() {
     return (
         <symbol id="control-statusbar" viewBox="0 0 24 24">
+            {/* window edge */}
             <line
                 x1="1.96"
                 y1="9.66"
@@ -14,10 +15,11 @@ export function SvgSymbolControlStatusbar() {
                 strokeWidth="1.5"
                 strokeMiterlimit="10"
             />
+            {/* background */}
             <path
                 d="M1.96,9.66h20.07v9.24H3.78c-1,0-1.82-.81-1.82-1.82v-7.42h0Z"
                 fill="currentColor"
-                opacity="0.12"
+                //opacity="0.12"
                 stroke="currentColor"
                 strokeWidth="1.5"
                 strokeMiterlimit="10"
