@@ -34,7 +34,7 @@ pnpm --filter win-watch-electron run gen:icons-temp -- --in "src/renderer/src/co
 pnpm --filter win-watch-electron run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls" --out "src/renderer/src/components/ui/icons/symbols/controls-temp" --no-clean
 
 # if global tsx installed
-tsx scripts/generate-normal-icons-from-symbols.ts --in "src/renderer/src/components/ui/icons/symbols/controls"
+tsx scripts/generate-normal/generate-normal-icons-from-symbols.ts --in "src/renderer/src/components/ui/icons/symbols/controls"
 ```
 
 #### Notes

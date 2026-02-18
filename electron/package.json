@@ -86,7 +86,7 @@
         }
     },
     "scripts": {
-        "gen:icons-temp": "tsx scripts/generate-normal-icons-from-symbols.ts --in \"src/renderer/src/components/ui/icons/symbols/controls\"",
+        "gen:icons-temp": "tsx scripts/generate-normal/generate-normal-icons-from-symbols.ts --in \"src/renderer/src/components/ui/icons/symbols/controls\"",
         "tsc": "tsc --noEmit -w",
         "dev": "electron-vite dev",
         "dev:debug": "electron-vite dev --inspect",
