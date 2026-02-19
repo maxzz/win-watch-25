@@ -1,12 +1,11 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { getHelpText, parseArgs } from "./1-cli-args";
-import { parseSvg } from "./2-parse-svg";
+import { checkArgs, parseArgs } from "./1-cli-args";
+import { parseSvg, svgInnerXmlToJsx } from "./2-parse-svg";
 import {
     generateIconComponent,
     generateSymbolAndWrapperComponents,
     guessSymbolIdFromBaseName,
-    svgInnerXmlToJsx,
     toPascalCase,
 } from "./3-svg-to-tsx";
 
@@ -20,24 +19,17 @@ main().catch(
 
 async function main() {
     const args = parseArgs(process.argv.slice(2));
-    if (args.help) {
-        // eslint-disable-next-line no-console
-        console.log(getHelpText());
+    const { exit, svgAbsolute } = await checkArgs(args);
+    if (exit) {
         return;
     }
 
-    const svgAbs = path.resolve(process.cwd(), args.svgFile);
-    const svgStat = await fs.stat(svgAbs).catch(() => null);
-    if (!svgStat || !svgStat.isFile()) {
-        throw new Error(`SVG file does not exist or is not a file: ${svgAbs}`);
-    }
-
-    const svgSrc = await fs.readFile(svgAbs, "utf8");
+    const svgSrc = await fs.readFile(svgAbsolute, "utf8");
     const { viewBox, innerXml } = parseSvg(svgSrc);
     const innerJsx = svgInnerXmlToJsx(innerXml);
 
-    const svgDirAbs = path.dirname(svgAbs);
-    const svgBase = path.basename(svgAbs, path.extname(svgAbs));
+    const svgDirAbs = path.dirname(svgAbsolute);
+    const svgBase = path.basename(svgAbsolute, path.extname(svgAbsolute));
     const outDirAbs = path.resolve(process.cwd(), args.outDir ?? svgDirAbs);
     const outBase = args.outBase ?? svgBase;
 
@@ -72,7 +64,7 @@ async function main() {
         // eslint-disable-next-line no-console
         console.log(
             [
-                `SVG: ${svgAbs}`,
+                `SVG: ${svgAbsolute}`,
                 `Out dir: ${outDirAbs}`,
                 `Normal file: ${outNormalPath}`,
                 `Temp file: ${outTempPath}`,

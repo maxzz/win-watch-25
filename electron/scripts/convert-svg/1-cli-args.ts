@@ -1,3 +1,6 @@
+import { promises as fs } from "node:fs";
+import path from "node:path";
+
 export type Args = {
     svgFile: string;
     outDir?: string;
@@ -9,6 +12,22 @@ export type Args = {
     dryRun: boolean;
     help: boolean;
 };
+
+export async function checkArgs(args: Args): Promise<{ exit: boolean; svgAbsolute: string }> {
+    if (args.help) {
+        // eslint-disable-next-line no-console
+        console.log(getHelpText());
+        return { exit: true, svgAbsolute: "" };
+    }
+
+    const svgAbsolute = path.resolve(process.cwd(), args.svgFile);
+    const svgStat = await fs.stat(svgAbsolute).catch(() => null);
+    if (!svgStat || !svgStat.isFile()) {
+        throw new Error(`SVG file does not exist or is not a file: ${svgAbsolute}`);
+    }
+
+    return { exit: false, svgAbsolute };
+}
 
 export function parseArgs(argv: string[]): Args {
     const args: Args = {
