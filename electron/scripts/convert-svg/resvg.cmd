@@ -1,0 +1,1 @@
+tsx resvg.ts %1

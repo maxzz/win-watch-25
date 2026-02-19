@@ -1,17 +1,13 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
-type Args = {
-    svgFile: string;
-    outDir?: string;
-    outBase?: string;
-    name?: string;
-    symbolId?: string;
-    tempSuffix: string;
-    force: boolean;
-    dryRun: boolean;
-    help: boolean;
-};
+main().catch(
+    (err) => {
+        // eslint-disable-next-line no-console
+        console.error(err instanceof Error ? err.message : err);
+        process.exitCode = 1;
+    }
+);
 
 async function main() {
     const args = parseArgs(process.argv.slice(2));
@@ -94,6 +90,18 @@ async function main() {
     // eslint-disable-next-line no-console
     console.log(`Generated 2 component file(s):\n- ${outNormalPath}\n- ${outTempPath}`);
 }
+
+type Args = {
+    svgFile: string;
+    outDir?: string;
+    outBase?: string;
+    name?: string;
+    symbolId?: string;
+    tempSuffix: string;
+    force: boolean;
+    dryRun: boolean;
+    help: boolean;
+};
 
 function parseArgs(argv: string[]): Args {
     const args: Args = {
@@ -179,14 +187,14 @@ function parseArgs(argv: string[]): Args {
 
 function getHelpText() {
     return [
-        "convert-svg",
+        "react from svg",
         "",
         "Generate 2 React TSX components from an SVG file:",
         "- <name>.tsx: <symbol> + <svg><use/></svg> wrapper",
         `- <name>${"-temp"}.tsx (default): inline <svg> icon component`,
         "",
         "Usage:",
-        "  pnpm tsx convert-svg/cli.ts <svg-file> [options]",
+        "  pnpm tsx resvg.ts <svg-file> [options]",
         "",
         "Options:",
         "  -h, --help                 Show help",
@@ -314,7 +322,7 @@ function cssStyleToJsxObject(styleText: string): string | null {
             if (!k || !v) return null;
             return { key: cssKeyToCamel(k), value: v };
         })
-        .filter((x): x is { key: string; value: string } => !!x);
+        .filter((x): x is { key: string; value: string; } => !!x);
 
     if (!items.length) return null;
 
@@ -420,10 +428,3 @@ function generateIconComponent(params: { iconComponentName: string; viewBox: str
         "",
     ].join("\n");
 }
-
-main().catch((err) => {
-    // eslint-disable-next-line no-console
-    console.error(err instanceof Error ? err.message : err);
-    process.exitCode = 1;
-});
-

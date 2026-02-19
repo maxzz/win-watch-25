@@ -20,13 +20,13 @@ Both files are generated into the **same folder** (by default: the SVG file’s 
 From the repo root:
 
 ```bash
-pnpm tsx convert-svg/cli.ts "<path-to-svg>"
+pnpm tsx convert-svg/resvg.ts "<path-to-svg>"
 ```
 
 Example:
 
 ```bash
-pnpm tsx convert-svg/cli.ts "electron/src/assets/icons/controls/svg/window.svg"
+pnpm tsx convert-svg/resvg.ts "electron/src/assets/icons/controls/svg/window.svg"
 ```
 
 This will generate:
@@ -37,7 +37,7 @@ This will generate:
 ## CLI options
 
 ```bash
-pnpm tsx convert-svg/cli.ts <svg-file> [options]
+pnpm tsx convert-svg/resvg.ts <svg-file> [options]
 ```
 
 - **`-h, --help`**: Show help
