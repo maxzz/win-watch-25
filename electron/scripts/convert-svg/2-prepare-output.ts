@@ -2,7 +2,7 @@ import path from "node:path";
 import { promises as fs } from "node:fs";
 import type { Args } from "./1-cli-args";
 import { guessSymbolIdFromBaseName, toPascalCase } from "./1-cli-args";
-import { parseSvg, svgInnerXmlToJsx } from "./2-parse-svg";
+import { parseSvg, svgInnerXmlToJsx } from "./3-parse-svg";
 
 export type PrepareOutputResult = {
     viewBox: string;                // view box attribute value, e.g. "0 0 24 24"

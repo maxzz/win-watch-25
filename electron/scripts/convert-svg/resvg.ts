@@ -1,7 +1,7 @@
 import { promises as fs } from "node:fs";
 import { checkArgs, parseArgs } from "./1-cli-args";
-import { prepareOutput } from "./4-prepare-output";
-import { generateIconComponent, generateSymbolAndWrapperComponents } from "./3-svg-to-tsx";
+import { prepareOutput } from "./2-prepare-output";
+import { generateIconComponent, generateSymbolAndWrapperComponents } from "./4-svg-to-tsx";
 
 run().catch(() => undefined);
 

@@ -1,15 +1,19 @@
-export function parseSvg(svgSrc: string): { viewBox: string; innerXml: string } {
+export function parseSvg(svgSrc: string): { viewBox: string; innerXml: string; } {
     const src = svgSrc.replace(/^\uFEFF/, "");
     const noXmlDecl = src.replace(/<\?xml[\s\S]*?\?>\s*/i, "");
 
     const openMatch = noXmlDecl.match(/<svg\b([\s\S]*?)>/im);
-    if (!openMatch) throw new Error("Could not find <svg ...> open tag.");
+    if (!openMatch) {
+        throw new Error("Could not find <svg ...> open tag.");
+    }
 
     const openTagAttrs = openMatch[1] ?? "";
     const viewBox = openTagAttrs.match(/\bviewBox\s*=\s*["']([^"']+)["']/im)?.[1] ?? "0 0 24 24";
 
     const innerMatch = noXmlDecl.match(/<svg\b[\s\S]*?>([\s\S]*?)<\/svg>/im);
-    if (!innerMatch) throw new Error("Could not find </svg> close tag.");
+    if (!innerMatch) {
+        throw new Error("Could not find </svg> close tag.");
+    }
 
     const innerXml = (innerMatch[1] ?? "").trimEnd();
     return { viewBox, innerXml };
@@ -30,12 +34,15 @@ export function svgInnerXmlToJsx(innerXml: string): string {
     });
 
     // Rewrite attributes for all opening tags.
-    s = s.replace(/<([a-zA-Z][\w:-]*)([^>]*)>/g, (m, tagName: string, attrs: string) => {
-        // Skip things that look like closing tags or directives (defensive).
-        if (m.startsWith("</") || m.startsWith("<!")) return m;
-        const fixedAttrs = rewriteTagAttributes(attrs);
-        return `<${tagName}${fixedAttrs}>`;
-    });
+    s = s.replace(
+        /<([a-zA-Z][\w:-]*)([^>]*)>/g, // regex to match tag name, whitespace, attributes
+        (m, tagName: string, attrs: string) => {
+            // Skip things that look like closing tags or directives (defensive).
+            if (m.startsWith("</") || m.startsWith("<!")) return m;
+            const fixedAttrs = rewriteTagAttributes(attrs);
+            return `<${tagName}${fixedAttrs}>`;
+        }
+    );
 
     return s;
 }
@@ -48,7 +55,7 @@ function rewriteTagAttributes(attrs: string): string {
 
     // Rewrite attr names and style=... values.
     a = a.replace(
-        /(\s+)([^\s=/>]+)(\s*=\s*)(?:"([^"]*)"|'([^']*)')/g,
+        /(\s+)([^\s=/>]+)(\s*=\s*)(?:"([^"]*)"|'([^']*)')/g, // regex to match attribute name, whitespace, equals sign, value (optionally quoted)
         (_m, ws: string, rawName: string, eq: string, v1: string | undefined, v2: string | undefined) => {
             const quote = v1 !== undefined ? `"` : `'`;
             const value = (v1 ?? v2 ?? "").toString();
@@ -56,11 +63,10 @@ function rewriteTagAttributes(attrs: string): string {
             const name = normalizeSvgAttrName(rawName);
             if (name === "style") {
                 const styleExpr = cssStyleToJsxObject(value);
-                if (!styleExpr) return "";
-                return `${ws}style={${styleExpr}}`;
+                return !styleExpr ? "" : `${ws}style={${styleExpr}}`; // avoid empty style={}
             }
 
-            return `${ws}${name}${eq}${quote}${value}${quote}`;
+            return `${ws}${name}${eq}${quote}${value}${quote}`; // return attribute with rewritten name and value
         }
     );
 
@@ -72,7 +78,7 @@ function normalizeSvgAttrName(name: string): string {
     if (name.startsWith("aria-")) return name;
     if (name.startsWith("data-")) return name;
 
-    if (name === "xlink:href") return "xlinkHref";
+    if (name === "xlink:href") return "xlinkHref"; // actually don't need it since we dropped xmlns:xlink in rewriteTagAttributes()
 
     const map: Record<string, string> = {
         "stroke-width": "strokeWidth",
@@ -95,28 +101,40 @@ function normalizeSvgAttrName(name: string): string {
 }
 
 function cssStyleToJsxObject(styleText: string): string | null {
+
     const items = styleText
         .split(";")
         .map((p) => p.trim())
         .filter(Boolean)
-        .map((pair) => {
-            const idx = pair.indexOf(":");
-            if (idx < 0) return null;
-            const k = pair.slice(0, idx).trim();
-            const v = pair.slice(idx + 1).trim();
-            if (!k || !v) return null;
-            return { key: cssKeyToCamel(k), value: v };
-        })
-        .filter((x): x is { key: string; value: string } => !!x);
+        .map(
+            (pair) => {
+                const idx = pair.indexOf(":");
+                if (idx < 0) {
+                    return null; // skip if no colon
+                }
+                const k = pair.slice(0, idx).trim();
+                const v = pair.slice(idx + 1).trim();
+                if (!k || !v) {
+                    return null; // skip if key or value is empty
+                }
+                const rv = { key: cssKeyToCamel(k), value: v }; // return key and value object
+                return rv;
+            }
+        )
+        .filter((x): x is { key: string; value: string; } => !!x);
 
-    if (!items.length) return null;
+    const rv = items.length
+        ? `{ ${items.map((it) => `${it.key}: ${JSON.stringify(it.value)}`).join(", ")} }` // return style object if items are present
+        : null;
 
-    return `{ ${items.map((it) => `${it.key}: ${JSON.stringify(it.value)}`).join(", ")} }`;
+    return rv;
 }
 
 function cssKeyToCamel(key: string): string {
     // e.g. "stroke-width" => "strokeWidth"
     const parts = key.split("-").filter(Boolean);
-    if (!parts.length) return key;
-    return [parts[0]!, ...parts.slice(1).map((p) => (p ? p[0]!.toUpperCase() + p.slice(1) : ""))].join("");
+    const rv = parts.length
+        ? [parts[0]!, ...parts.slice(1).map((p) => (p ? p[0]!.toUpperCase() + p.slice(1) : ""))].join("") // return camel case key
+        : key; // return original key if no parts
+    return rv; // return camel case key or original key
 }
