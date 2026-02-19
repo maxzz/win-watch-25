@@ -1,10 +1,10 @@
 import { type HTMLAttributes, type SVGAttributes } from "react";
 import { classNames } from "@renderer/utils";
 
-export function SvgSymbolGlyphsLayerGroupDuo() {
+export function SvgSymbolControlGroup() {
     return (
-        <symbol id="glyphs--layer-group-duo" viewBox="0 0 80 80">
-            {/* https://icon-sets.iconify.design/?query=group&search-page=5 */}
+        <symbol id="control-group" viewBox="0 0 80 80">
+            {/* https://icon-sets.iconify.design/?query=group&search-page=5 glyphs--layer-group-duo */}
             <g fill="none">
                 <path
                     fill="currentColor" fill-opacity="0.25"
@@ -35,12 +35,12 @@ export function SvgSymbolGlyphsLayerGroupDuo() {
     );
 }
 
-export function SymbolGlyphsLayerGroupDuo({ className, title, children, ...rest }: SVGAttributes<SVGSVGElement> & HTMLAttributes<SVGSVGElement>) {
+export function SymbolControlGroup({ className, title, children, ...rest }: SVGAttributes<SVGSVGElement> & HTMLAttributes<SVGSVGElement>) {
     return (
         <svg className={classNames("fill-none stroke-current", className)} {...rest}>
             {title && <title>{title}</title>}
             {children}
-            <use xlinkHref="#glyphs--layer-group-duo" />
+            <use xlinkHref="#control-group" />
         </svg>
     );
 }

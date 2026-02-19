@@ -9,6 +9,7 @@ import { SvgSymbolControlTitlebar } from "./8-control-titlebar";
 import { SvgSymbolControlTooltip } from "./9-control-tooltip";
 import { SvgSymbolControlWindow } from "./a-control-window";
 import { SvgSymbolControlPane } from "./b-control-pane";
+import { SvgSymbolControlGroup } from "./c-control-group";
 
 export * from "./1-control-button";
 export * from "./2-control-scrollbar";
@@ -21,6 +22,7 @@ export * from "./8-control-titlebar";
 export * from "./9-control-tooltip";
 export * from "./a-control-window";
 export * from "./b-control-pane";
+export * from "./c-control-group";
 
 export function DefControlTypes() {
     return (<>
@@ -35,6 +37,6 @@ export function DefControlTypes() {
         {SvgSymbolControlTooltip()}
         {SvgSymbolControlWindow()}
         {SvgSymbolControlPane()}
+        {SvgSymbolControlGroup()}
     </>);
 }
-

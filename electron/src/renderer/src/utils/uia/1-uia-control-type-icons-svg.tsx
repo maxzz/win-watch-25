@@ -52,6 +52,7 @@ import {
     SymbolControlTooltip,
     SymbolControlWindow,
     SymbolControlPane,
+    SymbolControlGroup,
 } from "@renderer/components/ui/icons/symbols/controls";
 import { Symbol_uia_Toolbar, Symbol_uia_Tooltip } from "@renderer/components/ui/icons/symbols/ui-automation";
 import { UIA_CONTROL_TYPE_FILMSTRIP_ICONS, DefaultFilmstripControlTypeIcon } from "./2-uia-control-type-icons-filmstrip";
@@ -62,6 +63,9 @@ const icon3Classes = "shrink-0 size-3 text-blue-700";
 const icon4Classes = "shrink-0 size-4 text-blue-700";
 
 const iconButtonClasses = "shrink-0 -ml-0.5 size-4 text-blue-700";
+const iconCustomClasses = "shrink-0 size-3 text-blue-700/50";
+const iconGroupClasses = "shrink-0 -ml-0.5 size-4 text-blue-700";
+const iconWindowClasses = "shrink-0 -ml-1 size-4";
 
 /**
  * Maps UIA Control Type IDs to corresponding Lucide icon elements.
@@ -92,14 +96,14 @@ const UIA_LUCIDE_ICONS: Record<string, JSX.Element> = {
     "50022": <SymbolControlTooltip className={icon3Classes} />,                    // ToolTip
     "50023": <TreeDeciduous className={icon3Classes} />,                           // Tree
     "50024": <Folder className={icon3Classes} />,                                  // TreeItem
-    "50025": <Boxes className={icon3Classes} />,                                   // Custom
-    "50026": <Group className={icon3Classes} />,                                   // Group
+    "50025": <Boxes className={iconCustomClasses} />,                              // Custom
+    "50026": <SymbolControlGroup className={iconGroupClasses} />,                  // Group
     "50027": <SymbolControlThumb className={icon3Classes} />,                      // Thumb
     "50028": <Grid3X3 className={icon3Classes} />,                                 // DataGrid
     "50029": <FileSpreadsheet className={icon3Classes} />,                         // DataItem
     "50030": <FileText className={icon3Classes} />,                                // Document
     "50031": <Square className={icon3Classes} />,                                  // SplitButton
-    "50032": <SymbolControlWindow className={icon3Classes} />,                     // Window
+    "50032": <SymbolControlWindow className={iconWindowClasses} />,                // Window
     "50033": <SymbolControlPane className={icon3Classes} />,                       // Pane
     "50034": <Heading className={icon3Classes} />,                                 // Header
     "50035": <PanelTopInactive className={icon3Classes} />,                        // HeaderItem
