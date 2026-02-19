@@ -1,5 +1,5 @@
-import { promises as fs } from "node:fs";
 import path from "node:path";
+import { promises as fs } from "node:fs";
 
 export type Args = {
     svgFile: string;
@@ -139,3 +139,21 @@ export function getHelpText() {
     ].join("\n");
 }
 
+// Utilities
+
+export function guessSymbolIdFromBaseName(baseName: string): string | null {
+    // e.g. "1-control-button" => "control-button"
+    const idx = baseName.indexOf("-");
+    if (idx < 0) return null;
+    const prefix = baseName.slice(0, idx);
+    if (!/^\d+$/.test(prefix)) return null;
+    return baseName.slice(idx + 1);
+}
+
+export function toPascalCase(id: string): string {
+    return id
+        .split(/[^a-zA-Z0-9]+/g)
+        .filter(Boolean)
+        .map((p) => (p ? p[0]!.toUpperCase() + p.slice(1) : ""))
+        .join("");
+}

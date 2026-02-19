@@ -1,13 +1,8 @@
-import { promises as fs } from "node:fs";
 import path from "node:path";
-import { checkArgs, parseArgs } from "./1-cli-args";
+import { promises as fs } from "node:fs";
+import { checkArgs, guessSymbolIdFromBaseName, parseArgs, toPascalCase } from "./1-cli-args";
 import { parseSvg, svgInnerXmlToJsx } from "./2-parse-svg";
-import {
-    generateIconComponent,
-    generateSymbolAndWrapperComponents,
-    guessSymbolIdFromBaseName,
-    toPascalCase,
-} from "./3-svg-to-tsx";
+import { generateIconComponent, generateSymbolAndWrapperComponents, } from "./3-svg-to-tsx";
 
 main().catch(
     (err) => {
