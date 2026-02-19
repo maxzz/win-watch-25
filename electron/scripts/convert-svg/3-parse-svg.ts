@@ -44,7 +44,37 @@ export function svgInnerXmlToJsx(innerXml: string): string {
         }
     );
 
+    s = formatPathTags(s);
+
     return s;
+}
+
+function formatPathTags(input: string): string {
+    // Ensure <path .../> is formatted like:
+    // <path
+    //     other="attrs"
+    //     d="..."
+    // />
+    return input.replace(/(^[ \t]*)<path\b([\s\S]*?)\/>/gm, (full, indent: string, attrsBlock: string) => {
+        const dMatch = attrsBlock.match(/\bd\s*=\s*(["'])([\s\S]*?)\1/m);
+        if (!dMatch) return full;
+
+        const dQuote = dMatch[1]!;
+        const dValue = dMatch[2]!;
+
+        const withoutD = attrsBlock.replace(dMatch[0], " ");
+        const otherAttrs = withoutD
+            .split(/\r?\n/g)
+            .map((l) => l.trim())
+            .filter(Boolean)
+            .join(" ")
+            .trim();
+
+        const attrIndent = `${indent}    `;
+        const otherLine = otherAttrs ? `${attrIndent}${otherAttrs}\n` : "";
+
+        return `${indent}<path\n${otherLine}${attrIndent}d=${dQuote}${dValue}${dQuote}\n${indent}/>`;
+    });
 }
 
 function rewriteTagAttributes(attrs: string): string {
