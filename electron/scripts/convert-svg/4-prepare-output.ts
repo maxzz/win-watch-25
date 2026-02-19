@@ -5,15 +5,15 @@ import { guessSymbolIdFromBaseName, toPascalCase } from "./1-cli-args";
 import { parseSvg, svgInnerXmlToJsx } from "./2-parse-svg";
 
 export type PrepareOutputResult = {
-    viewBox: string;
-    innerJsx: string;
-    symbolId: string;
-    symbolComponentName: string;
-    wrapperComponentName: string;
-    iconComponentName: string;
-    outDirAbs: string;
-    outNormalPath: string;
-    outTempPath: string;
+    viewBox: string;                // view box attribute value, e.g. "0 0 24 24"
+    innerJsx: string;               // inner XML converted to JSX, e.g. "<path d="M12 2C6.48 2 2 8h2v2h-2z"/>"
+    symbolId: string;               // symbol id attribute value, e.g. "window"
+    symbolComponentName: string;    // symbol component name, e.g. "SvgSymbolWindow"
+    wrapperComponentName: string;   // wrapper component name, e.g. "SymbolWindow"
+    iconComponentName: string;      // icon component name, e.g. "IconWindow"
+    outDirAbs: string;              // absolute path to output directory, e.g. "electron/src/assets/icons/controls"
+    outNormalPath: string;          // absolute path to normal output file, e.g. "electron/src/assets/icons/controls/window.tsx"
+    outTempPath: string;            // absolute path to temp output file, e.g. "electron/src/assets/icons/controls/window-temp.tsx"
 };
 
 export async function prepareOutput(args: Args, svgAbsolute: string): Promise<PrepareOutputResult> {

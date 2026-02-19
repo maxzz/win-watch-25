@@ -74,3 +74,6 @@ If you run on a file named `1-control-button.svg`:
 - The converter does basic SVG→JSX fixes (e.g. `class` → `className`, `stroke-width` → `strokeWidth`).
 - `<style>...</style>` blocks are converted to JSX-safe template literals so curly braces don’t break TSX parsing.
 
+## How to use it
+
+Open two folders, one with C:\y\w\2-web\0-dp\win-watch-25\electron\scripts\convert-svg\resvg.cmd and second with icon and then use drag and drop.
