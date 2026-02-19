@@ -25,6 +25,17 @@
             }
         },
         {
+            "name": "Debug resvg",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/electron",
+            "runtimeExecutable": "pnpm",
+            "runtimeArgs": ["exec", "tsx", "scripts/convert-svg/resvg.ts"],
+            "args": ["src/assets/icons/controls/svg/button.svg", "--dry-run"],
+            "console": "integratedTerminal",
+            "skipFiles": ["<node_internals>/**"]
+        },
+        {
             "name": "Debug Renderer",
             "type": "chrome",
             "request": "attach",
