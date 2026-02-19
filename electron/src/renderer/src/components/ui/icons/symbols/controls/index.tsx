@@ -10,6 +10,8 @@ import { SvgSymbolControlTooltip } from "./9-control-tooltip";
 import { SvgSymbolControlWindow } from "./a-control-window";
 import { SvgSymbolControlPane } from "./b-control-pane";
 import { SvgSymbolControlGroup } from "./c-control-group";
+import { SvgSymbolControlTreeRoot } from "./d-control-tree-root";
+import { SvgSymbolControlTreeChild } from "./e-control-tree-child";
 
 export * from "./1-control-button";
 export * from "./2-control-scrollbar";
@@ -23,6 +25,8 @@ export * from "./9-control-tooltip";
 export * from "./a-control-window";
 export * from "./b-control-pane";
 export * from "./c-control-group";
+export * from "./d-control-tree-root";
+export * from "./e-control-tree-child";
 
 export function DefControlTypes() {
     return (<>
@@ -38,5 +42,7 @@ export function DefControlTypes() {
         {SvgSymbolControlWindow()}
         {SvgSymbolControlPane()}
         {SvgSymbolControlGroup()}
+        {SvgSymbolControlTreeRoot()}
+        {SvgSymbolControlTreeChild()}
     </>);
 }
