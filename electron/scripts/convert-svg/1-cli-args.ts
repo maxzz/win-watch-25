@@ -8,6 +8,7 @@ export type Args = {
     name?: string;
     symbolId?: string;
     tempSuffix: string;
+    silent: boolean;
     force: boolean;
     dryRun: boolean;
     help: boolean;
@@ -33,6 +34,7 @@ export function parseArgs(argv: string[]): Args {
     const args: Args = {
         svgFile: "",
         tempSuffix: "-temp",
+        silent: false,
         force: false,
         dryRun: false,
         help: false,
@@ -43,6 +45,11 @@ export function parseArgs(argv: string[]): Args {
 
         if (a === "--help" || a === "-h") {
             args.help = true;
+            continue;
+        }
+
+        if (a === "--silent") {
+            args.silent = true;
             continue;
         }
 
@@ -124,6 +131,7 @@ export function getHelpText() {
         "",
         "Options:",
         "  -h, --help                 Show help",
+        "  --silent                   Do not wait for keypress on exit",
         "  -o, --out-dir <dir>         Output directory (default: SVG file directory)",
         "  --out-base <base>           Output file base name (default: SVG filename without extension)",
         "  --name <PascalName>         Base name for exported components (default: derived from symbol id)",
