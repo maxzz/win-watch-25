@@ -1,8 +1,7 @@
-import path from "node:path";
 import { promises as fs } from "node:fs";
-import { checkArgs, guessSymbolIdFromBaseName, parseArgs, toPascalCase } from "./1-cli-args";
-import { parseSvg, svgInnerXmlToJsx } from "./2-parse-svg";
-import { generateIconComponent, generateSymbolAndWrapperComponents, } from "./3-svg-to-tsx";
+import { checkArgs, parseArgs } from "./1-cli-args";
+import { prepareOutput } from "./4-prepare-output";
+import { generateIconComponent, generateSymbolAndWrapperComponents } from "./3-svg-to-tsx";
 
 main().catch(
     (err) => {
@@ -19,40 +18,20 @@ async function main() {
         return;
     }
 
-    const svgSrc = await fs.readFile(svgAbsolute, "utf8");
-    const { viewBox, innerXml } = parseSvg(svgSrc);
-    const innerJsx = svgInnerXmlToJsx(innerXml);
-
-    const svgDirAbs = path.dirname(svgAbsolute);
-    const svgBase = path.basename(svgAbsolute, path.extname(svgAbsolute));
-    const outDirAbs = path.resolve(process.cwd(), args.outDir ?? svgDirAbs);
-    const outBase = args.outBase ?? svgBase;
-
-    const inferredSymbolId = guessSymbolIdFromBaseName(outBase) ?? outBase;
-    const symbolId = args.symbolId ?? inferredSymbolId;
-
-    const inferredName = toPascalCase(symbolId);
-    const baseNamePascal = args.name ?? inferredName;
-
-    const symbolComponentName = `SvgSymbol${baseNamePascal}`;
-    const wrapperComponentName = `Symbol${baseNamePascal}`;
-    const iconComponentName = `Icon${baseNamePascal}`;
-
-    const outNormalPath = path.join(outDirAbs, `${outBase}.tsx`);
-    const outTempPath = path.join(outDirAbs, `${outBase}${args.tempSuffix}.tsx`);
+    const prep = await prepareOutput(args, svgAbsolute);
 
     const normalTsx = generateSymbolAndWrapperComponents({
-        symbolComponentName,
-        wrapperComponentName,
-        symbolId,
-        viewBox,
-        innerJsx,
+        symbolComponentName: prep.symbolComponentName,
+        wrapperComponentName: prep.wrapperComponentName,
+        symbolId: prep.symbolId,
+        viewBox: prep.viewBox,
+        innerJsx: prep.innerJsx,
     });
 
     const tempTsx = generateIconComponent({
-        iconComponentName,
-        viewBox,
-        innerJsx,
+        iconComponentName: prep.iconComponentName,
+        viewBox: prep.viewBox,
+        innerJsx: prep.innerJsx,
     });
 
     if (args.dryRun) {
@@ -60,29 +39,29 @@ async function main() {
         console.log(
             [
                 `SVG: ${svgAbsolute}`,
-                `Out dir: ${outDirAbs}`,
-                `Normal file: ${outNormalPath}`,
-                `Temp file: ${outTempPath}`,
-                `Symbol id: ${symbolId}`,
-                `Components: ${symbolComponentName}, ${wrapperComponentName}, ${iconComponentName}`,
+                `Out dir: ${prep.outDirAbs}`,
+                `Normal file: ${prep.outNormalPath}`,
+                `Temp file: ${prep.outTempPath}`,
+                `Symbol id: ${prep.symbolId}`,
+                `Components: ${prep.symbolComponentName}, ${prep.wrapperComponentName}, ${prep.iconComponentName}`,
             ].join("\n")
         );
         return;
     }
 
-    await fs.mkdir(outDirAbs, { recursive: true });
+    await fs.mkdir(prep.outDirAbs, { recursive: true });
 
     if (!args.force) {
-        const existingNormal = await fs.stat(outNormalPath).catch(() => null);
-        if (existingNormal) throw new Error(`Refusing to overwrite existing file (use --force): ${outNormalPath}`);
+        const existingNormal = await fs.stat(prep.outNormalPath).catch(() => null);
+        if (existingNormal) throw new Error(`Refusing to overwrite existing file (use --force): ${prep.outNormalPath}`);
 
-        const existingTemp = await fs.stat(outTempPath).catch(() => null);
-        if (existingTemp) throw new Error(`Refusing to overwrite existing file (use --force): ${outTempPath}`);
+        const existingTemp = await fs.stat(prep.outTempPath).catch(() => null);
+        if (existingTemp) throw new Error(`Refusing to overwrite existing file (use --force): ${prep.outTempPath}`);
     }
 
-    await fs.writeFile(outNormalPath, normalTsx, "utf8");
-    await fs.writeFile(outTempPath, tempTsx, "utf8");
+    await fs.writeFile(prep.outNormalPath, normalTsx, "utf8");
+    await fs.writeFile(prep.outTempPath, tempTsx, "utf8");
 
     // eslint-disable-next-line no-console
-    console.log(`Generated 2 component file(s):\n- ${outNormalPath}\n- ${outTempPath}`);
+    console.log(`Generated 2 component file(s):\n- ${prep.outNormalPath}\n- ${prep.outTempPath}`);
 }
