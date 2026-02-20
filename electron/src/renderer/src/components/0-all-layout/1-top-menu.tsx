@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { dialogAboutOpenAtom, dialogOptionsOpenAtom } from "@renderer/store/2-ui-atoms";
-import { envBuildVersion, envModifiedDate } from "@renderer/utils/env-date-formatter";
 import { DialogOptions } from "../4-dialogs/1-dialog-options";
+import { DialogAbout } from "../4-dialogs/3-dialog-about";
 import {
     Menubar,
     MenubarContent,
@@ -25,7 +25,7 @@ export function TopMenu() {
     return (
         <>
             <DialogOptions open={optionsOpen} onOpenChange={setOptionsOpen} />
-            <AboutDialog open={aboutOpen} onOpenChange={setAboutOpen} />
+            <DialogAbout open={aboutOpen} onOpenChange={setAboutOpen} />
 
             <Menubar className="p-0 h-auto border-none shadow-none rounded-none bg-transparent">
                 <MenubarMenu>
@@ -47,30 +47,3 @@ export function TopMenu() {
         </>
     );
 }
-
-function AboutDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) {
-    return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                    <DialogTitle>About</DialogTitle>
-                    <DialogDescription>
-                        Windows UI Automation Monitor.
-                    </DialogDescription>
-                </DialogHeader>
-
-                <div className="text-xs grid gap-1">
-                    <div className="flex items-center justify-between gap-3">
-                        <span className="text-muted-foreground">Version</span>
-                        <span className="font-mono">{envBuildVersion()}</span>
-                    </div>
-                    <div className="flex items-center justify-between gap-3">
-                        <span className="text-muted-foreground">Built</span>
-                        <span className="font-mono">{envModifiedDate()}</span>
-                    </div>
-                </div>
-            </DialogContent>
-        </Dialog>
-    );
-}
-
