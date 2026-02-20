@@ -58,6 +58,7 @@ import {
 } from "@renderer/components/ui/icons/symbols/controls";
 import { Symbol_uia_Toolbar, Symbol_uia_Tooltip } from "@renderer/components/ui/icons/symbols/ui-automation";
 import { UIA_CONTROL_TYPE_FILMSTRIP_ICONS, DefaultFilmstripControlTypeIcon } from "./2-uia-control-type-icons-filmstrip";
+import { IconControlTreeChild, IconControlTreeRoot } from "@renderer/components/ui/icons/symbols/controls-temp";
 
 const USE_FILMSTRIP = false; // Set to true to use the new pixel-art filmstrip icons
 
@@ -98,6 +99,8 @@ const UIA_LUCIDE_ICONS: Record<string, JSX.Element> = {
     "50022": <SymbolControlTooltip className={icon3Classes} />,                    // ToolTip
     "50023": <SymbolControlTreeRoot className={icon3Classes} />,                   // Tree
     "50024": <SymbolControlTreeChild className={icon3Classes} />,                  // TreeItem
+    // "50023": <IconControlTreeRoot className={icon3Classes} />,                   // Tree
+    // "50024": <IconControlTreeChild className={icon3Classes} />,                  // TreeItem
     "50025": <Boxes className={iconCustomClasses} />,                              // Custom
     "50026": <SymbolControlGroup className={iconGroupClasses} />,                  // Group
     "50027": <SymbolControlThumb className={icon3Classes} />,                      // Thumb
