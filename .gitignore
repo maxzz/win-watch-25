@@ -45,7 +45,7 @@ electron/dist/
 electron/release/
 electron/*.log
 
-# Generated temp folders
+# Generated temp folders, but tw4 will ignore this, so we need them to keep them in the repo
 #*-temp/
 
 # NAPI Plugin / node-gyp

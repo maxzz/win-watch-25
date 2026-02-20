@@ -15,7 +15,7 @@ export function SvgSymbolControlTreeChild() {
 
 export function SymbolControlTreeChild({ className, title, children, ...rest }: SVGAttributes<SVGSVGElement> & HTMLAttributes<SVGSVGElement>) {
     return (
-        <svg className={classNames("fill-none stroke-red-500", className)} strokeMiterlimit="10" {...rest}>
+        <svg className={classNames("fill-none stroke-current", className)} strokeMiterlimit="10" {...rest}>
             {title && <title>{title}</title>}
             {children}
             <use xlinkHref="#control-tree-child" />

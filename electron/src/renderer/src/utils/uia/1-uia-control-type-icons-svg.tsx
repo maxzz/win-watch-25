@@ -53,6 +53,8 @@ import {
     SymbolControlWindow,
     SymbolControlPane,
     SymbolControlGroup,
+    SymbolControlTreeRoot,
+    SymbolControlTreeChild,
 } from "@renderer/components/ui/icons/symbols/controls";
 import { Symbol_uia_Toolbar, Symbol_uia_Tooltip } from "@renderer/components/ui/icons/symbols/ui-automation";
 import { UIA_CONTROL_TYPE_FILMSTRIP_ICONS, DefaultFilmstripControlTypeIcon } from "./2-uia-control-type-icons-filmstrip";
@@ -94,8 +96,8 @@ const UIA_LUCIDE_ICONS: Record<string, JSX.Element> = {
     "50020": <SymbolFieldTxt className={icon4Classes} />,                          // Text
     "50021": <Symbol_uia_Toolbar className={icon3Classes} />,                      // ToolBar
     "50022": <SymbolControlTooltip className={icon3Classes} />,                    // ToolTip
-    "50023": <TreeDeciduous className={icon3Classes} />,                           // Tree
-    "50024": <Folder className={icon3Classes} />,                                  // TreeItem
+    "50023": <SymbolControlTreeRoot className={icon3Classes} />,                   // Tree
+    "50024": <SymbolControlTreeChild className={icon3Classes} />,                  // TreeItem
     "50025": <Boxes className={iconCustomClasses} />,                              // Custom
     "50026": <SymbolControlGroup className={iconGroupClasses} />,                  // Group
     "50027": <SymbolControlThumb className={icon3Classes} />,                      // Thumb
