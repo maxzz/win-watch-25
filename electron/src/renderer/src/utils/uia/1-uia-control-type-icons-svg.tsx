@@ -64,6 +64,7 @@ const USE_FILMSTRIP = false; // Set to true to use the new pixel-art filmstrip i
 
 const icon3Classes = "shrink-0 size-3 text-blue-700";
 const icon4Classes = "shrink-0 size-4 text-blue-700";
+const icon35Classes = "shrink-0 size-3.5 text-blue-700";
 
 const iconButtonClasses = "shrink-0 -ml-0.5 size-4 text-blue-700";
 const iconCustomClasses = "shrink-0 size-3 text-blue-700/50";
@@ -97,10 +98,10 @@ const UIA_LUCIDE_ICONS: Record<string, JSX.Element> = {
     "50020": <SymbolFieldTxt className={icon4Classes} />,                          // Text
     "50021": <Symbol_uia_Toolbar className={icon3Classes} />,                      // ToolBar
     "50022": <SymbolControlTooltip className={icon3Classes} />,                    // ToolTip
-    "50023": <SymbolControlTreeRoot className={icon3Classes} />,                   // Tree
-    "50024": <SymbolControlTreeChild className={icon3Classes} />,                  // TreeItem
-    // "50023": <IconControlTreeRoot className={icon3Classes} />,                   // Tree
-    // "50024": <IconControlTreeChild className={icon3Classes} />,                  // TreeItem
+    "50023": <SymbolControlTreeRoot className={icon35Classes} />,                  // Tree
+    "50024": <SymbolControlTreeChild className={icon35Classes} />,                 // TreeItem
+    // "50023": <IconControlTreeRoot className={icon35Classes} />,                  // Tree
+    // "50024": <IconControlTreeChild className={icon35Classes} />,                 // TreeItem
     "50025": <Boxes className={iconCustomClasses} />,                              // Custom
     "50026": <SymbolControlGroup className={iconGroupClasses} />,                  // Group
     "50027": <SymbolControlThumb className={icon3Classes} />,                      // Thumb
