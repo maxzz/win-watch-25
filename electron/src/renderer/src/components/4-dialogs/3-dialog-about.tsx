@@ -5,8 +5,11 @@ export function DialogAbout({ open, onOpenChange }: { open: boolean; onOpenChang
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-md">
+
                 <DialogHeader>
-                    <DialogTitle>About</DialogTitle>
+                    <DialogTitle>
+                        About
+                    </DialogTitle>
                     <DialogDescription>
                         Windows UI Automation Monitor.
                     </DialogDescription>
@@ -26,4 +29,3 @@ export function DialogAbout({ open, onOpenChange }: { open: boolean; onOpenChang
         </Dialog>
     );
 }
-

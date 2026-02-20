@@ -13,8 +13,11 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-md">
+
                 <DialogHeader>
-                    <DialogTitle>Options</DialogTitle>
+                    <DialogTitle>
+                        Options
+                    </DialogTitle>
                     <DialogDescription>
                         App behavior preferences.
                     </DialogDescription>
@@ -22,14 +25,17 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
 
                 <div className="mt-1 grid gap-2">
                     <div className="flex items-center justify-between gap-3 rounded-md border px-3 py-2">
+
                         <Label htmlFor="opt-auto-highlight" className="flex-1">
                             Auto highlight
                         </Label>
+                        
                         <Switch
                             id="opt-auto-highlight"
                             checked={settings.autoHighlightSelectedControl}
                             onCheckedChange={(checked) => setAutoHighlight(checked)}
                         />
+
                     </div>
                 </div>
             </DialogContent>
