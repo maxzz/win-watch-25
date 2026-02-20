@@ -1,5 +1,6 @@
 import { useSetAtom } from "jotai";
 import { useSnapshot } from "valtio";
+import { classNames } from "@renderer/utils/classnames";
 import { appSettings } from "@renderer/store/1-ui-settings";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from "../ui/shadcn/dialog";
 import { Label } from "../ui/shadcn/label";
@@ -25,17 +26,12 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
 
                 <div className="mt-1 grid gap-2">
                     <div className="flex items-center justify-between gap-3 rounded-md border px-3 py-2">
-
-                        <Label htmlFor="opt-auto-highlight" className="flex-1">
-                            Auto highlight
-                        </Label>
-                        
-                        <Switch
-                            id="opt-auto-highlight"
+                        <OptionCheckbox
                             checked={settings.autoHighlightSelectedControl}
                             onCheckedChange={(checked) => setAutoHighlight(checked)}
+                            label="Auto highlight"
+                            title="Auto highlight the selected control"
                         />
-
                     </div>
                 </div>
             </DialogContent>
@@ -43,3 +39,15 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
     );
 }
 
+function OptionCheckbox({ checked, onCheckedChange, label, disabled, title }: { checked: boolean, onCheckedChange: (checked: boolean) => void, label: React.ReactNode, disabled?: boolean; title?: string }) {
+    return (
+        <Label
+            className={classNames("text-xs font-normal flex items-center justify-between space-x-1", disabled && "opacity-50")}
+            data-disabled={disabled}
+            title={title}
+        >
+            {label}
+            <Switch className={classNames(disabled && "disabled:opacity-100")} checked={checked} onCheckedChange={onCheckedChange} disabled={disabled} />
+        </Label>
+    );
+}
