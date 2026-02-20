@@ -46,7 +46,7 @@ electron/release/
 electron/*.log
 
 # Generated temp folders
-*-temp/
+#*-temp/
 
 # NAPI Plugin / node-gyp
 # napi-plugin/build/
