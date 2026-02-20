@@ -37,6 +37,7 @@ interface WinWatchApi {
     highlightRect: (bounds: Rect4, options?: HighlightOptions) => Promise<void>;
     hideHighlight: () => Promise<void>;
     getWindowRect: (handle: string) => Promise<string>;
+    quitApp: () => Promise<void>;
 }
 
 declare var tmApi: WinWatchApi;

@@ -3,11 +3,13 @@ import { classNames } from "@renderer/utils";
 import { appSettings } from "@renderer/store/1-ui-settings";
 import { PanelBottomIcon, PanelRightIcon } from "lucide-react";
 import { Button } from "../ui/shadcn/button";
+import { TopMenu } from "./1-top-menu";
 
 export function AppHeader({ className }: { className?: string; }) {
     return (
         <div className={classNames("px-3 py-1 border-b bg-muted/30 flex items-center justify-between", className)}>
             <div className="flex items-center gap-4">
+                <TopMenu />
                 <span className="text-xs font-medium" title="Windows UI Automation Monitor">
                     UI Automation Monitor
                 </span>

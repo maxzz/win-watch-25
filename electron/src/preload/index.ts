@@ -4,6 +4,7 @@ import { electronAPI } from "@electron-toolkit/preload";
 // Custom APIs for renderer in the main process
 
 const mainLocalApi: WinWatchApi = {
+    quitApp: () => ipcRenderer.invoke('quit-app'),
     // Get list of all top-level windows
     getTopLevelWindows: () => ipcRenderer.invoke('get-top-level-windows'),
     // Get control tree for a specific window

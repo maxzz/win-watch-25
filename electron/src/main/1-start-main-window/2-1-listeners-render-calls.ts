@@ -1,8 +1,12 @@
-import { BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import { winwatchPlugin } from "../0-all/1-load-plugin";
 
 export function setListenersRenderCalls() {
     // IPC handlers
+    ipcMain.handle('quit-app', () => {
+        app.quit();
+    });
+
     ipcMain.handle('get-top-level-windows', () => {
         if (!winwatchPlugin) {
             return JSON.stringify([{ title: "Native module not loaded" }]);
