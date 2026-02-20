@@ -1,16 +1,10 @@
 import { useSetAtom } from "jotai";
 import { useSnapshot } from "valtio";
 import { appSettings } from "@renderer/store/1-ui-settings";
-import { setAutoHighlightSelectedControlAtom } from "@renderer/store/2-atoms";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from "../ui/shadcn/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from "../ui/shadcn/dialog";
 import { Label } from "../ui/shadcn/label";
 import { Switch } from "../ui/shadcn/switch";
+import { setAutoHighlightSelectedControlAtom } from "@renderer/store/2-atoms";
 
 export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) {
     const settings = useSnapshot(appSettings);

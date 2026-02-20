@@ -1,22 +1,8 @@
 import { useAtom } from "jotai";
-import { dialogAboutOpenAtom, dialogOptionsOpenAtom } from "@renderer/store/2-ui-atoms";
 import { DialogOptions } from "../4-dialogs/1-dialog-options";
 import { DialogAbout } from "../4-dialogs/3-dialog-about";
-import {
-    Menubar,
-    MenubarContent,
-    MenubarItem,
-    MenubarMenu,
-    MenubarSeparator,
-    MenubarTrigger,
-} from "../ui/shadcn/menubar";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from "../ui/shadcn/dialog";
+import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarTrigger, } from "../ui/shadcn/menubar";
+import { dialogAboutOpenAtom, dialogOptionsOpenAtom } from "@renderer/store/2-ui-atoms";
 
 export function TopMenu() {
     const [optionsOpen, setOptionsOpen] = useAtom(dialogOptionsOpenAtom);

@@ -1,11 +1,5 @@
 import { envBuildVersion, envModifiedDate } from "@renderer/utils/env-date-formatter";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from "../ui/shadcn/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from "../ui/shadcn/dialog";
 
 export function DialogAbout({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) {
     return (
