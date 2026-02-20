@@ -25,21 +25,19 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                 </DialogHeader>
 
                 <div className="mt-1 grid gap-2">
-                    <div className="flex items-center justify-between gap-3 rounded-md border px-3 py-2">
-                        <OptionCheckbox
-                            checked={settings.autoHighlightSelectedControl}
-                            onCheckedChange={(checked) => setAutoHighlight(checked)}
-                            label="Auto highlight"
-                            title="Auto highlight the selected control"
-                        />
-                    </div>
+                    <OptionCheckbox
+                        checked={settings.autoHighlightSelectedControl}
+                        onCheckedChange={(checked) => setAutoHighlight(checked)}
+                        label="Auto highlight"
+                        title="Auto highlight the selected control"
+                    />
                 </div>
             </DialogContent>
         </Dialog>
     );
 }
 
-function OptionCheckbox({ checked, onCheckedChange, label, disabled, title }: { checked: boolean, onCheckedChange: (checked: boolean) => void, label: React.ReactNode, disabled?: boolean; title?: string }) {
+function OptionCheckbox({ checked, onCheckedChange, label, disabled, title }: { checked: boolean, onCheckedChange: (checked: boolean) => void, label: React.ReactNode, disabled?: boolean; title?: string; }) {
     return (
         <Label
             className={classNames("text-xs font-normal flex items-center justify-between space-x-1", disabled && "opacity-50")}
