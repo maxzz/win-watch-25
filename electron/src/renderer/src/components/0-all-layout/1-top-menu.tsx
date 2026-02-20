@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useSnapshot } from "valtio";
 import { appSettings } from "@renderer/store/1-ui-settings";
 import { setAutoHighlightSelectedControlAtom } from "@renderer/store/2-atoms";
+import { dialogAboutOpenAtom, dialogOptionsOpenAtom } from "@renderer/store/2-ui-atoms";
 import { envBuildVersion, envModifiedDate } from "@renderer/utils/env-date-formatter";
 import {
     Menubar,
@@ -23,8 +23,8 @@ import { Label } from "../ui/shadcn/label";
 import { Switch } from "../ui/shadcn/switch";
 
 export function TopMenu() {
-    const [optionsOpen, setOptionsOpen] = useState(false);
-    const [aboutOpen, setAboutOpen] = useState(false);
+    const [optionsOpen, setOptionsOpen] = useAtom(dialogOptionsOpenAtom);
+    const [aboutOpen, setAboutOpen] = useAtom(dialogAboutOpenAtom);
 
     return (
         <>
