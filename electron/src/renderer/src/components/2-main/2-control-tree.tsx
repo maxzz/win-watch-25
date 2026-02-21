@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { activeHwndAtom, refreshWindowControlsTreeAtom, selectedControlAtom, setSelectedControlAtom, windowControlsTreeAtom, windowControlsTreeErrorAtom, windowControlsTreeLoadingAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
-import { ControlNode } from "@renderer/store/9-tmapi-types";
+import { type ControlNode } from "@renderer/store/9-tmapi-types";
 import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
 import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
 import { getControlTypeIcon } from "@renderer/utils/uia/1-uia-control-type-icons-svg";
 import { ControlTreeHeader } from "./headers/6-control-tree-header";
 
 export function ControlTreeLoader() {
-    const activeHandle = useAtomValue(activeHwndAtom);
+    const activeHwnd = useAtomValue(activeHwndAtom);
     const windowControlsTree = useAtomValue(windowControlsTreeAtom);
     const loading = useAtomValue(windowControlsTreeLoadingAtom);
     const error = useAtomValue(windowControlsTreeErrorAtom);
@@ -20,7 +20,7 @@ export function ControlTreeLoader() {
             // Fetch the new controls tree when window selection changes.
             void refreshTree();
         },
-        [activeHandle, refreshTree]
+        [activeHwnd, refreshTree]
     );
 
     useEffect(
@@ -29,7 +29,7 @@ export function ControlTreeLoader() {
             // so the properties panel doesn't show stale data.
             void setSelectedControl(null);
         },
-        [activeHandle, setSelectedControl]
+        [activeHwnd, setSelectedControl]
     );
 
     useEffect(
@@ -41,7 +41,28 @@ export function ControlTreeLoader() {
         [windowControlsTree, setSelectedControl]
     );
 
-    if (!activeHandle) {
+    if (!activeHwnd) {
+        return (
+            <div className="p-4 text-center text-muted-foreground">
+                No control tree available
+            </div>
+        );
+    }
+    else if (loading) {
+        return (
+            <div className="p-4 text-muted-foreground">
+                Loading controls...
+            </div>
+        );
+    }
+    else if (error) {
+        return (
+            <div className="p-4 text-center text-muted-foreground">
+                Failed to load controls
+            </div>
+        );
+    }
+    else if (!windowControlsTree) {
         return (
             <div className="p-4 text-center text-muted-foreground">
                 No control tree available
@@ -49,31 +70,8 @@ export function ControlTreeLoader() {
         );
     }
 
-    if (loading) {
-        return (
-            <div className="p-4 text-muted-foreground">
-                Loading controls...
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="p-4 text-center text-muted-foreground">
-                Failed to load controls
-            </div>
-        );
-    }
-
     return (
-        !windowControlsTree
-            ? (
-                <div className="p-4 text-center text-muted-foreground">
-                    No control tree available
-                </div>
-            ) : (
-                <ControlTree windowControlsTree={windowControlsTree} />
-            )
+        <ControlTree windowControlsTree={windowControlsTree} />
     );
 }
 
