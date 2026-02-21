@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { useSetAtom } from "jotai";
-import { activeHwndAtom, doOnAppStartRefreshWindowInfosAtom } from "../2-atoms";
+import { activeHwndAtom, doOnAppStartRefreshWindowInfosAtom, selectedHwndAtom } from "../2-atoms";
 import { useSnapshot } from "valtio";
 import { appSettings } from "../1-ui-settings";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster";
 
 export function useActiveWindow() {
     const setActiveHandle = useSetAtom(activeHwndAtom);
+    const setSelectedHandle = useSetAtom(selectedHwndAtom);
     const { activeWindowMonitoringEnabled } = useSnapshot(appSettings);
 
     useEffect(
@@ -35,6 +36,7 @@ export function useActiveWindow() {
                         // I should fix C++ to be consistent. But assuming decimal handle string for now.
 
                         setActiveHandle(info?.handle);
+                        setSelectedHandle(info?.handle);
                     } catch (e) {
                         console.error("Error parsing active window update", e);
                         notice.error("Error parsing active window update");

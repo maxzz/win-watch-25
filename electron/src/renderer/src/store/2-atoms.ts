@@ -40,6 +40,9 @@ export const doOnAppStartRefreshWindowInfosAtom = atom(
 
 //export const activeWindowInfoAtom = atom<WindowInfo | null>(null);
 export const activeHwndAtom = atom<string | null>(null);
+// Window the user is currently inspecting/selected in the UI.
+// This must NOT be overwritten by active-window monitoring, otherwise manual selection "doesn't stick".
+export const selectedHwndAtom = atom<string | null>(null);
 
 //#endregion Window list
 
@@ -52,8 +55,8 @@ export const windowControlsTreeErrorAtom = atom<string | null>(null);
 export const refreshWindowControlsTreeAtom = atom(
     null,
     async (get, set): Promise<void> => {
-        const activeHandle = get(activeHwndAtom);
-        if (!activeHandle) {
+        const selectedHandle = get(selectedHwndAtom);
+        if (!selectedHandle) {
             set(windowControlsTreeLoadingAtom, false);
             set(windowControlsTreeErrorAtom, null);
             set(windowControlsTreeAtom, null);
@@ -65,23 +68,23 @@ export const refreshWindowControlsTreeAtom = atom(
         set(windowControlsTreeAtom, null);
 
         try {
-            const json = await tmApi.getControlTree(activeHandle);
+            const json = await tmApi.getControlTree(selectedHandle);
             const tree: ControlNode = JSON.parse(json) as ControlNode;
-            // Guard against races: if the active window changed while we were fetching,
+            // Guard against races: if the selection changed while we were fetching,
             // don't overwrite the tree for the new selection.
-            if (get(activeHwndAtom) !== activeHandle) {
+            if (get(selectedHwndAtom) !== selectedHandle) {
                 return;
             }
             set(windowControlsTreeAtom, tree);
         } catch (e) {
             console.error("Failed to fetch control tree", e);
-            notice.error(`Failed to fetch control tree of window (handle: ${activeHandle})`);
-            if (get(activeHwndAtom) === activeHandle) {
+            notice.error(`Failed to fetch control tree of window (handle: ${selectedHandle})`);
+            if (get(selectedHwndAtom) === selectedHandle) {
                 set(windowControlsTreeErrorAtom, "Failed to fetch control tree");
                 set(windowControlsTreeAtom, null);
             }
         } finally {
-            if (get(activeHwndAtom) === activeHandle) {
+            if (get(selectedHwndAtom) === selectedHandle) {
                 set(windowControlsTreeLoadingAtom, false);
             }
         }
@@ -142,18 +145,18 @@ export const setSelectedControlAtom = atom(
 export const doInvokeControlAtom = atom(
     null,
     async (get, _set, control: ControlNode): Promise<void> => {
-        const activeHandle = get(activeHwndAtom);
-        if (!activeHandle || !control.runtimeId) {
+        const selectedHandle = get(selectedHwndAtom);
+        if (!selectedHandle || !control.runtimeId) {
             return;
         }
 
         try {
             console.log("💻Invoking", control.name);
 
-            await tmApi.invokeControl(activeHandle, control.runtimeId);
+            await tmApi.invokeControl(selectedHandle, control.runtimeId);
         } catch (e) {
             console.error("Failed to invoke control", e);
-            notice.error(`Failed to invoke control (handle: ${activeHandle}, runtimeId: ${control.runtimeId})`);
+            notice.error(`Failed to invoke control (handle: ${selectedHandle}, runtimeId: ${control.runtimeId})`);
         }
     }
 );
@@ -194,24 +197,24 @@ export const doInvokeControlAtom = atom(
 export const doHighlightSelectedWindowAtom = atom(
     null,
     async (get, set): Promise<void> => {
-        const activeHandle = get(activeHwndAtom);
-        if (!activeHandle) return;
+        const selectedHandle = get(selectedHwndAtom);
+        if (!selectedHandle) return;
 
         try {
-            const rectJson = await tmApi.getWindowRect(activeHandle);
+            const rectJson = await tmApi.getWindowRect(selectedHandle);
             const rect = JSON.parse(rectJson);
             if (!rect) {
-                notice.error(`Failed to get window rectangle of selected window (handle: ${activeHandle})`);
+                notice.error(`Failed to get window rectangle of selected window (handle: ${selectedHandle})`);
                 return;
             }
 
             const { left, top, right, bottom } = rect;
             await tmApi.highlightRect({ left, top, right, bottom }, { blinkCount: 3, color: 0xFF8400, borderWidth: 2 });
 
-            notice.success(`Highlighted selected window (handle: ${activeHandle})`);
+            notice.success(`Highlighted selected window (handle: ${selectedHandle})`);
         } catch (e) {
-            console.error(`Failed to highlight selected window (handle: ${activeHandle})`, e);
-            notice.error(`Failed to highlight selected window (handle: ${activeHandle})`);
+            console.error(`Failed to highlight selected window (handle: ${selectedHandle})`, e);
+            notice.error(`Failed to highlight selected window (handle: ${selectedHandle})`);
         }
     }
 );

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { activeHwndAtom, refreshWindowControlsTreeAtom, selectedControlAtom, setSelectedControlAtom, windowControlsTreeAtom, windowControlsTreeErrorAtom, windowControlsTreeLoadingAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
+import { refreshWindowControlsTreeAtom, selectedControlAtom, selectedHwndAtom, setSelectedControlAtom, windowControlsTreeAtom, windowControlsTreeErrorAtom, windowControlsTreeLoadingAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
 import { type ControlNode } from "@renderer/store/9-tmapi-types";
 import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
 import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
@@ -8,7 +8,7 @@ import { getControlTypeIcon } from "@renderer/utils/uia/1-uia-control-type-icons
 import { ControlTreeHeader } from "./headers/6-control-tree-header";
 
 export function ControlTreeLoader() {
-    const activeHwnd = useAtomValue(activeHwndAtom);
+    const selectedHwnd = useAtomValue(selectedHwndAtom);
     const windowControlsTree = useAtomValue(windowControlsTreeAtom);
     const loading = useAtomValue(windowControlsTreeLoadingAtom);
     const error = useAtomValue(windowControlsTreeErrorAtom);
@@ -20,7 +20,7 @@ export function ControlTreeLoader() {
             // Fetch the new controls tree when window selection changes.
             void refreshTree();
         },
-        [activeHwnd, refreshTree]
+        [selectedHwnd, refreshTree]
     );
 
     useEffect(
@@ -29,7 +29,7 @@ export function ControlTreeLoader() {
             // so the properties panel doesn't show stale data.
             void setSelectedControl(null);
         },
-        [activeHwnd, setSelectedControl]
+        [selectedHwnd, setSelectedControl]
     );
 
     useEffect(
@@ -43,7 +43,7 @@ export function ControlTreeLoader() {
 
     const status = (
         <ControlTreeStatus
-            activeHwnd={activeHwnd}
+            activeHwnd={selectedHwnd}
             loading={loading}
             error={error}
             hasTree={Boolean(windowControlsTree)}
