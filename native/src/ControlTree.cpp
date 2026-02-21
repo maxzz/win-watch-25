@@ -102,6 +102,27 @@ void ControlTree::WalkTree(IUIAutomationElement* element, ControlNode& node) {
     } else {
         node.nativeWindowHandle = nullptr;
     }
+
+    // Legacy IAccessible pattern (Role/State).
+    node.IsLegacyIAccessiblePatternAvailable = false;
+    node.CurrentRole = 0;
+    node.CurrentState = 0;
+    IUIAutomationLegacyIAccessiblePattern* pLegacy = NULL;
+    if (SUCCEEDED(element->GetCurrentPattern(UIA_LegacyIAccessiblePatternId, (IUnknown**)&pLegacy)) && pLegacy) {
+        node.IsLegacyIAccessiblePatternAvailable = true;
+
+        DWORD role = 0;
+        if (SUCCEEDED(pLegacy->get_CurrentRole(&role))) {
+            node.CurrentRole = static_cast<long>(role);
+        }
+
+        DWORD state = 0;
+        if (SUCCEEDED(pLegacy->get_CurrentState(&state))) {
+            node.CurrentState = static_cast<long>(state);
+        }
+
+        pLegacy->Release();
+    }
     
     RECT rect;
     if (SUCCEEDED(element->get_CurrentBoundingRectangle(&rect))) {
@@ -154,6 +175,9 @@ std::string ControlTree::ToJson(const ControlNode& node) {
     json << "\"className\":\"" << EscapeJson(node.className) << "\",";
     json << "\"runtimeId\":\"" << EscapeJson(node.runtimeId) << "\",";
     json << "\"nativeWindowHandle\":\"" << (node.nativeWindowHandle ? HwndToHexString(node.nativeWindowHandle) : "") << "\",";
+    json << "\"IsLegacyIAccessiblePatternAvailable\":" << (node.IsLegacyIAccessiblePatternAvailable ? "true" : "false") << ",";
+    json << "\"CurrentRole\":" << node.CurrentRole << ",";
+    json << "\"CurrentState\":" << node.CurrentState << ",";
     json << "\"bounds\":{\"left\":" << node.left << ",\"top\":" << node.top << ",\"right\":" << node.right << ",\"bottom\":" << node.bottom << "},";
     json << "\"isEnabled\":" << (node.isEnabled ? "true" : "false") << ",";
     json << "\"isVisible\":" << (node.isVisible ? "true" : "false") << ",";

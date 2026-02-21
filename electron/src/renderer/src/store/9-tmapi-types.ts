@@ -15,6 +15,9 @@ export interface WindowInfo {       // Top level window info (obtained from C++ 
     children?: WindowInfo[];        // from EnumWindowsProc
 }
 
+export interface LegacyProperties {
+}
+
 export interface ControlNode {      // Control node info (obtained from C++ native code by calling ControlTree::GetTreeForWindow)
     name: string;                   // from IUIAutomationElement::GetCurrentName
     controlType: string;            // from IUIAutomationElement::GetCurrentControlType
@@ -22,6 +25,9 @@ export interface ControlNode {      // Control node info (obtained from C++ nati
     className: string;              // from IUIAutomationElement::GetClassName
     runtimeId: string;              // from IUIAutomationElement::GetRuntimeId
     nativeWindowHandle: string;     // from IUIAutomationElement::get_CurrentNativeWindowHandle
+    IsLegacyIAccessiblePatternAvailable: boolean; // from IUIAutomationElement::GetCurrentPattern(UIA_LegacyIAccessiblePatternId)
+    CurrentRole: number;            // from IUIAutomationLegacyIAccessiblePattern::get_CurrentRole
+    CurrentState: number;           // from IUIAutomationLegacyIAccessiblePattern::get_CurrentState
     bounds: NativeBounds;           // from IUIAutomationElement::GetCurrentBoundingRectangle
     isEnabled: boolean;             // from IUIAutomationElement::GetCurrentIsEnabled
     isVisible: boolean;             // from IUIAutomationElement::GetCurrentIsOffscreen

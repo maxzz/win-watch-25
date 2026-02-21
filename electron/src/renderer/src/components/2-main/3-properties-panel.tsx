@@ -58,6 +58,14 @@ export function PropertiesPanel() {
 }
 
 function getControlProperties(control: ControlNode): Array<{ label: string; value: string; }> {
+    const legacyItems = control.IsLegacyIAccessiblePatternAvailable
+        ? [
+            { label: "Legacy IAccessible Available", value: "true" },
+            { label: "Legacy CurrentRole", value: String(control.CurrentRole) },
+            { label: "Legacy CurrentState", value: formatHex(control.CurrentState) }
+        ]
+        : [{ label: "Legacy IAccessible Available", value: "false" }];
+
     return [
         { label: "Native Window Handle", value: normalizeHwnd(control.nativeWindowHandle) },
         { label: "Name", value: control.name },
@@ -67,8 +75,15 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         { label: "Runtime ID", value: control.runtimeId },
         { label: "Enabled", value: String(control.isEnabled) },
         { label: "Visible", value: String(control.isVisible) },
-        { label: "Bounds", value: control.bounds ? `[${control.bounds.left}, ${control.bounds.top}, ${control.bounds.right}, ${control.bounds.bottom}]` : "N/A" }
+        { label: "Bounds", value: control.bounds ? `[${control.bounds.left}, ${control.bounds.top}, ${control.bounds.right}, ${control.bounds.bottom}]` : "N/A" },
+        ...legacyItems
     ];
+}
+
+function formatHex(value: number): string {
+    if (!Number.isFinite(value)) return "";
+    if (value === 0) return "0x0";
+    return `0x${(value >>> 0).toString(16).toUpperCase()}`;
 }
 
 function boundsValue(boundsStr?: string): string {
