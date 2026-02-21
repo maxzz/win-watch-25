@@ -46,21 +46,21 @@ export const activeHwndAtom = atom<string | null>(null);
 //#region Control tree
 
 export const doGetWindowControlsTreeAtom = atom(
-    async (get): Promise<ControlNode | null> => {
+    (get) => {
         const activeHandle = get(activeHwndAtom);
         if (!activeHandle) {
+            // Important: return synchronously so consumers don't suspend when no window is selected.
             return null;
         }
 
-        try {
-            const json = await tmApi.getControlTree(activeHandle);
-            const tree: ControlNode = JSON.parse(json) as ControlNode;
-            return tree;
-        } catch (e) {
-            console.error("Failed to fetch control tree", e);
-            notice.error(`Failed to fetch control tree of window (handle: ${activeHandle})`);
-            return null;
-        }
+        return tmApi.getControlTree(activeHandle).then(
+            (json) => JSON.parse(json) as ControlNode,
+            (e) => {
+                console.error("Failed to fetch control tree", e);
+                notice.error(`Failed to fetch control tree of window (handle: ${activeHandle})`);
+                return null;
+            }
+        );
     }
 );
 

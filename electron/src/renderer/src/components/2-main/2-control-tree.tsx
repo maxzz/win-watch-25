@@ -1,26 +1,70 @@
-import { useState, Suspense } from "react";
+import { useEffect, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { selectedControlAtom, setSelectedControlAtom, doGetWindowControlsTreeAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
+import { loadable } from "jotai/utils";
+import { activeHwndAtom, selectedControlAtom, setSelectedControlAtom, doGetWindowControlsTreeAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
 import { ControlNode } from "@renderer/store/9-tmapi-types";
 import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
 import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
 import { getControlTypeIcon } from "@renderer/utils/uia/1-uia-control-type-icons-svg";
 import { ControlTreeHeader } from "./headers/6-control-tree-header";
 
+const windowControlsTreeLoadableAtom = loadable(doGetWindowControlsTreeAtom);
+
 export function ControlTreeLoader() {
-    const windowControlsTree = useAtomValue(doGetWindowControlsTreeAtom);
+    const activeHandle = useAtomValue(activeHwndAtom);
+    const treeLoadable = useAtomValue(windowControlsTreeLoadableAtom);
+    const setSelectedControl = useSetAtom(setSelectedControlAtom);
+    const treeState = treeLoadable.state;
+    const windowControlsTree = treeState === "hasData" ? treeLoadable.data : null;
+
+    useEffect(
+        () => {
+            // Clear previous selection immediately when switching windows,
+            // so the properties panel doesn't show stale data.
+            void setSelectedControl(null);
+        },
+        [activeHandle, setSelectedControl]
+    );
+
+    useEffect(
+        () => {
+            if (treeState !== "hasData") return;
+            if (!windowControlsTree) return;
+            // When a new controls tree is obtained, select the first control in the tree.
+            void setSelectedControl(windowControlsTree);
+        },
+        [treeState, windowControlsTree, setSelectedControl]
+    );
+
+    if (!activeHandle) {
+        return (
+            <div className="p-4 text-center text-muted-foreground">
+                No control tree available
+            </div>
+        );
+    }
+
+    if (treeLoadable.state === "loading") {
+        return <div className="p-4 text-muted-foreground">Loading controls...</div>;
+    }
+
+    if (treeLoadable.state === "hasError") {
+        return (
+            <div className="p-4 text-center text-muted-foreground">
+                Failed to load controls
+            </div>
+        );
+    }
+
     return (
-        <Suspense fallback={<div className="p-4 text-muted-foreground">Loading controls...</div>}>
-            {!windowControlsTree
-                ? (
-                    <div className="p-4 text-center text-muted-foreground">
-                        No control tree available
-                    </div>
-                ) : (
-                    <ControlTree windowControlsTree={windowControlsTree} />
-                )
-            }
-        </Suspense>
+        !windowControlsTree
+            ? (
+                <div className="p-4 text-center text-muted-foreground">
+                    No control tree available
+                </div>
+            ) : (
+                <ControlTree windowControlsTree={windowControlsTree} />
+            )
     );
 }
 
