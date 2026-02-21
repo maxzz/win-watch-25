@@ -1,11 +1,11 @@
 import { useAtomValue } from "jotai";
-import { selectedControlAtom } from "@renderer/store/2-atoms";
-import { formatControlType } from "@renderer/utils/uia/0-uia-control-type-names";
 import { useSnapshot } from "valtio/react";
+import { asHex, classNames, normalizeHwnd } from "@renderer/utils";
+import { formatControlType } from "@renderer/utils/uia/0-uia-control-type-names";
 import { appSettings } from "@renderer/store/1-ui-settings";
-import { classNames, normalizeHwnd } from "@renderer/utils";
+import { type ControlNode } from "@renderer/store/9-tmapi-types";
+import { selectedControlAtom } from "@renderer/store/2-atoms";
 import { PropertiesPanelHeader } from "./headers/7-properties-panel-header";
-import type { ControlNode } from "@renderer/store/9-tmapi-types";
 
 export function PropertiesPanel() {
     const control = useAtomValue(selectedControlAtom);
@@ -40,7 +40,7 @@ export function PropertiesPanel() {
                             return (
                                 <div className="contents border-b hover:bg-muted/30" key={idx}>
                                     <div className="px-2 py-px border-r cursor-default select-none" title={prop.label}>{prop.label}</div>
-                                    <div className="px-2 py-px break-all truncate cursor-default" title={prop.value}>
+                                    <div className="px-2 py-px break-all truncate cursor-default" title={prop.title || prop.value}>
                                         {nameValue || (
                                             <span className="text-muted-foreground italic">
                                                 -
@@ -57,7 +57,7 @@ export function PropertiesPanel() {
     );
 }
 
-function getControlProperties(control: ControlNode): Array<{ label: string; value: string; }> {
+function getControlProperties(control: ControlNode): Array<{ label: string; value: string; title?: string; }> {
     const legacyItems = control.isLegacyIAccessiblePatternAvailable
         ? [
             { label: "Legacy IAccessible Available", value: "true" },
@@ -67,9 +67,9 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         : [{ label: "Legacy IAccessible Available", value: "false" }];
 
     return [
-        { label: "Native Window Handle", value: normalizeHwnd(control.nativeWindowHandle) },
-        { label: "Process ID", value: String(control.processId) },
+        { label: "Process ID", value: asHex({ value: String(control.processId), prefix: true }), title: `decimal: ${String(control.processId)}` },
         { label: "Framework ID", value: control.frameworkId },
+        { label: "Native Window Handle", value: normalizeHwnd(control.nativeWindowHandle) },
         { label: "Localized Control Type", value: control.localizedControlType },
         { label: "Name", value: control.name },
         { label: "Automation ID", value: control.automationId },
