@@ -98,9 +98,9 @@ void ControlTree::WalkTree(IUIAutomationElement* element, ControlNode& node) {
     // UIA NativeWindowHandle (often 0 for non-windowed controls).
     UIA_HWND nativeHwnd = 0;
     if (SUCCEEDED(element->get_CurrentNativeWindowHandle(&nativeHwnd))) {
-        node.NativeWindowHandle = reinterpret_cast<HWND>(nativeHwnd);
+        node.nativeWindowHandle = reinterpret_cast<HWND>(nativeHwnd);
     } else {
-        node.NativeWindowHandle = nullptr;
+        node.nativeWindowHandle = nullptr;
     }
     
     RECT rect;
@@ -153,7 +153,7 @@ std::string ControlTree::ToJson(const ControlNode& node) {
     json << "\"automationId\":\"" << EscapeJson(node.automationId) << "\",";
     json << "\"className\":\"" << EscapeJson(node.className) << "\",";
     json << "\"runtimeId\":\"" << EscapeJson(node.runtimeId) << "\",";
-    json << "\"NativeWindowHandle\":\"" << HwndToHexString(node.NativeWindowHandle) << "\",";
+    json << "\"nativeWindowHandle\":\"" << (node.nativeWindowHandle ? HwndToHexString(node.nativeWindowHandle) : "") << "\",";
     json << "\"bounds\":{\"left\":" << node.left << ",\"top\":" << node.top << ",\"right\":" << node.right << ",\"bottom\":" << node.bottom << "},";
     json << "\"isEnabled\":" << (node.isEnabled ? "true" : "false") << ",";
     json << "\"isVisible\":" << (node.isVisible ? "true" : "false") << ",";

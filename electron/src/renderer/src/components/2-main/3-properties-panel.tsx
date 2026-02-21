@@ -28,7 +28,7 @@ export function PropertiesPanel() {
     const properties = [
         { label: "Name", value: control.name },
         { label: "Automation ID", value: control.automationId },
-        { label: "Native Window Handle", value: control.NativeWindowHandle },
+        { label: "Native Window Handle", value: control.nativeWindowHandle },
         { label: "Control Type", value: formatControlType(control.controlType) },
         { label: "Class Name", value: control.className },
         { label: "Runtime ID", value: control.runtimeId },
