@@ -41,30 +41,37 @@ export function ControlTreeLoader() {
         [windowControlsTree, setSelectedControl]
     );
 
+    // return (
+    //     <div className="px-2 py-1 text-xs text-muted-foreground">
+    //         No control tree available
+    //     </div>
+    // );
+
+
     if (!activeHwnd) {
         return (
-            <div className="p-4 text-center text-muted-foreground">
+            <div className="px-2 py-1 text-xs text-muted-foreground">
                 No control tree available
             </div>
         );
     }
     else if (loading) {
         return (
-            <div className="p-4 text-muted-foreground">
+            <div className="px-2 py-1 text-xs text-muted-foreground">
                 Loading controls...
             </div>
         );
     }
     else if (error) {
         return (
-            <div className="p-4 text-center text-muted-foreground">
+            <div className="px-2 py-1 text-xs text-muted-foreground">
                 Failed to load controls
             </div>
         );
     }
     else if (!windowControlsTree) {
         return (
-            <div className="p-4 text-center text-muted-foreground">
+            <div className="px-2 py-1 text-xs text-muted-foreground">
                 No control tree available
             </div>
         );
