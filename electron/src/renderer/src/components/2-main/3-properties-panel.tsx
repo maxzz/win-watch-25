@@ -48,8 +48,8 @@ export function PropertiesPanel() {
                             const nameValue = prop.label === "Bounds" ? boundsValue(prop.value) : prop.value;
                             return (
                                 <div className="contents border-b hover:bg-muted/30" key={idx}>
-                                    <div className="px-2 py-0.5 font-medium text-muted-foreground border-r cursor-default select-none" title={prop.label}>{prop.label}</div>
-                                    <div className="px-2 py-0.5 break-all truncate cursor-default" title={prop.value}>
+                                    <div className="px-2 py-px font-medium text-muted-foreground border-r cursor-default select-none" title={prop.label}>{prop.label}</div>
+                                    <div className="px-2 py-px break-all truncate cursor-default" title={prop.value}>
                                         {nameValue || <span className="text-muted-foreground italic">empty</span>}
                                     </div>
                                 </div>
