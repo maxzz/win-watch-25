@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 import { useAtomValue } from "jotai";
 import { useSnapshot } from "valtio/react";
 import { asHex, classNames, normalizeHwnd } from "@renderer/utils";
@@ -36,11 +37,13 @@ export function PropertiesPanel() {
                 <div className="text-xs grid grid-cols-[auto_1fr]">
                     {properties.map(
                         (prop, idx) => {
-                            const nameValue = prop.label === "Bounds" ? boundsValue(prop.value) : prop.value;
+                            const nameValue = prop.label === "Bounds" ? boundsValue(strOnly(prop.value)) : prop.value;
                             return (
                                 <div className="contents border-b hover:bg-muted/30" key={idx}>
-                                    <div className="px-2 py-px border-r cursor-default select-none" title={prop.label}>{prop.label}</div>
-                                    <div className="px-2 py-px break-all truncate cursor-default" title={prop.title || prop.value}>
+                                    <div className="px-1.5 py-px border-r cursor-default select-none" title={prop.label}>
+                                        {prop.label}
+                                    </div>
+                                    <div className="px-1.5 py-px break-all truncate cursor-default" title={prop.title || strEmpty(prop.value)}>
                                         {nameValue || (
                                             <span className="text-muted-foreground italic">
                                                 -
@@ -57,7 +60,7 @@ export function PropertiesPanel() {
     );
 }
 
-function getControlProperties(control: ControlNode): Array<{ label: string; value: string; title?: string; }> {
+function getControlProperties(control: ControlNode): Array<{ label: string; value: ReactNode; title?: string; }> {
     const legacyItems = control.isLegacyIAccessiblePatternAvailable
         ? [
             { label: "Legacy IAccessible Available", value: "true" },
@@ -68,7 +71,7 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
 
     return [
         { label: "Process ID", value: asHex({ value: String(control.processId), prefix: true }), title: `decimal: ${String(control.processId)}` },
-        { label: "Framework ID", value: control.frameworkId },
+        { label: "Framework ID", value: <span className="font-medium text-blue-600">{control.frameworkId}</span> },
         { label: "Native Window Handle", value: normalizeHwnd(control.nativeWindowHandle) },
         { label: "Localized Control Type", value: control.localizedControlType },
         { label: "Name", value: control.name },
@@ -96,4 +99,18 @@ function boundsValue(boundsStr?: string): string {
     const bounds = boundsStr.slice(1, -1).split(",").map(Number); // remove [] and split into l, t, r, b
     const [left, top, right, bottom] = bounds;
     return `l:${left}, t:${top}, r:${right}, b:${bottom}`; // the same style as in the Microsoft Inspector
+}
+
+function strOnly(value: ReactNode): string {
+    if (typeof value === 'string') {
+        return value;
+    }
+    throw new Error(`Unsupported value type: ${typeof value}`);
+}
+
+function strEmpty(value: ReactNode): string {
+    if (typeof value === 'string') {
+        return value;
+    }
+    return "";
 }
