@@ -6,11 +6,14 @@
  * @returns The converted handle
  */
 export function normalizeHwnd(hwnd: string): string {
+    if (!hwnd) {
+        return hwnd;
+    }
     if (hwnd.length === 16 && hwnd.startsWith("00000000")) {
         return "0x" + hwnd.substring(8);
     }
     if (hwnd.length === 18 && hwnd.startsWith("0x00000000")) {
-        return hwnd.substring(2);
+        return "0x" + hwnd.substring(10);
     }
     return hwnd;
 }
