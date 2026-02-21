@@ -41,13 +41,28 @@ export function ControlTreeLoader() {
         [windowControlsTree, setSelectedControl]
     );
 
-    // return (
-    //     <div className="px-2 py-1 text-xs text-muted-foreground">
-    //         No control tree available
-    //     </div>
-    // );
+    const status = (
+        <ControlTreeStatus
+            activeHwnd={activeHwnd}
+            loading={loading}
+            error={error}
+            hasTree={Boolean(windowControlsTree)}
+        />
+    );
+    if (status) {
+        return status;
+    }
 
+    if (!windowControlsTree) {
+        return null;
+    }
 
+    return (
+        <ControlTree windowControlsTree={windowControlsTree} />
+    );
+}
+
+function ControlTreeStatus({ activeHwnd, loading, error, hasTree }: { activeHwnd: string | null; loading: boolean; error: string | null; hasTree: boolean; }) {
     if (!activeHwnd) {
         return (
             <div className="px-2 py-1 text-xs text-muted-foreground">
@@ -55,31 +70,28 @@ export function ControlTreeLoader() {
             </div>
         );
     }
-    else if (loading) {
+    if (loading) {
         return (
             <div className="px-2 py-1 text-xs text-muted-foreground">
                 Loading controls...
             </div>
         );
     }
-    else if (error) {
+    if (error) {
         return (
             <div className="px-2 py-1 text-xs text-muted-foreground">
                 Failed to load controls
             </div>
         );
     }
-    else if (!windowControlsTree) {
+    if (!hasTree) {
         return (
             <div className="px-2 py-1 text-xs text-muted-foreground">
                 No control tree available
             </div>
         );
     }
-
-    return (
-        <ControlTree windowControlsTree={windowControlsTree} />
-    );
+    return null;
 }
 
 function ControlTree({ windowControlsTree }: { windowControlsTree: ControlNode; }) {
