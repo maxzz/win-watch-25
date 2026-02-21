@@ -14,6 +14,7 @@ export interface ControlNode {
   automationId: string;
   className: string;
   runtimeId: string;
+  NativeWindowHandle: string;
   bounds: { left: number; top: number; right: number; bottom: number };
   isEnabled: boolean;
   isVisible: boolean;

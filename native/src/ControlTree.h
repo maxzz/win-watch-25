@@ -10,6 +10,7 @@ struct ControlNode {
     std::string automationId;
     std::string className;
     std::string runtimeId;
+    HWND NativeWindowHandle = nullptr;
     long left, top, right, bottom;
     bool isEnabled;
     bool isVisible;
