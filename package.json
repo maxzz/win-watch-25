@@ -24,14 +24,19 @@
     "scripts": {
         "tsc": "pnpm --filter win-watch-electron run tsc",
         "dev": "pnpm --filter win-watch-electron run dev",
-        "gen": "pnpm --filter win-watch-electron run gen:icons-temp",
         "dev:debug": "pnpm --filter win-watch-electron run dev:debug",
-        "build:all": "tsx scripts/build-plugins.ts --release",
-        "build:all:debug": "tsx scripts/build-plugins.ts --debug",
-        "build:native": "tsx scripts/build-plugins.ts --release --native-only",
-        "build:native:debug": "tsx scripts/build-plugins.ts --debug --native-only",
-        "build:napi": "tsx scripts/build-plugins.ts --release --napi-only",
-        "build:napi:debug": "tsx scripts/build-plugins.ts --debug --napi-only",
-        "build:exe:win": "pnpm build:all && pnpm --filter win-watch-electron run build && pnpm --filter win-watch-electron exec electron-builder --win --x64"
+
+        "gen": "pnpm --filter win-watch-electron run gen:icons-temp",
+
+        "build:all": "tsx scripts/build-plugins.ts --debug",
+        "build:all:release": "tsx scripts/build-plugins.ts --release",
+        
+        "build:native": "tsx scripts/build-plugins.ts --debug --native-only",
+        "build:napi": "tsx scripts/build-plugins.ts --debug --napi-only",
+
+        "build:native:release": "tsx scripts/build-plugins.ts --release --native-only",
+        "build:napi:release": "tsx scripts/build-plugins.ts --release --napi-only",
+
+        "build:exe": "pnpm build:all:release && pnpm --filter win-watch-electron run build && pnpm --filter win-watch-electron exec electron-builder --win --x64"
     }
 }
