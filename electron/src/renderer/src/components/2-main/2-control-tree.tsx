@@ -41,20 +41,15 @@ export function ControlTreeLoader() {
         [windowControlsTree, setSelectedControl]
     );
 
-    const status = (
-        <ControlTreeStatus
-            activeHwnd={selectedHwnd}
-            loading={loading}
-            error={error}
-            hasTree={Boolean(windowControlsTree)}
-        />
-    );
-    if (status) {
-        return status;
-    }
-
-    if (!windowControlsTree) {
-        return null;
+    if (!selectedHwnd || loading || error || !windowControlsTree) {
+        return (
+            <ControlTreeStatus
+                hwnd={selectedHwnd}
+                loading={loading}
+                error={error}
+                hasTree={Boolean(windowControlsTree)}
+            />
+        );
     }
 
     return (
@@ -62,8 +57,8 @@ export function ControlTreeLoader() {
     );
 }
 
-function ControlTreeStatus({ activeHwnd, loading, error, hasTree }: { activeHwnd: string | null; loading: boolean; error: string | null; hasTree: boolean; }) {
-    if (!activeHwnd) {
+function ControlTreeStatus({ hwnd, loading, error, hasTree }: { hwnd: string | null; loading: boolean; error: string | null; hasTree: boolean; }) {
+    if (!hwnd) {
         return (
             <div className="px-2 py-1 text-xs text-muted-foreground">
                 No control tree available
