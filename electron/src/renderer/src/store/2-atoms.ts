@@ -45,22 +45,46 @@ export const activeHwndAtom = atom<string | null>(null);
 
 //#region Control tree
 
-export const doGetWindowControlsTreeAtom = atom(
-    (get) => {
+export const windowControlsTreeAtom = atom<ControlNode | null>(null);
+export const windowControlsTreeLoadingAtom = atom<boolean>(false);
+export const windowControlsTreeErrorAtom = atom<string | null>(null);
+
+export const refreshWindowControlsTreeAtom = atom(
+    null,
+    async (get, set): Promise<void> => {
         const activeHandle = get(activeHwndAtom);
         if (!activeHandle) {
-            // Important: return synchronously so consumers don't suspend when no window is selected.
-            return null;
+            set(windowControlsTreeLoadingAtom, false);
+            set(windowControlsTreeErrorAtom, null);
+            set(windowControlsTreeAtom, null);
+            return;
         }
 
-        return tmApi.getControlTree(activeHandle).then(
-            (json) => JSON.parse(json) as ControlNode,
-            (e) => {
-                console.error("Failed to fetch control tree", e);
-                notice.error(`Failed to fetch control tree of window (handle: ${activeHandle})`);
-                return null;
+        set(windowControlsTreeLoadingAtom, true);
+        set(windowControlsTreeErrorAtom, null);
+        set(windowControlsTreeAtom, null);
+
+        try {
+            const json = await tmApi.getControlTree(activeHandle);
+            const tree: ControlNode = JSON.parse(json) as ControlNode;
+            // Guard against races: if the active window changed while we were fetching,
+            // don't overwrite the tree for the new selection.
+            if (get(activeHwndAtom) !== activeHandle) {
+                return;
             }
-        );
+            set(windowControlsTreeAtom, tree);
+        } catch (e) {
+            console.error("Failed to fetch control tree", e);
+            notice.error(`Failed to fetch control tree of window (handle: ${activeHandle})`);
+            if (get(activeHwndAtom) === activeHandle) {
+                set(windowControlsTreeErrorAtom, "Failed to fetch control tree");
+                set(windowControlsTreeAtom, null);
+            }
+        } finally {
+            if (get(activeHwndAtom) === activeHandle) {
+                set(windowControlsTreeLoadingAtom, false);
+            }
+        }
     }
 );
 

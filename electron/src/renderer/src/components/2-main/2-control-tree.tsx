@@ -1,43 +1,27 @@
 import { useEffect, useState } from "react";
-import { atom, useAtomValue, useSetAtom } from "jotai";
-import { activeHwndAtom, selectedControlAtom, setSelectedControlAtom, doGetWindowControlsTreeAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
+import { useAtomValue, useSetAtom } from "jotai";
+import { activeHwndAtom, refreshWindowControlsTreeAtom, selectedControlAtom, setSelectedControlAtom, windowControlsTreeAtom, windowControlsTreeErrorAtom, windowControlsTreeLoadingAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
 import { ControlNode } from "@renderer/store/9-tmapi-types";
 import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
 import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
 import { getControlTypeIcon } from "@renderer/utils/uia/1-uia-control-type-icons-svg";
 import { ControlTreeHeader } from "./headers/6-control-tree-header";
 
-type Loadable<T> =
-    | { state: "loading"; }
-    | { state: "hasData"; data: T; }
-    | { state: "hasError"; error: unknown; };
-
-const windowControlsTreeLoadableAtom = atom<Loadable<ControlNode | null>>(
-    (get) => {
-        try {
-            const value = get(doGetWindowControlsTreeAtom);
-            // Depending on Jotai internals/settings, async atoms may either:
-            // - throw the promise (Suspense), or
-            // - return the promise as the value.
-            // We treat both as "loading".
-            if (value && typeof (value as unknown as { then?: unknown }).then === "function") {
-                return { state: "loading" };
-            }
-            return { state: "hasData", data: value as ControlNode | null };
-        } catch (e) {
-            if (e && typeof (e as unknown as { then?: unknown }).then === "function") {
-                return { state: "loading" };
-            }
-            return { state: "hasError", error: e };
-        }
-    }
-);
-
 export function ControlTreeLoader() {
     const activeHandle = useAtomValue(activeHwndAtom);
-    const treeLoadable = useAtomValue(windowControlsTreeLoadableAtom);
+    const windowControlsTree = useAtomValue(windowControlsTreeAtom);
+    const loading = useAtomValue(windowControlsTreeLoadingAtom);
+    const error = useAtomValue(windowControlsTreeErrorAtom);
     const setSelectedControl = useSetAtom(setSelectedControlAtom);
-    const windowControlsTree = treeLoadable.state === "hasData" ? treeLoadable.data : null;
+    const refreshTree = useSetAtom(refreshWindowControlsTreeAtom);
+
+    useEffect(
+        () => {
+            // Fetch the new controls tree when window selection changes.
+            void refreshTree();
+        },
+        [activeHandle, refreshTree]
+    );
 
     useEffect(
         () => {
@@ -50,12 +34,11 @@ export function ControlTreeLoader() {
 
     useEffect(
         () => {
-            if (treeLoadable.state !== "hasData") return;
             if (!windowControlsTree) return;
             // When a new controls tree is obtained, select the first control in the tree.
             void setSelectedControl(windowControlsTree);
         },
-        [treeLoadable.state, windowControlsTree, setSelectedControl]
+        [windowControlsTree, setSelectedControl]
     );
 
     if (!activeHandle) {
@@ -66,7 +49,7 @@ export function ControlTreeLoader() {
         );
     }
 
-    if (treeLoadable.state === "loading") {
+    if (loading) {
         return (
             <div className="p-4 text-muted-foreground">
                 Loading controls...
@@ -74,7 +57,7 @@ export function ControlTreeLoader() {
         );
     }
 
-    if (treeLoadable.state === "hasError") {
+    if (error) {
         return (
             <div className="p-4 text-center text-muted-foreground">
                 Failed to load controls
