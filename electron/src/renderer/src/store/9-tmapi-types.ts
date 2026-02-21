@@ -25,9 +25,15 @@ export interface ControlNode {      // Control node info (obtained from C++ nati
     className: string;              // from IUIAutomationElement::GetClassName
     runtimeId: string;              // from IUIAutomationElement::GetRuntimeId
     nativeWindowHandle: string;     // from IUIAutomationElement::get_CurrentNativeWindowHandle
-    IsLegacyIAccessiblePatternAvailable: boolean; // from IUIAutomationElement::GetCurrentPattern(UIA_LegacyIAccessiblePatternId)
-    CurrentRole: number;            // from IUIAutomationLegacyIAccessiblePattern::get_CurrentRole
-    CurrentState: number;           // from IUIAutomationLegacyIAccessiblePattern::get_CurrentState
+
+    isLegacyIAccessiblePatternAvailable: boolean; // from IUIAutomationElement::GetCurrentPattern(UIA_LegacyIAccessiblePatternId)
+    currentRole: number;            // from IUIAutomationLegacyIAccessiblePattern::get_CurrentRole
+    currentState: number;           // from IUIAutomationLegacyIAccessiblePattern::get_CurrentState
+
+    frameworkId: string;            // from IUIAutomationElement::get_CurrentFrameworkId
+    localizedControlType: string;   // from IUIAutomationElement::get_CurrentLocalizedControlType
+    processId: number;              // from IUIAutomationElement::get_CurrentProcessId
+
     bounds: NativeBounds;           // from IUIAutomationElement::GetCurrentBoundingRectangle
     isEnabled: boolean;             // from IUIAutomationElement::GetCurrentIsEnabled
     isVisible: boolean;             // from IUIAutomationElement::GetCurrentIsOffscreen

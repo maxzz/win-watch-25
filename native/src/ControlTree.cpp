@@ -76,6 +76,13 @@ void ControlTree::WalkTree(IUIAutomationElement* element, ControlNode& node) {
         node.name = BstrToUtf8(bStr);
         SysFreeString(bStr);
     }
+
+    if (SUCCEEDED(element->get_CurrentFrameworkId(&bStr)) && bStr) {
+        node.frameworkId = BstrToUtf8(bStr);
+        SysFreeString(bStr);
+    } else {
+        node.frameworkId.clear();
+    }
     
     if (SUCCEEDED(element->get_CurrentAutomationId(&bStr)) && bStr) {
         node.automationId = BstrToUtf8(bStr);
@@ -85,6 +92,13 @@ void ControlTree::WalkTree(IUIAutomationElement* element, ControlNode& node) {
     if (SUCCEEDED(element->get_CurrentClassName(&bStr)) && bStr) {
         node.className = BstrToUtf8(bStr);
         SysFreeString(bStr);
+    }
+
+    if (SUCCEEDED(element->get_CurrentLocalizedControlType(&bStr)) && bStr) {
+        node.localizedControlType = BstrToUtf8(bStr);
+        SysFreeString(bStr);
+    } else {
+        node.localizedControlType.clear();
     }
     
     // Control Type ID lookup could be added here for better names
@@ -104,24 +118,31 @@ void ControlTree::WalkTree(IUIAutomationElement* element, ControlNode& node) {
     }
 
     // Legacy IAccessible pattern (Role/State).
-    node.IsLegacyIAccessiblePatternAvailable = false;
-    node.CurrentRole = 0;
-    node.CurrentState = 0;
+    node.isLegacyIAccessiblePatternAvailable = false;
+    node.currentRole = 0;
+    node.currentState = 0;
     IUIAutomationLegacyIAccessiblePattern* pLegacy = NULL;
     if (SUCCEEDED(element->GetCurrentPattern(UIA_LegacyIAccessiblePatternId, (IUnknown**)&pLegacy)) && pLegacy) {
-        node.IsLegacyIAccessiblePatternAvailable = true;
+        node.isLegacyIAccessiblePatternAvailable = true;
 
         DWORD role = 0;
         if (SUCCEEDED(pLegacy->get_CurrentRole(&role))) {
-            node.CurrentRole = static_cast<long>(role);
+            node.currentRole = role;
         }
 
         DWORD state = 0;
         if (SUCCEEDED(pLegacy->get_CurrentState(&state))) {
-            node.CurrentState = static_cast<long>(state);
+            node.currentState = state;
         }
 
         pLegacy->Release();
+    }
+
+    int pid = 0;
+    if (SUCCEEDED(element->get_CurrentProcessId(&pid))) {
+        node.processId = pid;
+    } else {
+        node.processId = 0;
     }
     
     RECT rect;
@@ -175,9 +196,12 @@ std::string ControlTree::ToJson(const ControlNode& node) {
     json << "\"className\":\"" << EscapeJson(node.className) << "\",";
     json << "\"runtimeId\":\"" << EscapeJson(node.runtimeId) << "\",";
     json << "\"nativeWindowHandle\":\"" << (node.nativeWindowHandle ? HwndToHexString(node.nativeWindowHandle) : "") << "\",";
-    json << "\"IsLegacyIAccessiblePatternAvailable\":" << (node.IsLegacyIAccessiblePatternAvailable ? "true" : "false") << ",";
-    json << "\"CurrentRole\":" << node.CurrentRole << ",";
-    json << "\"CurrentState\":" << node.CurrentState << ",";
+    json << "\"isLegacyIAccessiblePatternAvailable\":" << (node.isLegacyIAccessiblePatternAvailable ? "true" : "false") << ",";
+    json << "\"currentRole\":" << node.currentRole << ",";
+    json << "\"currentState\":" << node.currentState << ",";
+    json << "\"frameworkId\":\"" << EscapeJson(node.frameworkId) << "\",";
+    json << "\"localizedControlType\":\"" << EscapeJson(node.localizedControlType) << "\",";
+    json << "\"processId\":" << node.processId << ",";
     json << "\"bounds\":{\"left\":" << node.left << ",\"top\":" << node.top << ",\"right\":" << node.right << ",\"bottom\":" << node.bottom << "},";
     json << "\"isEnabled\":" << (node.isEnabled ? "true" : "false") << ",";
     json << "\"isVisible\":" << (node.isVisible ? "true" : "false") << ",";

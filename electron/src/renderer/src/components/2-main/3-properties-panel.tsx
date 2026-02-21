@@ -58,16 +58,19 @@ export function PropertiesPanel() {
 }
 
 function getControlProperties(control: ControlNode): Array<{ label: string; value: string; }> {
-    const legacyItems = control.IsLegacyIAccessiblePatternAvailable
+    const legacyItems = control.isLegacyIAccessiblePatternAvailable
         ? [
             { label: "Legacy IAccessible Available", value: "true" },
-            { label: "Legacy CurrentRole", value: String(control.CurrentRole) },
-            { label: "Legacy CurrentState", value: formatHex(control.CurrentState) }
+            { label: "Legacy CurrentRole", value: String(control.currentRole) },
+            { label: "Legacy CurrentState", value: formatHex(control.currentState) }
         ]
         : [{ label: "Legacy IAccessible Available", value: "false" }];
 
     return [
         { label: "Native Window Handle", value: normalizeHwnd(control.nativeWindowHandle) },
+        { label: "Process ID", value: String(control.processId) },
+        { label: "Framework ID", value: control.frameworkId },
+        { label: "Localized Control Type", value: control.localizedControlType },
         { label: "Name", value: control.name },
         { label: "Automation ID", value: control.automationId },
         { label: "Control Type", value: formatControlType(control.controlType) },
