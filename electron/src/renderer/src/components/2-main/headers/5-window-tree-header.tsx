@@ -10,49 +10,47 @@ import { doHighlightSelectedWindowAtom, doRefreshWindowInfosAtom, selectedHwndAt
 
 export function WindowTreeHeader() {
     return (
-        <div className="px-2 py-1 bg-muted/20 border-b flex justify-between items-center select-none">
+        <div className="px-2 1py-1 h-7 bg-muted/20 border-b flex justify-between items-center select-none">
             <span className="text-xs font-semibold">
                 Windows
             </span>
             <div className="flex items-center gap-1">
-                <Button_WindowTreeRefresh />
-                <Button_ToggleActiveWindowMonitoring />
-                <Button_HighlightSelectedWindow />
+                <Button_HighlightHwnd />
+                <Button_FollowFocus />
+                <Button_RefreshTree />
 
-                <Symbol_uia_Toolbar className="size-3.5" />
+                {/* <Symbol_uia_Toolbar className="size-3.5" />
                 <Symbol_uia_Tooltip className="size-3.5" />
-                <Symbol_uia_Tooltip2 className="size-3.5" />
+                <Symbol_uia_Tooltip2 className="size-3.5" /> */}
             </div>
         </div>
     );
 }
 
-function Button_WindowTreeRefresh() {
+function Button_RefreshTree() {
     const refreshWindowInfos = useSetAtom(doRefreshWindowInfosAtom);
     return (
         <Button
-            variant="outline"
+            variant="ghost"
             size="xs"
             onClick={refreshWindowInfos}
             title="Refresh window list (refresh window tree)"
         >
-            <IconRefresh className="size-3.5" />
+            <IconRefresh className="size-3" />
         </Button>
     );
 }
 
-function Button_ToggleActiveWindowMonitoring() {
+function Button_FollowFocus() {
     const settings = useSnapshot(appSettings);
     const enabled = settings.activeWindowMonitoringEnabled;
     const switchId = "window-tree-follow-focus";
     return (
         <div className="flex items-center gap-1.5">
-            <Label
-                className="text-[11px] font-normal text-muted-foreground cursor-pointer"
-                title={enabled ? "Stop following the focused window" : "Follow the focused window"}
-            >
-                Follow focus
+            <Label className="text-xs font-normal text-muted-foreground cursor-pointer gap-0" title={enabled ? "Stop following the focused window" : "Follow the focused window"}>
+                <span className="pb-[3px]">Follow focus:</span>
                 <Switch
+                    className="scale-75"
                     checked={enabled}
                     onCheckedChange={(checked) => appSettings.activeWindowMonitoringEnabled = checked}
                 />
@@ -61,12 +59,12 @@ function Button_ToggleActiveWindowMonitoring() {
     );
 }
 
-function Button_HighlightSelectedWindow() {
+function Button_HighlightHwnd() {
     const selectedHwnd = useAtomValue(selectedHwndAtom);
     const doHighlightSelectedWindow = useSetAtom(doHighlightSelectedWindowAtom);
     return (
         <Button
-            variant="outline"
+            variant="ghost"
             size="xs"
             onClick={doHighlightSelectedWindow}
             disabled={!selectedHwnd}
