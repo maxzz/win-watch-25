@@ -16,12 +16,10 @@ export function ControlTreeHeader() {
             </span>
 
             <div className="ml-auto flex items-center gap-2">
-                <Label
-                    className="text-[11px] font-normal text-muted-foreground cursor-pointer"
-                    title="Auto highlight the selected control"
-                >
-                    Auto-highlight
+                <Label className="text-xs font-normal text-muted-foreground cursor-pointer gap-0" title="Auto highlight the selected control">
+                    <span className="pb-0.5">Auto-highlight:</span>
                     <Switch
+                        className="scale-75"
                         checked={autoHighlightSelectedControl}
                         onCheckedChange={(checked) => setAutoHighlightSelectedControl(checked)}
                     />
