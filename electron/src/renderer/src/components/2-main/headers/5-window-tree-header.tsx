@@ -3,7 +3,8 @@ import { useSnapshot } from "valtio";
 import { appSettings } from "@renderer/store/1-ui-settings";
 import { Crosshair } from "lucide-react";
 import { Button } from "../../ui/shadcn/button";
-import { Toggle } from "../../ui/shadcn/toggle";
+import { Label } from "../../ui/shadcn/label";
+import { Switch } from "../../ui/shadcn/switch";
 import { IconRefresh, Symbol_uia_Toolbar, Symbol_uia_Tooltip, Symbol_uia_Tooltip2 } from "../../ui/icons";
 import { doHighlightSelectedWindowAtom, doRefreshWindowInfosAtom, selectedHwndAtom } from "@renderer/store/2-atoms";
 
@@ -43,18 +44,22 @@ function Button_WindowTreeRefresh() {
 function Button_ToggleActiveWindowMonitoring() {
     const settings = useSnapshot(appSettings);
     const enabled = settings.activeWindowMonitoringEnabled;
+    const switchId = "window-tree-follow-focus";
     return (
-        <Toggle
-            variant="outline"
-            size="sm"
-            className="h-6 px-2 text-[11px]"
-            pressed={enabled}
-            onPressedChange={(pressed) => appSettings.activeWindowMonitoringEnabled = pressed}
-            title={enabled ? "Disable active window monitoring" : "Enable active window monitoring"}
-            type="button"
-        >
-            {enabled ? "Auto" : "Manual"}
-        </Toggle>
+        <div className="flex items-center gap-1.5">
+            <Label
+                htmlFor={switchId}
+                className="text-[11px] font-normal text-muted-foreground cursor-pointer"
+                title={enabled ? "Stop following the focused window" : "Follow the focused window"}
+            >
+                Follow focus
+            </Label>
+            <Switch
+                id={switchId}
+                checked={enabled}
+                onCheckedChange={(checked) => appSettings.activeWindowMonitoringEnabled = checked}
+            />
+        </div>
     );
 }
 
