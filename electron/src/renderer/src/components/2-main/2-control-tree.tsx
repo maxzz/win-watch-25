@@ -122,7 +122,7 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
             {controlIcon}
 
             <span className="ml-1 text-xs truncate" title={node.name}>
-                {getControlTypeName(node.controlType)} {node.name ? `"${node.name}"` : ""}
+                {getNodeText(node)}
             </span>
 
             {isSelected && (
@@ -146,4 +146,12 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
             </div>
         )}
     </>);
+}
+
+function getNodeText(node: ControlNode): string {
+    const typeName = getControlTypeName(node.controlType);
+    if (typeName === "Pane") {
+        return node.className ? node.className : "Pane";
+    }
+    return `${typeName} ${node.name ? `"${node.name}"` : ""}`;
 }

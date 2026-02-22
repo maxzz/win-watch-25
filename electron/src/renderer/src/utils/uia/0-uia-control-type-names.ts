@@ -4,7 +4,7 @@
  * https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-controltype-ids
  */
 
-export const UIA_CONTROL_TYPE_NAMES: Record<string, string> = {
+const UIA_CONTROL_TYPE_NAMES: Record<string, string> = {
     "50000": "Button",
     "50001": "Calendar",
     "50002": "CheckBox",
