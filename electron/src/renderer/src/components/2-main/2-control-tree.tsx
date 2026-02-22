@@ -41,13 +41,15 @@ export function ControlTreeLoader() {
         [windowControlsTree, setSelectedControl]
     );
 
-    return (<>
-        <ControlTreeHeader />
-        {!selectedHwnd || loading || error || !windowControlsTree
-            ? <ControlTreeStatus hwnd={selectedHwnd} loading={loading} error={error} hasTree={!!windowControlsTree} />
-            : <ControlTree windowControlsTree={windowControlsTree} />
-        }
-    </>);
+    return (
+        <div className="h-full bg-card flex flex-col">
+            <ControlTreeHeader />
+            {!selectedHwnd || loading || error || !windowControlsTree
+                ? <ControlTreeStatus hwnd={selectedHwnd} loading={loading} error={error} hasTree={!!windowControlsTree} />
+                : <ControlTree windowControlsTree={windowControlsTree} />
+            }
+        </div >
+    );
 }
 
 function ControlTreeStatus({ hwnd, loading, error, hasTree }: { hwnd: string | null; loading: boolean; error: string | null; hasTree: boolean; }) {
@@ -84,10 +86,8 @@ function ControlTreeStatus({ hwnd, loading, error, hasTree }: { hwnd: string | n
 
 function ControlTree({ windowControlsTree }: { windowControlsTree: ControlNode; }) {
     return (
-        <div className="h-full bg-card flex flex-col">
-            <div className="flex-1 overflow-auto">
-                <ControlTreeNode node={windowControlsTree} depth={0} />
-            </div>
+        <div className="flex-1 overflow-auto">
+            <ControlTreeNode node={windowControlsTree} depth={0} />
         </div>
     );
 }
