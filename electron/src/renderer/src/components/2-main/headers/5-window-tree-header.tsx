@@ -3,6 +3,7 @@ import { useSnapshot } from "valtio";
 import { appSettings } from "@renderer/store/1-ui-settings";
 import { Crosshair } from "lucide-react";
 import { Button } from "../../ui/shadcn/button";
+import { Toggle } from "../../ui/shadcn/toggle";
 import { IconRefresh, Symbol_uia_Toolbar, Symbol_uia_Tooltip, Symbol_uia_Tooltip2 } from "../../ui/icons";
 import { doHighlightSelectedWindowAtom, doRefreshWindowInfosAtom, selectedHwndAtom } from "@renderer/store/2-atoms";
 
@@ -43,14 +44,17 @@ function Button_ToggleActiveWindowMonitoring() {
     const settings = useSnapshot(appSettings);
     const enabled = settings.activeWindowMonitoringEnabled;
     return (
-        <Button
+        <Toggle
             variant="outline"
-            size="xs"
-            onClick={() => appSettings.activeWindowMonitoringEnabled = !enabled}
+            size="sm"
+            className="h-6 px-2 text-[11px]"
+            pressed={enabled}
+            onPressedChange={(pressed) => appSettings.activeWindowMonitoringEnabled = pressed}
             title={enabled ? "Disable active window monitoring" : "Enable active window monitoring"}
+            type="button"
         >
             {enabled ? "Auto" : "Manual"}
-        </Button>
+        </Toggle>
     );
 }
 
