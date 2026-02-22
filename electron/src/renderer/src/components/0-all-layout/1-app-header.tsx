@@ -4,6 +4,7 @@ import { appSettings } from "@renderer/store/1-ui-settings";
 import { PanelBottomIcon, PanelRightIcon } from "lucide-react";
 import { Button } from "../ui/shadcn/button";
 import { TopMenu } from "./1-top-menu";
+import { ButtonThemeToggle } from "./3-5-btn-theme-toggle";
 
 export function AppHeader({ className }: { className?: string; }) {
     return (
@@ -14,7 +15,10 @@ export function AppHeader({ className }: { className?: string; }) {
                     UI Automation Monitor
                 </span>
             </div>
-            <Button_TogglePropertiesPosition />
+            <div className="flex items-center gap-1">
+                <ButtonThemeToggle />
+                <Button_TogglePropertiesPosition />
+            </div>
         </div>
     );
 }
