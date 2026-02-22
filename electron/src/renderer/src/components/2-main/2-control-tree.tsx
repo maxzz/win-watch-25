@@ -41,21 +41,13 @@ export function ControlTreeLoader() {
         [windowControlsTree, setSelectedControl]
     );
 
-    if (!selectedHwnd || loading || error || !windowControlsTree) {
-        return (
-            // TODO: <ControlTreeHeader />
-            <ControlTreeStatus
-                hwnd={selectedHwnd}
-                loading={loading}
-                error={error}
-                hasTree={!!windowControlsTree}
-            />
-        );
-    }
-
-    return (
-        <ControlTree windowControlsTree={windowControlsTree} />
-    );
+    return (<>
+        <ControlTreeHeader />
+        {!selectedHwnd || loading || error || !windowControlsTree
+            ? <ControlTreeStatus hwnd={selectedHwnd} loading={loading} error={error} hasTree={!!windowControlsTree} />
+            : <ControlTree windowControlsTree={windowControlsTree} />
+        }
+    </>);
 }
 
 function ControlTreeStatus({ hwnd, loading, error, hasTree }: { hwnd: string | null; loading: boolean; error: string | null; hasTree: boolean; }) {
