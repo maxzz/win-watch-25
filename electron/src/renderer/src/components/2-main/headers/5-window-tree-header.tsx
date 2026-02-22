@@ -14,15 +14,32 @@ export function WindowTreeHeader() {
             <span className="text-xs font-semibold">
                 Windows
             </span>
-            <div className="flex items-center gap-1">
-                <Button_HighlightHwnd />
+            <div className="flex items-center gap-0.5">
                 <Button_FollowFocus />
                 <Button_RefreshTree />
+                <Button_HighlightHwnd />
 
                 {/* <Symbol_uia_Toolbar className="size-3.5" />
                 <Symbol_uia_Tooltip className="size-3.5" />
                 <Symbol_uia_Tooltip2 className="size-3.5" /> */}
             </div>
+        </div>
+    );
+}
+
+function Button_FollowFocus() {
+    const settings = useSnapshot(appSettings);
+    const enabled = settings.activeWindowMonitoringEnabled;
+    return (
+        <div className="flex items-center gap-1.5">
+            <Label className="text-xs font-normal text-muted-foreground cursor-pointer gap-0" title={enabled ? "Stop following the focused window" : "Follow the focused window"}>
+                <span className="pb-0.5">Follow focus:</span>
+                <Switch
+                    className="scale-75"
+                    checked={enabled}
+                    onCheckedChange={(checked) => appSettings.activeWindowMonitoringEnabled = checked}
+                />
+            </Label>
         </div>
     );
 }
@@ -41,36 +58,19 @@ function Button_RefreshTree() {
     );
 }
 
-function Button_FollowFocus() {
-    const settings = useSnapshot(appSettings);
-    const enabled = settings.activeWindowMonitoringEnabled;
-    const switchId = "window-tree-follow-focus";
-    return (
-        <div className="flex items-center gap-1.5">
-            <Label className="text-xs font-normal text-muted-foreground cursor-pointer gap-0" title={enabled ? "Stop following the focused window" : "Follow the focused window"}>
-                <span className="pb-[3px]">Follow focus:</span>
-                <Switch
-                    className="scale-75"
-                    checked={enabled}
-                    onCheckedChange={(checked) => appSettings.activeWindowMonitoringEnabled = checked}
-                />
-            </Label>
-        </div>
-    );
-}
-
 function Button_HighlightHwnd() {
     const selectedHwnd = useAtomValue(selectedHwndAtom);
     const doHighlightSelectedWindow = useSetAtom(doHighlightSelectedWindowAtom);
     return (
         <Button
+            className="disabled:opacity-10"
             variant="ghost"
             size="xs"
             onClick={doHighlightSelectedWindow}
             disabled={!selectedHwnd}
             title="Highlight selected window"
         >
-            <Crosshair className="size-3.5" />
+            <Crosshair className="size-3.5 stroke-[1.5px]" />
         </Button>
     );
 }

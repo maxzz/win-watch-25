@@ -8,7 +8,6 @@ import { Switch } from "../../ui/shadcn/switch";
 export function ControlTreeHeader() {
     const { autoHighlightSelectedControl } = useSnapshot(appSettings);
     const setAutoHighlightSelectedControl = useSetAtom(setAutoHighlightSelectedControlAtom);
-    const switchId = "control-tree-auto-highlight";
 
     return (
         <div className="px-2 py-1 border-b bg-muted/20 flex items-center select-none">
