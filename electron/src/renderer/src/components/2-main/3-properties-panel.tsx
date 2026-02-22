@@ -71,7 +71,7 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
 
     return [
         { label: "Process ID", value: asHex({ value: String(control.processId), prefix: true }), title: `decimal: ${String(control.processId)}` },
-        { label: "Framework ID", value: <span className="font-medium text-blue-600">{control.frameworkId}</span> },
+        { label: "Framework ID", value: <span className="-ml-1 px-1 font-medium text-foreground bg-sky-100 dark:bg-sky-900 border border-sky-300 dark:border-sky-700 rounded">{control.frameworkId}</span> },
         { label: "Native Window Handle", value: normalizeHwnd(control.nativeWindowHandle) },
         { label: "Class Name", value: control.className },
         { label: "Control Type", value: formatControlType(control.controlType) },

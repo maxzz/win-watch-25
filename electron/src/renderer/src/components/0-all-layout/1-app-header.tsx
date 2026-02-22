@@ -11,9 +11,6 @@ export function AppHeader({ className }: { className?: string; }) {
         <div className={classNames("px-3 py-1 border-b bg-muted/30 flex items-center justify-between", className)}>
             <div className="flex items-center gap-4">
                 <TopMenu />
-                <span className="text-xs font-medium" title="Windows UI Automation Monitor">
-                    UI Automation Monitor
-                </span>
             </div>
             <div className="flex items-center gap-1">
                 <ButtonThemeToggle />
