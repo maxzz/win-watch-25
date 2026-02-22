@@ -48,17 +48,15 @@ function Button_ToggleActiveWindowMonitoring() {
     return (
         <div className="flex items-center gap-1.5">
             <Label
-                htmlFor={switchId}
                 className="text-[11px] font-normal text-muted-foreground cursor-pointer"
                 title={enabled ? "Stop following the focused window" : "Follow the focused window"}
             >
                 Follow focus
+                <Switch
+                    checked={enabled}
+                    onCheckedChange={(checked) => appSettings.activeWindowMonitoringEnabled = checked}
+                />
             </Label>
-            <Switch
-                id={switchId}
-                checked={enabled}
-                onCheckedChange={(checked) => appSettings.activeWindowMonitoringEnabled = checked}
-            />
         </div>
     );
 }
