@@ -55,14 +55,14 @@ function Button_ToggleActiveWindowMonitoring() {
 }
 
 function Button_HighlightSelectedWindow() {
-    const selectedHandle = useAtomValue(selectedHwndAtom);
+    const selectedHwnd = useAtomValue(selectedHwndAtom);
     const doHighlightSelectedWindow = useSetAtom(doHighlightSelectedWindowAtom);
     return (
         <Button
             variant="outline"
             size="xs"
             onClick={doHighlightSelectedWindow}
-            disabled={!selectedHandle}
+            disabled={!selectedHwnd}
             title="Highlight selected window"
         >
             <Crosshair className="size-3.5" />

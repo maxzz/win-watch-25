@@ -6,14 +6,14 @@ import { appSettings } from "../1-ui-settings";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster";
 
 export function useActiveWindow() {
-    const setActiveHandle = useSetAtom(activeHwndAtom);
-    const setSelectedHandle = useSetAtom(selectedHwndAtom);
+    const setActiveHwnd = useSetAtom(activeHwndAtom);
+    const setSelectedHwnd = useSetAtom(selectedHwndAtom);
     const { activeWindowMonitoringEnabled } = useSnapshot(appSettings);
 
     useEffect(
         () => {
             if (!activeWindowMonitoringEnabled) {
-                setActiveHandle(null);
+                setActiveHwnd(null);
                 return;
             }
 
@@ -35,12 +35,12 @@ export function useActiveWindow() {
                         // C++ WindowMonitor: std::to_string((long long)hwnd) -> decimal.
                         // I should fix C++ to be consistent. But assuming decimal handle string for now.
 
-                        setActiveHandle(info?.handle);
-                        setSelectedHandle(info?.handle);
+                        setActiveHwnd(info?.handle);
+                        setSelectedHwnd(info?.handle);
                     } catch (e) {
                         console.error("Error parsing active window update", e);
                         notice.error("Error parsing active window update");
-                        setActiveHandle(null);
+                        setActiveHwnd(null);
                     }
                 }
             );
@@ -51,13 +51,13 @@ export function useActiveWindow() {
 }
 
 export function useMonitorActiveWindow() {
-    const setActiveHandle = useSetAtom(activeHwndAtom);
+    const setActiveHwnd = useSetAtom(activeHwndAtom);
     const { activeWindowMonitoringEnabled } = useSnapshot(appSettings);
 
     useEffect(
         () => {
             if (!activeWindowMonitoringEnabled) {
-                setActiveHandle(null);
+                setActiveHwnd(null);
                 try {
                     tmApi.stopMonitoring();
                 } catch (e) {

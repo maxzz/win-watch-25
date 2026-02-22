@@ -4,15 +4,15 @@ import { normalizeHwnd, asHexNumber } from "@renderer/utils";
 
 export function ActiveWindowInfo() {
     const windowInfos = useAtomValue(windowInfosAtom);
-    const activeHandle = useAtomValue(activeHwndAtom);
+    const activeHwnd = useAtomValue(activeHwndAtom);
 
     // Find window info for active handle
     // This might be slow if list is huge, but fine for now
     // Also handle format mismatch (hex vs dec) might be an issue
     // I'll try to fuzzy match or normalized in the future
     const activeWindow =
-        windowInfos.find(w => w.handle == activeHandle) ||
-        windowInfos.find(w => parseInt(w.handle) == parseInt(activeHandle || "0")) ||
+        windowInfos.find(w => w.handle == activeHwnd) ||
+        windowInfos.find(w => parseInt(w.handle) == parseInt(activeHwnd || "0")) ||
         null;
 
     //console.log("ActiveWindowInfo", activeHandle, activeWindow, windowInfos);

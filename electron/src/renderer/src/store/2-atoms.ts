@@ -55,8 +55,8 @@ export const windowControlsTreeErrorAtom = atom<string | null>(null);
 export const refreshWindowControlsTreeAtom = atom(
     null,
     async (get, set): Promise<void> => {
-        const selectedHandle = get(selectedHwndAtom);
-        if (!selectedHandle) {
+        const selectedHwnd = get(selectedHwndAtom);
+        if (!selectedHwnd) {
             set(windowControlsTreeLoadingAtom, false);
             set(windowControlsTreeErrorAtom, null);
             set(windowControlsTreeAtom, null);
@@ -68,23 +68,23 @@ export const refreshWindowControlsTreeAtom = atom(
         set(windowControlsTreeAtom, null);
 
         try {
-            const json = await tmApi.getControlTree(selectedHandle);
+            const json = await tmApi.getControlTree(selectedHwnd);
             const tree: ControlNode = JSON.parse(json) as ControlNode;
             // Guard against races: if the selection changed while we were fetching,
             // don't overwrite the tree for the new selection.
-            if (get(selectedHwndAtom) !== selectedHandle) {
+            if (get(selectedHwndAtom) !== selectedHwnd) {
                 return;
             }
             set(windowControlsTreeAtom, tree);
         } catch (e) {
             console.error("Failed to fetch control tree", e);
-            notice.error(`Failed to fetch control tree of window (handle: ${selectedHandle})`);
-            if (get(selectedHwndAtom) === selectedHandle) {
+            notice.error(`Failed to fetch control tree of window (handle: ${selectedHwnd})`);
+            if (get(selectedHwndAtom) === selectedHwnd) {
                 set(windowControlsTreeErrorAtom, "Failed to fetch control tree");
                 set(windowControlsTreeAtom, null);
             }
         } finally {
-            if (get(selectedHwndAtom) === selectedHandle) {
+            if (get(selectedHwndAtom) === selectedHwnd) {
                 set(windowControlsTreeLoadingAtom, false);
             }
         }

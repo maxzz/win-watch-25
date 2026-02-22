@@ -8,7 +8,7 @@ import { selectedHwndAtom, windowInfosAtom } from "@renderer/store/2-atoms";
 
 export function WindowTreePanel() {
     const windowInfos: WindowInfo[] = useAtomValue(windowInfosAtom);
-    const [selectedHandle, setSelectedHandle] = useAtom(selectedHwndAtom);
+    const [selectedHwnd, setSelectedHwnd] = useAtom(selectedHwndAtom);
 
     return (
         <div className="h-full bg-card border-r flex flex-col">
@@ -17,7 +17,7 @@ export function WindowTreePanel() {
             <div className="flex-1 overflow-auto">
                 {windowInfos.map(
                     (windowInfo, i) => (
-                        <WindowNode key={i} windowInfo={windowInfo} selectedHandle={selectedHandle} onSelect={setSelectedHandle} depth={0} />
+                        <WindowNode key={i} windowInfo={windowInfo} selectedHandle={selectedHwnd} onSelect={setSelectedHwnd} depth={0} />
                     )
                 )}
             </div>

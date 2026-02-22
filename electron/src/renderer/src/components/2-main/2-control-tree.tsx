@@ -43,11 +43,12 @@ export function ControlTreeLoader() {
 
     if (!selectedHwnd || loading || error || !windowControlsTree) {
         return (
+            // TODO: <ControlTreeHeader />
             <ControlTreeStatus
                 hwnd={selectedHwnd}
                 loading={loading}
                 error={error}
-                hasTree={Boolean(windowControlsTree)}
+                hasTree={!!windowControlsTree}
             />
         );
     }
