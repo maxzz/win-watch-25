@@ -85,8 +85,6 @@ function ControlTreeStatus({ hwnd, loading, error, hasTree }: { hwnd: string | n
 function ControlTree({ windowControlsTree }: { windowControlsTree: ControlNode; }) {
     return (
         <div className="h-full bg-card flex flex-col">
-            <ControlTreeHeader />
-
             <div className="flex-1 overflow-auto">
                 <ControlTreeNode node={windowControlsTree} depth={0} />
             </div>
