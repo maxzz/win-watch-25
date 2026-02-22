@@ -14,7 +14,7 @@ export function AppHeader({ className }: { className?: string; }) {
             </div>
             <div className="flex items-center gap-1">
                 <ButtonThemeToggle />
-                <Button_TogglePropertiesPosition />
+                {/* <Button_TogglePropertiesPosition /> */}
             </div>
         </div>
     );

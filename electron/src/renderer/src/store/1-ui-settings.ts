@@ -33,7 +33,7 @@ const DEFAULT_SETTINGS: AppSettings = {
         "controls-panel": 20,
         "control-props-panel": 80,
     },
-    propertiesPanelPosition: 'bottom',
+    propertiesPanelPosition: 'right',
 };
 
 // Load settings from localStorage
