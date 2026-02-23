@@ -14,7 +14,7 @@ export function WindowTreeHeader() {
             <span className="text-xs font-semibold">
                 Windows
             </span>
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-0">
                 <Button_FollowFocus />
                 <Button_RefreshTree />
                 <Button_HighlightHwnd />
@@ -31,16 +31,14 @@ function Button_FollowFocus() {
     const settings = useSnapshot(appSettings);
     const enabled = settings.activeWindowMonitoringEnabled;
     return (
-        <div className="flex items-center gap-1.5">
-            <Label className="text-xs font-normal text-muted-foreground cursor-pointer gap-0" title={enabled ? "Stop following the focused window" : "Follow the focused window"}>
-                <span className="pb-0.5">Follow focus:</span>
-                <Switch
-                    className="scale-75"
-                    checked={enabled}
-                    onCheckedChange={(checked) => appSettings.activeWindowMonitoringEnabled = checked}
-                />
-            </Label>
-        </div>
+        <Label className="text-xs font-normal text-muted-foreground cursor-pointer gap-0" title={enabled ? "Stop following the focused window" : "Follow the focused window"}>
+            <span className="pb-0.5">Follow focus:</span>
+            <Switch
+                className="scale-75"
+                checked={enabled}
+                onCheckedChange={(checked) => appSettings.activeWindowMonitoringEnabled = checked}
+            />
+        </Label>
     );
 }
 

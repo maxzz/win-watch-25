@@ -14,9 +14,9 @@ export function ControlTreeHeader() {
                 Control Hierarchy
             </span>
 
-            <div className="ml-auto flex items-center gap-2">
-                <Button_RefreshControlsTree />
+            <div className="ml-auto flex items-center gap-0">
                 <ControlTreeAutoHighlightToggle />
+                <Button_RefreshControlsTree />
             </div>
         </div>
     );
