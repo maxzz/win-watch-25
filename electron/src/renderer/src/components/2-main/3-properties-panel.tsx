@@ -87,12 +87,6 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
     ];
 }
 
-function formatHex(value: number): string {
-    if (!Number.isFinite(value)) return "";
-    if (value === 0) return "0x0";
-    return `0x${(value >>> 0).toString(16).toUpperCase()}`;
-}
-
 function boundsValue(boundsStr?: string): string {
     if (!boundsStr) {
         return '';

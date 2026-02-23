@@ -1,18 +1,18 @@
 import { useAtomValue } from "jotai";
-import { activeHwndAtom, windowInfosAtom } from "@renderer/store/2-atoms";
+import { selectedHwndAtom, windowInfosAtom } from "@renderer/store/2-atoms";
 import { normalizeHwnd, asHexNumber } from "@renderer/utils";
 
 export function ActiveWindowInfo() {
     const windowInfos = useAtomValue(windowInfosAtom);
-    const activeHwnd = useAtomValue(activeHwndAtom);
+    const selectedHwnd = useAtomValue(selectedHwndAtom);
 
     // Find window info for active handle
     // This might be slow if list is huge, but fine for now
     // Also handle format mismatch (hex vs dec) might be an issue
     // I'll try to fuzzy match or normalized in the future
     const activeWindow =
-        windowInfos.find(w => w.handle == activeHwnd) ||
-        windowInfos.find(w => parseInt(w.handle) == parseInt(activeHwnd || "0")) ||
+        windowInfos.find(w => w.handle == selectedHwnd) ||
+        windowInfos.find(w => parseInt(w.handle) == parseInt(selectedHwnd || "0")) ||
         null;
 
     //console.log("ActiveWindowInfo", activeHandle, activeWindow, windowInfos);
@@ -20,7 +20,7 @@ export function ActiveWindowInfo() {
     if (!activeWindow) {
         return (
             <div className={panelClasses}>
-                No active window selected
+                No window selected
             </div>
         );
     }
