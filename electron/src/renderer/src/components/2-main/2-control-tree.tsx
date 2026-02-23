@@ -151,7 +151,10 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
 function getNodeText(node: ControlNode): string {
     const typeName = getControlTypeName(node.controlType);
     if (typeName === "Pane") {
-        return node.className ? node.className : "Pane";
+        return node.className ? node.className : typeName;
+    }
+    if (typeName === "Group") {
+        return node.className ? `${typeName}: ${node.className}` : typeName;
     }
     return `${typeName} ${node.name ? `"${node.name}"` : ""}`;
 }
