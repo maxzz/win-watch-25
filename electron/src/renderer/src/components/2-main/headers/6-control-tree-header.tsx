@@ -1,13 +1,16 @@
 import { useSetAtom } from "jotai";
 import { useSnapshot } from "valtio/react";
 import { appSettings } from "@renderer/store/1-ui-settings";
-import { setAutoHighlightSelectedControlAtom } from "@renderer/store/2-atoms";
+import { refreshWindowControlsTreeAtom, setAutoHighlightSelectedControlAtom } from "@renderer/store/2-atoms";
+import { Button } from "../../ui/shadcn/button";
 import { Label } from "../../ui/shadcn/label";
 import { Switch } from "../../ui/shadcn/switch";
+import { IconRefresh } from "../../ui/icons";
 
 export function ControlTreeHeader() {
     const { autoHighlightSelectedControl } = useSnapshot(appSettings);
     const setAutoHighlightSelectedControl = useSetAtom(setAutoHighlightSelectedControlAtom);
+    const refreshControlsTree = useSetAtom(refreshWindowControlsTreeAtom);
 
     return (
         <div className="px-2 py-1 pr-0 h-7 border-b bg-muted/20 flex items-center select-none">
@@ -16,6 +19,14 @@ export function ControlTreeHeader() {
             </span>
 
             <div className="ml-auto flex items-center gap-2">
+                <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => void refreshControlsTree()}
+                    title="Refresh controls tree"
+                >
+                    <IconRefresh className="size-3" />
+                </Button>
                 <Label className="text-xs font-normal text-muted-foreground cursor-pointer gap-0" title="Auto highlight the selected control">
                     <span className="pb-0.5">Auto-highlight:</span>
                     <Switch
