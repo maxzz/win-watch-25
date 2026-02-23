@@ -71,7 +71,7 @@ const MSAA_ROLE_SYSTEM_NAMES: Record<number, string> = {
     0x40: "ROLE_SYSTEM_OUTLINEBUTTON",
 };
 
-function formatHexU32(value: number): string {
+export function formatHexU32(value: number): string {
     if (!Number.isFinite(value)) return "";
     return `0x${(value >>> 0).toString(16).toUpperCase()}`;
 }
