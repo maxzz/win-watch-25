@@ -155,10 +155,10 @@ function getNodeText(node: ControlNode): string {
     }
     if (typeName === "Group") {
         return (
-            node.className
-                ? `${typeName}: ${node.className}`
-                : node.name
-                    ? `${typeName}: "${node.name}"`
+            node.name
+                ? `${typeName}: "${node.name}"`
+                : node.className
+                    ? `${typeName}: ${node.className}`
                     : typeName
         );
     }
