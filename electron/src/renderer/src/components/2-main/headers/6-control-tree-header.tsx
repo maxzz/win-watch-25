@@ -8,9 +8,6 @@ import { Switch } from "../../ui/shadcn/switch";
 import { IconRefresh } from "../../ui/icons";
 
 export function ControlTreeHeader() {
-    const { autoHighlightSelectedControl } = useSnapshot(appSettings);
-    const setAutoHighlightSelectedControl = useSetAtom(setAutoHighlightSelectedControlAtom);
-
     return (
         <div className="px-2 py-1 pr-0 h-7 border-b bg-muted/20 flex items-center select-none">
             <span className="text-xs font-semibold">
@@ -19,14 +16,7 @@ export function ControlTreeHeader() {
 
             <div className="ml-auto flex items-center gap-2">
                 <Button_RefreshControlsTree />
-                <Label className="text-xs font-normal text-muted-foreground cursor-pointer gap-0" title="Auto highlight the selected control">
-                    <span className="pb-0.5">Auto-highlight:</span>
-                    <Switch
-                        className="scale-75"
-                        checked={autoHighlightSelectedControl}
-                        onCheckedChange={(checked) => setAutoHighlightSelectedControl(checked)}
-                    />
-                </Label>
+                <ControlTreeAutoHighlightToggle />
             </div>
         </div>
     );
@@ -46,5 +36,21 @@ function Button_RefreshControlsTree() {
         >
             <IconRefresh className="size-3" />
         </Button>
+    );
+}
+
+function ControlTreeAutoHighlightToggle() {
+    const { autoHighlightSelectedControl } = useSnapshot(appSettings);
+    const setAutoHighlightSelectedControl = useSetAtom(setAutoHighlightSelectedControlAtom);
+
+    return (
+        <Label className="text-xs font-normal text-muted-foreground cursor-pointer gap-0" title="Auto highlight the selected control">
+            <span className="pb-0.5">Auto-highlight:</span>
+            <Switch
+                className="scale-75"
+                checked={autoHighlightSelectedControl}
+                onCheckedChange={(checked) => setAutoHighlightSelectedControl(checked)}
+            />
+        </Label>
     );
 }
