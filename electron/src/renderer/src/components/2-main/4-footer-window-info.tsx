@@ -2,7 +2,7 @@ import { useAtomValue } from "jotai";
 import { selectedHwndAtom, windowInfosAtom } from "@renderer/store/2-atoms";
 import { normalizeHwnd, asHexNumber } from "@renderer/utils";
 
-export function ActiveWindowInfo() {
+export function FooterWindowInfo() {
     const windowInfos = useAtomValue(windowInfosAtom);
     const selectedHwnd = useAtomValue(selectedHwndAtom);
 
@@ -10,14 +10,14 @@ export function ActiveWindowInfo() {
     // This might be slow if list is huge, but fine for now
     // Also handle format mismatch (hex vs dec) might be an issue
     // I'll try to fuzzy match or normalized in the future
-    const activeWindow =
+    const selectedWindow =
         windowInfos.find(w => w.handle == selectedHwnd) ||
         windowInfos.find(w => parseInt(w.handle) == parseInt(selectedHwnd || "0")) ||
         null;
 
     //console.log("ActiveWindowInfo", activeHandle, activeWindow, windowInfos);
 
-    if (!activeWindow) {
+    if (!selectedWindow) {
         return (
             <div className={panelClasses}>
                 No window selected
@@ -29,17 +29,17 @@ export function ActiveWindowInfo() {
         <div className={panelClasses}>
             <div className="min-w-[132px]">
                 <span className="font-semibold">HWND: </span>
-                {normalizeHwnd(activeWindow.handle)}
+                {normalizeHwnd(selectedWindow.handle)}
             </div>
 
             <div>
                 <span className="font-semibold">PID: </span>
-                {asHexNumber({ value: activeWindow.processId, prefix: true })} ({activeWindow.processName})
+                {asHexNumber({ value: selectedWindow.processId, prefix: true })} ({selectedWindow.processName})
             </div>
 
             <div>
                 <span className="font-semibold">class: </span>
-                {activeWindow.className}
+                {selectedWindow.className}
             </div>
 
             {/* <div className="flex-1 text-right truncate">
