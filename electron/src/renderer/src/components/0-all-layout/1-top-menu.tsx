@@ -9,15 +9,21 @@ export function TopMenu() {
     return (
         <Menubar className="p-0 h-auto border-none shadow-none rounded-none bg-transparent">
             <MenubarMenu>
-                <MenubarTrigger className="px-1.5 py-1">Menu</MenubarTrigger>
+                <MenubarTrigger className="px-1.5 py-1">
+                    Menu
+                </MenubarTrigger>
+
                 <MenubarContent>
                     <MenubarItem onClick={() => setOptionsOpen(true)}>
                         Options...
                     </MenubarItem>
+
                     <MenubarItem onClick={() => setAboutOpen(true)}>
                         About
                     </MenubarItem>
+
                     <MenubarSeparator />
+                    
                     <MenubarItem variant="destructive" onClick={() => tmApi.quitApp()}>
                         Exit
                     </MenubarItem>
