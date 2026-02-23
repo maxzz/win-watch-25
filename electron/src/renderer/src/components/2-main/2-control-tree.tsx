@@ -156,5 +156,8 @@ function getNodeText(node: ControlNode): string {
     if (typeName === "Group") {
         return node.className ? `${typeName}: ${node.className}` : typeName;
     }
-    return `${typeName} ${node.name ? `"${node.name}"` : ""}`;
+    if (typeName === "Text") {
+        return node.name ? `Text: "${node.name}"` : typeName;
+    }
+    return `${typeName}${node.name ? `: "${node.name}"` : ""}`;
 }
