@@ -1,6 +1,7 @@
 import { useSetAtom } from "jotai";
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarTrigger, } from "../ui/shadcn/menubar";
 import { dialogAboutOpenAtom, dialogOptionsOpenAtom } from "@renderer/store/2-ui-atoms";
+import { IconMenuHamburger3 } from "../ui/icons";
 
 export function TopMenu() {
     const setOptionsOpen = useSetAtom(dialogOptionsOpenAtom);
@@ -10,7 +11,7 @@ export function TopMenu() {
         <Menubar className="p-0 h-auto border-none shadow-none rounded-none bg-transparent">
             <MenubarMenu>
                 <MenubarTrigger className="px-1.5 py-1">
-                    Menu
+                    <IconMenuHamburger3 className="size-4" />
                 </MenubarTrigger>
 
                 <MenubarContent>
@@ -23,7 +24,7 @@ export function TopMenu() {
                     </MenubarItem>
 
                     <MenubarSeparator />
-                    
+
                     <MenubarItem variant="destructive" onClick={() => tmApi.quitApp()}>
                         Exit
                     </MenubarItem>
