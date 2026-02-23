@@ -3,6 +3,7 @@ import { useAtomValue } from "jotai";
 import { useSnapshot } from "valtio/react";
 import { asHex, classNames, normalizeHwnd } from "@renderer/utils";
 import { formatControlType } from "@renderer/utils/uia/0-uia-control-type-names";
+import { formatMsaaRole } from "@renderer/utils/msaa/0-msaa-role-names";
 import { appSettings } from "@renderer/store/1-ui-settings";
 import { type ControlNode } from "@renderer/store/9-tmapi-types";
 import { selectedControlAtom } from "@renderer/store/2-atoms";
@@ -64,7 +65,7 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
     const legacyItems = control.isLegacyIAccessiblePatternAvailable
         ? [
             { label: "Legacy IAccessible Available", value: "true" },
-            { label: "Legacy CurrentRole", value: String(control.currentRole) },
+            { label: "Legacy CurrentRole", value: formatMsaaRole(control.currentRole), title: `decimal: ${String(control.currentRole)}` },
             { label: "Legacy CurrentState", value: formatHex(control.currentState) }
         ]
         : [{ label: "Legacy IAccessible Available", value: "false" }];

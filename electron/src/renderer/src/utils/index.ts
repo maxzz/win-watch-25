@@ -15,4 +15,6 @@ export * from "./theme-utils";
 export * from "./web-data-transfer-item-list";
 export * from "./x-sub-error";
 
+export * from "./msaa/0-msaa-role-names";
+
 export * from "./win32/handles";
