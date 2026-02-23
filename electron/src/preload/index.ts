@@ -31,6 +31,9 @@ const mainLocalApi: WinWatchApi = {
 
     // Get current window rectangle in screen coordinates
     getWindowRect: (handle: string) => ipcRenderer.invoke('get-window-rect', handle),
+
+    // Get current control bounds in screen coordinates by runtime ID
+    getControlCurrentBounds: (handle: string, runtimeId: string) => ipcRenderer.invoke('get-control-current-bounds', handle, runtimeId),
 };
 
 try {

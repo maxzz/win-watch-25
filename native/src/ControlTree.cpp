@@ -278,3 +278,35 @@ bool ControlTree::InvokeControl(HWND hwnd, const std::string& runtimeId) {
     target->Release();
     return result;
 }
+
+bool ControlTree::TryGetControlCurrentBounds(HWND hwnd, const std::string& runtimeId, RECT& outRect) {
+    if (!g_pAutomation) {
+        Initialize();
+    }
+    if (!g_pAutomation) {
+        return false;
+    }
+
+    IUIAutomationElement* pRoot = NULL;
+    if (FAILED(g_pAutomation->ElementFromHandle((UIA_HWND)hwnd, &pRoot))) {
+        return false;
+    }
+
+    IUIAutomationElement* target = FindElementByRuntimeId(pRoot, runtimeId);
+    pRoot->Release();
+
+    if (!target) {
+        return false;
+    }
+
+    RECT rect = { 0 };
+    const bool ok = SUCCEEDED(target->get_CurrentBoundingRectangle(&rect));
+    target->Release();
+
+    if (!ok) {
+        return false;
+    }
+
+    outRect = rect;
+    return true;
+}

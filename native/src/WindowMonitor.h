@@ -50,6 +50,10 @@ extern "C" {
     // Returns JSON: {"left": number, "top": number, "right": number, "bottom": number} or null if window not found
     WM_API const char* GetWindowRectJson(HWND hwnd);
 
+    // Get current control bounds in screen coordinates by runtime ID.
+    // Returns JSON: {"left": number, "top": number, "right": number, "bottom": number} or null if not found.
+    WM_API const char* GetControlCurrentBoundsJson(HWND hwnd, const char* runtimeId);
+
     // Invoke a control (e.g. click)
     WM_API bool InvokeControl(HWND hwnd, const char* runtimeId);
     

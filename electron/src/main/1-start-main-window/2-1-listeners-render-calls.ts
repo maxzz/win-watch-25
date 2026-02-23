@@ -66,4 +66,10 @@ export function setListenersRenderCalls() {
         if (!winwatchPlugin) return 'null';
         return winwatchPlugin.getWindowRect(handle);
     });
+
+    // Get current control bounds in screen coordinates by runtime ID
+    ipcMain.handle('get-control-current-bounds', (_, handle: string, runtimeId: string) => {
+        if (!winwatchPlugin) return 'null';
+        return winwatchPlugin.getControlCurrentBounds(handle, runtimeId);
+    });
 }

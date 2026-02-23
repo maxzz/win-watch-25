@@ -30,6 +30,7 @@ public:
     static ControlNode GetTreeForWindow(HWND hwnd);
     static std::string ToJson(const ControlNode& node);
     static bool InvokeControl(HWND hwnd, const std::string& runtimeId);
+    static bool TryGetControlCurrentBounds(HWND hwnd, const std::string& runtimeId, RECT& outRect);
 
 private:
     static IUIAutomation* g_pAutomation;

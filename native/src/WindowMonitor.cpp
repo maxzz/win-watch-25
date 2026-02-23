@@ -147,6 +147,27 @@ WM_API const char* GetWindowRectJson(HWND hwnd) {
     return _strdup(json.str().c_str());
 }
 
+WM_API const char* GetControlCurrentBoundsJson(HWND hwnd, const char* runtimeId) {
+    if (!IsWindow(hwnd) || !runtimeId || runtimeId[0] == '\0') {
+        return _strdup("null");
+    }
+
+    RECT rect;
+    if (!ControlTree::TryGetControlCurrentBounds(hwnd, runtimeId, rect)) {
+        return _strdup("null");
+    }
+
+    std::ostringstream json;
+    json << "{";
+    json << "\"left\":" << rect.left << ",";
+    json << "\"top\":" << rect.top << ",";
+    json << "\"right\":" << rect.right << ",";
+    json << "\"bottom\":" << rect.bottom;
+    json << "}";
+
+    return _strdup(json.str().c_str());
+}
+
 WM_API bool InvokeControl(HWND hwnd, const char* runtimeId) {
     return ControlTree::InvokeControl(hwnd, runtimeId);
 }
