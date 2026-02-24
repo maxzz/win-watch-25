@@ -18,9 +18,14 @@ export function DialogAbout({ open, onOpenChange }: { open: boolean; onOpenChang
 
 
                 <div className="text-xs grid grid-cols-[auto_1fr] gap-3 1items-center">
-                    <div className="bg-sky-50 dark:bg-sky-950 border-sky-500 border rounded shadow flex items-center justify-center">
+                    <a
+                        href="https://github.com/maxzz/win-watch-25"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="bg-sky-50 dark:bg-sky-950 border-sky-500 border rounded shadow flex items-center justify-center"
+                    >
                         <IconMicroscope className="p-1 size-12 stroke-[3px]! stroke-sky-500 dark:stroke-sky-400" />
-                    </div>
+                    </a>
 
                     <div className="grid gap-1">
                         <div className="space-y-1 text-xs">
