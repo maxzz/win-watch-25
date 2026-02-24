@@ -41,7 +41,6 @@ export function PropertiesPanel() {
                             if (prop.label === "-") {
                                 return (
                                     <div className="col-span-2 py-0.5 h-px border-b border-foreground/20 dark:border-foreground/20" key={idx}>
-                                        {/* <div className="h-px bg-border/20 dark:bg-foreground/20" /> */}
                                     </div>
                                 );
                             }
