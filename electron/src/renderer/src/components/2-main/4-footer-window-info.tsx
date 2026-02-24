@@ -27,14 +27,15 @@ export function FooterWindowInfo() {
 
     return (
         <div className={panelClasses}>
-            <div className="min-w-[132px]">
+            {/* <div className="min-w-[132px]">
                 <span className="font-semibold">HWND: </span>
                 {normalizeHwnd(selectedWindow.handle)}
-            </div>
+            </div> */}
 
             <div>
-                <span className="font-semibold">PID: </span>
-                {asHexNumber({ value: selectedWindow.processId, prefix: true })} ({selectedWindow.processName})
+                <span className="font-semibold">{selectedWindow.processName}</span>
+                {' '}
+                [PID={asHexNumber({ value: selectedWindow.processId, prefix: true })}]
             </div>
 
             <div>
