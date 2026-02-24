@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAtom, useAtomValue } from "jotai";
-import { classNames } from "@renderer/utils";
+import { classNames, normalizeHwnd } from "@renderer/utils";
 import { type WindowInfo } from "@renderer/store/9-tmapi-types";
 import { WindowTreeHeader } from "./headers/5-window-tree-header";
 import { IconL_AppWindow, IconL_ChevronDown, IconL_ChevronRight } from "../ui/icons";
@@ -37,8 +37,8 @@ function WindowNode({ windowInfo, selectedHandle, onSelect, depth }: { windowInf
                 style={{ paddingLeft: `${depth * 12 + 4}px` }}
                 onClick={() => {
                     onSelect(windowInfo.handle);
-                    //console.log("WindowNode clicked", windowInfo.handle);
                 }}
+                title={getWindowNodeTitle(windowInfo)}
             >
                 <span
                     className="shrink-0 mr-1 size-4 flex items-center justify-center"
@@ -52,7 +52,7 @@ function WindowNode({ windowInfo, selectedHandle, onSelect, depth }: { windowInf
 
                 <IconL_AppWindow className="shrink-0 mr-0.5 size-3.5 text-muted-foreground" />
 
-                <span className="text-xs truncate" title={windowInfo.title || "No Title"}>
+                <span className="text-xs truncate">
                     {/* <span className="ml-1 text-xs text-muted-foreground">
                         {window.handle}
                     </span> */}
@@ -71,4 +71,12 @@ function WindowNode({ windowInfo, selectedHandle, onSelect, depth }: { windowInf
             )}
         </div>
     );
+}
+
+function getWindowNodeTitle(windowInfo: WindowInfo): string {
+    const hwnd = normalizeHwnd(windowInfo.handle);
+    const title = windowInfo.title || "No Title";
+    const processName = windowInfo.processName || "No Process Name";
+    const className = windowInfo.className || "No Class Name";
+    return `Process: ${processName}\nTitle: ${title}\nHWND: ${hwnd}\nClassname: ${className}`;
 }
