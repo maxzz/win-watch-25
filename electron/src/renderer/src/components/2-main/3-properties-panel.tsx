@@ -40,15 +40,15 @@ export function PropertiesPanel() {
                         (prop, idx) => {
                             if (prop.label === "-") {
                                 return (
-                                    <div className="col-span-2 border-b" key={idx}>
-                                        <div className="h-px bg-border/30" />
+                                    <div className="col-span-2 py-0.5 h-px border-b border-foreground/20 dark:border-foreground/20" key={idx}>
+                                        {/* <div className="h-px bg-border/20 dark:bg-foreground/20" /> */}
                                     </div>
                                 );
                             }
                             const nameValue = prop.label === "Bounds" ? boundsValue(strOnly(prop.value)) : prop.value;
                             return (
-                                <div className="contents border-b hover:bg-muted/30" key={idx}>
-                                    <div className="px-1.5 py-px border-r cursor-default select-none" title={prop.label}>
+                                <div className="contents" key={idx}>
+                                    <div className="px-1.5 py-px border-r border-foreground/20 dark:border-foreground/20 cursor-default select-none" title={prop.label}>
                                         {prop.label}
                                     </div>
                                     <div className="px-1.5 py-px break-all truncate cursor-default" title={prop.title || strEmpty(prop.value)}>
@@ -80,19 +80,21 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         { label: "Process ID", value: asHex({ value: String(control.processId), prefix: true }), title: `decimal: ${String(control.processId)}` },
         { label: "Framework ID", value: <span className="-ml-1 px-1 text-foreground bg-sky-100 dark:bg-sky-900 border border-sky-300 dark:border-sky-700 rounded">{control.frameworkId}</span> },
         { label: "Native Window Handle", value: normalizeHwnd(control.nativeWindowHandle) },
+        { label: "-", value: null },
         { label: "Name", value: <span className="text-blue-800 font-semibold">{control.name}</span> },
         { label: "Classname", value: control.className },
         { label: "Control Type", value: formatControlType(control.controlType) },
         { label: "Localized Control Type", value: control.localizedControlType },
+        { label: "-", value: null },
         { label: "Runtime ID", value: control.runtimeId },
         { label: "Automation ID", value: control.automationId },
-        { label: "Enabled", value: String(control.isEnabled) },
-        { label: "Visible", value: String(control.isVisible) },
         { label: "-", value: null },
         { label: "Legacy IAccessible Available", value: String(control.isLegacyIAccessiblePatternAvailable) },
         ...legacyItems,
         { label: "Has HTML Access", value: control.hasHtmlAccess ? <span className="text-green-500">true</span> : "false" },
         { label: "-", value: null },
+        { label: "Enabled", value: String(control.isEnabled) },
+        { label: "Visible", value: String(control.isVisible) },
         { label: "Bounds", value: control.bounds ? `[${control.bounds.left}, ${control.bounds.top}, ${control.bounds.right}, ${control.bounds.bottom}]` : "N/A" },
         { label: "-", value: null },
     ];
