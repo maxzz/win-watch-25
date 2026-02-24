@@ -14,7 +14,7 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="max-w-[360px]!">
 
                 <DialogHeader>
                     <DialogTitle>
@@ -25,7 +25,7 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="mt-1 grid gap-2">
+                <div className="mt-1 pb-4 grid gap-2">
                     <OptionCheckbox
                         checked={settings.autoHighlightSelectedControl}
                         onCheckedChange={(checked) => setAutoHighlight(checked)}
