@@ -17,6 +17,7 @@ export interface AppSettings {
     theme: ThemeMode;
     activeWindowMonitoringEnabled: boolean;
     autoHighlightSelectedControl: boolean;
+    showEmptyBoundsNotification: boolean;
     panelLayout: PanelLayout; // Panel sizes (percentages) 
     // Properties panel position
     propertiesPanelPosition: PropertiesPanelPosition;
@@ -27,6 +28,7 @@ const DEFAULT_SETTINGS: AppSettings = {
     theme: "light",
     activeWindowMonitoringEnabled: true,
     autoHighlightSelectedControl: false,
+    showEmptyBoundsNotification: true,
     panelLayout: {
         "left-panel": 25,
         "right-panel": 75,

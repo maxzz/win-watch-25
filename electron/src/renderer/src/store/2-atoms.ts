@@ -17,7 +17,9 @@ async function getCurrentHighlightBounds(
         return null;
     }
     if (isBoundsEmpty(initialBounds)) {
-        notice.info("Selected control bounds are empty.");
+        if (appSettings.showEmptyBoundsNotification) {
+            notice.info("Selected control bounds are empty.");
+        }
         return null;
     }
     if (!selectedHandle || !control.runtimeId) {
@@ -32,7 +34,9 @@ async function getCurrentHighlightBounds(
         return null;
     }
     if (isBoundsEmpty(currentBounds)) {
-        notice.info("Selected control current bounds are empty.");
+        if (appSettings.showEmptyBoundsNotification) {
+            notice.info("Selected control current bounds are empty.");
+        }
         return null;
     }
 
@@ -128,6 +132,13 @@ export const refreshWindowControlsTreeAtom = atom(
 );
 
 export const selectedControlAtom = atom<ControlNode | null>(null);
+
+export const setShowEmptyBoundsNotificationAtom = atom(
+    null,
+    (_get, _set, enabled: boolean): void => {
+        appSettings.showEmptyBoundsNotification = enabled;
+    }
+);
 
 export const setAutoHighlightSelectedControlAtom = atom(
     null,

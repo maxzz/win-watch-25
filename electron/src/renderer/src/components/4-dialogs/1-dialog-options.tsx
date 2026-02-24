@@ -5,11 +5,12 @@ import { appSettings } from "@renderer/store/1-ui-settings";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from "../ui/shadcn/dialog";
 import { Label } from "../ui/shadcn/label";
 import { Switch } from "../ui/shadcn/switch";
-import { setAutoHighlightSelectedControlAtom } from "@renderer/store/2-atoms";
+import { setAutoHighlightSelectedControlAtom, setShowEmptyBoundsNotificationAtom } from "@renderer/store/2-atoms";
 
 export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) {
     const settings = useSnapshot(appSettings);
     const setAutoHighlight = useSetAtom(setAutoHighlightSelectedControlAtom);
+    const setShowEmptyBoundsNotification = useSetAtom(setShowEmptyBoundsNotificationAtom);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -30,6 +31,12 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                         onCheckedChange={(checked) => setAutoHighlight(checked)}
                         label="Auto highlight"
                         title="Auto highlight the selected control"
+                    />
+                    <OptionCheckbox
+                        checked={settings.showEmptyBoundsNotification}
+                        onCheckedChange={(checked) => setShowEmptyBoundsNotification(checked)}
+                        label="Show empty bounds notification"
+                        title="Show a notification when selected control bounds are empty"
                     />
                 </div>
             </DialogContent>
