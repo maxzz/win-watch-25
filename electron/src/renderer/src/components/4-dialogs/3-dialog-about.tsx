@@ -19,21 +19,22 @@ export function DialogAbout({ open, onOpenChange }: { open: boolean; onOpenChang
 
                 <div className="text-xs grid grid-cols-[auto_1fr] gap-3 1items-center">
                     <a
+                        className="bg-sky-50 dark:bg-sky-950 border-sky-500 border rounded shadow shadow-foreground/20 dark:shadow-foreground/30 active:scale-50 transition-all flex items-center justify-center"
                         href="https://github.com/maxzz/win-watch-25"
                         target="_blank"
                         rel="noreferrer"
-                        className="bg-sky-50 dark:bg-sky-950 border-sky-500 border rounded shadow flex items-center justify-center"
+                        title="Open GitHub Repository"
                     >
                         <IconMicroscope className="p-1 size-12 stroke-[3px]! stroke-sky-500 dark:stroke-sky-400" />
                     </a>
 
                     <div className="grid gap-1">
-                        <div className="space-y-1 text-xs">
-                            <p className="pb-4 font-semibold">UI Automation Monitor</p>
-                            <p>Version: {envBuildVersion()}</p>
-                            <p>Build Date: {envModifiedDate()}</p>
-                            <p className="mt-2 text-[.5rem] text-muted-foreground">No Rights Reserved. No Copyright (c) 1986-2026</p>
-                        </div>
+                        <p className="pb-2 font-semibold">UI Automation Monitor</p>
+
+                        <p>Build Date: {envModifiedDate()}</p>
+                        <p>Version: {envBuildVersion()}</p>
+
+                        <p className="text-[.5rem] text-muted-foreground">No Rights Reserved. No Copyright (c) 1986-2026</p>
                     </div>
                 </div>
             </DialogContent>
