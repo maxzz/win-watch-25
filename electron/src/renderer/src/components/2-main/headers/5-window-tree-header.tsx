@@ -17,7 +17,7 @@ export function WindowTreeHeader() {
             <div className="flex items-center gap-0">
                 <Button_FollowFocus />
                 <Button_RefreshTree />
-                <Button_HighlightHwnd />
+                {/* <Button_HighlightHwnd /> */}
 
                 {/* <Symbol_uia_Toolbar className="size-3.5" />
                 <Symbol_uia_Tooltip className="size-3.5" />

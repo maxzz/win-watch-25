@@ -9,12 +9,12 @@ import { IconRefresh } from "../../ui/icons";
 
 export function ControlTreeHeader() {
     return (
-        <div className="px-2 py-1 pr-0 h-7 border-b bg-muted/20 flex items-center select-none">
+        <div className="px-2 py-1 pr-0 h-7 border-b bg-muted/20 flex items-center justify-between select-none">
             <span className="text-xs font-semibold">
                 Control Hierarchy
             </span>
 
-            <div className="ml-auto flex items-center gap-0">
+            <div className="flex items-center gap-0">
                 <ControlTreeAutoHighlightToggle />
                 <Button_RefreshControlsTree />
             </div>
