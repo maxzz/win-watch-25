@@ -38,6 +38,13 @@ export function PropertiesPanel() {
                 <div className="text-xs grid grid-cols-[auto_1fr]">
                     {properties.map(
                         (prop, idx) => {
+                            if (prop.label === "-") {
+                                return (
+                                    <div className="col-span-2 border-b" key={idx}>
+                                        <div className="h-px bg-border/30" />
+                                    </div>
+                                );
+                            }
                             const nameValue = prop.label === "Bounds" ? boundsValue(strOnly(prop.value)) : prop.value;
                             return (
                                 <div className="contents border-b hover:bg-muted/30" key={idx}>
@@ -77,14 +84,17 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         { label: "Classname", value: control.className },
         { label: "Control Type", value: formatControlType(control.controlType) },
         { label: "Localized Control Type", value: control.localizedControlType },
-        { label: "Automation ID", value: control.automationId },
         { label: "Runtime ID", value: control.runtimeId },
+        { label: "Automation ID", value: control.automationId },
         { label: "Enabled", value: String(control.isEnabled) },
         { label: "Visible", value: String(control.isVisible) },
+        { label: "-", value: null },
         { label: "Legacy IAccessible Available", value: String(control.isLegacyIAccessiblePatternAvailable) },
         ...legacyItems,
         { label: "Has HTML Access", value: control.hasHtmlAccess ? <span className="text-green-500">true</span> : "false" },
+        { label: "-", value: null },
         { label: "Bounds", value: control.bounds ? `[${control.bounds.left}, ${control.bounds.top}, ${control.bounds.right}, ${control.bounds.bottom}]` : "N/A" },
+        { label: "-", value: null },
     ];
 }
 
