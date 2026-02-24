@@ -2,8 +2,62 @@
 #include "Utils.h"
 #include <iostream>
 #include <comdef.h>
+#include <oleacc.h>
+#include <mshtml.h>
 
 IUIAutomation* ControlTree::g_pAutomation = NULL;
+
+static bool TryGetHtmlElement(IUIAutomationElement* element) {
+    if (!element) {
+        return false;
+    }
+
+    IUIAutomationLegacyIAccessiblePattern* pLegacy = NULL;
+    const HRESULT legacyHr = element->GetCurrentPatternAs(
+        UIA_LegacyIAccessiblePatternId,
+        IID_PPV_ARGS(&pLegacy)
+    );
+    if (FAILED(legacyHr) || !pLegacy) {
+        return false;
+    }
+
+    IAccessible* pAccessible = NULL;
+    const HRESULT accHr = pLegacy->GetIAccessible(&pAccessible);
+    if (FAILED(accHr) || !pAccessible) {
+        pLegacy->Release();
+        return false;
+    }
+
+    int childId = CHILDID_SELF;
+    pLegacy->get_CurrentChildId(&childId);
+
+    IDispatch* pDispatch = NULL;
+    HRESULT dispatchHr = E_FAIL;
+    if (childId == CHILDID_SELF) {
+        dispatchHr = pAccessible->QueryInterface(IID_PPV_ARGS(&pDispatch));
+    } else {
+        VARIANT childVariant;
+        VariantInit(&childVariant);
+        childVariant.vt = VT_I4;
+        childVariant.lVal = childId;
+        dispatchHr = pAccessible->get_accChild(childVariant, &pDispatch);
+    }
+
+    bool hasHtmlAccess = false;
+    if (SUCCEEDED(dispatchHr) && pDispatch) {
+        IHTMLElement* pHtmlElement = NULL;
+        const HRESULT htmlHr = pDispatch->QueryInterface(IID_PPV_ARGS(&pHtmlElement));
+        if (SUCCEEDED(htmlHr) && pHtmlElement) {
+            hasHtmlAccess = true;
+            pHtmlElement->Release();
+        }
+        pDispatch->Release();
+    }
+
+    pAccessible->Release();
+    pLegacy->Release();
+    return hasHtmlAccess;
+}
 
 // Helper to escape JSON strings (dup from WindowList, could be shared)
 // Removed local EscapeJson implementation
@@ -117,6 +171,8 @@ void ControlTree::WalkTree(IUIAutomationElement* element, ControlNode& node) {
         node.nativeWindowHandle = nullptr;
     }
 
+    node.hasHtmlAccess = TryGetHtmlElement(element);
+
     // Legacy IAccessible pattern (Role/State).
     node.isLegacyIAccessiblePatternAvailable = false;
     node.currentRole = 0;
@@ -196,6 +252,7 @@ std::string ControlTree::ToJson(const ControlNode& node) {
     json << "\"className\":\"" << EscapeJson(node.className) << "\",";
     json << "\"runtimeId\":\"" << EscapeJson(node.runtimeId) << "\",";
     json << "\"nativeWindowHandle\":\"" << (node.nativeWindowHandle ? HwndToHexString(node.nativeWindowHandle) : "") << "\",";
+    json << "\"hasHtmlAccess\":" << (node.hasHtmlAccess ? "true" : "false") << ",";
     json << "\"isLegacyIAccessiblePatternAvailable\":" << (node.isLegacyIAccessiblePatternAvailable ? "true" : "false") << ",";
     json << "\"currentRole\":" << node.currentRole << ",";
     json << "\"currentState\":" << node.currentState << ",";

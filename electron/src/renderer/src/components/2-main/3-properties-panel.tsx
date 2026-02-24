@@ -64,11 +64,15 @@ export function PropertiesPanel() {
 function getControlProperties(control: ControlNode): Array<{ label: string; value: ReactNode; title?: string; }> {
     const legacyItems = control.isLegacyIAccessiblePatternAvailable
         ? [
+            { label: "Has HTML Access", value: String(control.hasHtmlAccess) },
             { label: "Legacy IAccessible Available", value: "true" },
             { label: "Legacy CurrentRole", value: <span className="text-[0.5rem]">{formatMsaaRole(control.currentRole)}</span>, title: `decimal: 0x${formatHexU32(control.currentRole)}` },
             { label: "Legacy CurrentState", value: <span className="text-[0.5rem]">{formatHexU32(control.currentState)}</span>, title: `decimal: 0x${formatHexU32(control.currentState)}` }
         ]
-        : [{ label: "Legacy IAccessible Available", value: "false" }];
+        : [
+            { label: "Has HTML Access", value: String(control.hasHtmlAccess) },
+            { label: "Legacy IAccessible Available", value: "false" }
+        ];
 
     return [
         { label: "Process ID", value: asHex({ value: String(control.processId), prefix: true }), title: `decimal: ${String(control.processId)}` },

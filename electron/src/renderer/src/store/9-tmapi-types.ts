@@ -25,6 +25,7 @@ export interface ControlNode {      // Control node info (obtained from C++ nati
     className: string;              // from IUIAutomationElement::GetClassName
     runtimeId: string;              // from IUIAutomationElement::GetRuntimeId
     nativeWindowHandle: string;     // from IUIAutomationElement::get_CurrentNativeWindowHandle
+    hasHtmlAccess: boolean;         // true when TryGetHtmlElement(...) returns non-NULL
 
     isLegacyIAccessiblePatternAvailable: boolean; // from IUIAutomationElement::GetCurrentPattern(UIA_LegacyIAccessiblePatternId)
     currentRole: number;            // from IUIAutomationLegacyIAccessiblePattern::get_CurrentRole
