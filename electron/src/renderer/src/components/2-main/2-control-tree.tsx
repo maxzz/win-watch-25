@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { refreshWindowControlsTreeAtom, selectedControlAtom, selectedHwndAtom, setSelectedControlAtom, windowControlsTreeAtom, windowControlsTreeErrorAtom, windowControlsTreeLoadingAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
+import { refreshWindowControlsTreeAtom, selectedControlAtom, selectedHwndAtom, setSelectedControlAtom, windowControlsTreeAtom, windowControlsTreeErrorAtom, windowControlsTreeHwndAtom, windowControlsTreeLoadingAtom, windowControlsTreeRefreshingAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
 import { type ControlNode } from "@renderer/store/9-tmapi-types";
 import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
 import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
@@ -10,10 +10,13 @@ import { ControlTreeHeader } from "./headers/6-control-tree-header";
 export function ControlTreeLoader() {
     const selectedHwnd = useAtomValue(selectedHwndAtom);
     const windowControlsTree = useAtomValue(windowControlsTreeAtom);
+    const windowControlsTreeHwnd = useAtomValue(windowControlsTreeHwndAtom);
     const loading = useAtomValue(windowControlsTreeLoadingAtom);
+    const refreshing = useAtomValue(windowControlsTreeRefreshingAtom);
     const error = useAtomValue(windowControlsTreeErrorAtom);
     const setSelectedControl = useSetAtom(setSelectedControlAtom);
     const refreshTree = useSetAtom(refreshWindowControlsTreeAtom);
+    const hasTreeForSelectedWindow = !!windowControlsTree && windowControlsTreeHwnd === selectedHwnd;
 
     useEffect(
         () => {
@@ -44,9 +47,14 @@ export function ControlTreeLoader() {
     return (
         <div className="h-full bg-card flex flex-col">
             <ControlTreeHeader />
-            {!selectedHwnd || loading || error || !windowControlsTree
-                ? <ControlTreeStatus hwnd={selectedHwnd} loading={loading} error={error} hasTree={!!windowControlsTree} />
-                : <ControlTree windowControlsTree={windowControlsTree} />
+            {hasTreeForSelectedWindow && windowControlsTree
+                ? (
+                    <>
+                        <ControlTreeInlineStatus refreshing={refreshing} error={error} />
+                        <ControlTree windowControlsTree={windowControlsTree} />
+                    </>
+                )
+                : <ControlTreeStatus hwnd={selectedHwnd} loading={loading || refreshing} error={error} hasTree={false} />
             }
         </div >
     );
@@ -78,6 +86,24 @@ function ControlTreeStatus({ hwnd, loading, error, hasTree }: { hwnd: string | n
         return (
             <div className="px-2 py-1 text-xs text-muted-foreground">
                 No control tree available
+            </div>
+        );
+    }
+    return null;
+}
+
+function ControlTreeInlineStatus({ refreshing, error }: { refreshing: boolean; error: string | null; }) {
+    if (refreshing) {
+        return (
+            <div className="px-2 py-1 text-xs text-muted-foreground border-b bg-muted/10">
+                Refreshing controls...
+            </div>
+        );
+    }
+    if (error) {
+        return (
+            <div className="px-2 py-1 text-xs text-amber-600 border-b bg-amber-500/10">
+                Refresh failed. Showing last successful snapshot.
             </div>
         );
     }

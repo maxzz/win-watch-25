@@ -90,7 +90,9 @@ export const selectedHwndAtom = atom<string | null>(null);
 //#region Control tree
 
 export const windowControlsTreeAtom = atom<ControlNode | null>(null);
+export const windowControlsTreeHwndAtom = atom<string | null>(null);
 export const windowControlsTreeLoadingAtom = atom<boolean>(false);
+export const windowControlsTreeRefreshingAtom = atom<boolean>(false);
 export const windowControlsTreeErrorAtom = atom<string | null>(null);
 const cachedWindowControlsTreeFamily = atomFamily(
     (_hwnd: string) => atom<ControlNode | null>(null)
@@ -102,8 +104,10 @@ export const refreshWindowControlsTreeAtom = atom(
         const selectedHwnd = get(selectedHwndAtom);
         if (!selectedHwnd) {
             set(windowControlsTreeLoadingAtom, false);
+            set(windowControlsTreeRefreshingAtom, false);
             set(windowControlsTreeErrorAtom, null);
             set(windowControlsTreeAtom, null);
+            set(windowControlsTreeHwndAtom, null);
             return;
         }
 
@@ -111,14 +115,19 @@ export const refreshWindowControlsTreeAtom = atom(
         const cachedTree = get(cachedWindowControlsTreeFamily(selectedHwnd));
         if (!forceRefresh && cachedTree) {
             set(windowControlsTreeLoadingAtom, false);
+            set(windowControlsTreeRefreshingAtom, false);
             set(windowControlsTreeErrorAtom, null);
             set(windowControlsTreeAtom, cachedTree);
+            set(windowControlsTreeHwndAtom, selectedHwnd);
             return;
         }
 
-        set(windowControlsTreeLoadingAtom, true);
+        const isShowingCurrentWindowTree =
+            get(windowControlsTreeAtom) !== null && get(windowControlsTreeHwndAtom) === selectedHwnd;
+
+        set(windowControlsTreeLoadingAtom, !isShowingCurrentWindowTree);
+        set(windowControlsTreeRefreshingAtom, isShowingCurrentWindowTree);
         set(windowControlsTreeErrorAtom, null);
-        set(windowControlsTreeAtom, null);
 
         try {
             const json = await tmApi.getControlTree(selectedHwnd);
@@ -130,16 +139,17 @@ export const refreshWindowControlsTreeAtom = atom(
             }
             set(cachedWindowControlsTreeFamily(selectedHwnd), tree);
             set(windowControlsTreeAtom, tree);
+            set(windowControlsTreeHwndAtom, selectedHwnd);
         } catch (e) {
             console.error("Failed to fetch control tree", e);
             notice.error(`Failed to fetch control tree of window (handle: ${selectedHwnd})`);
             if (get(selectedHwndAtom) === selectedHwnd) {
                 set(windowControlsTreeErrorAtom, "Failed to fetch control tree");
-                set(windowControlsTreeAtom, null);
             }
         } finally {
             if (get(selectedHwndAtom) === selectedHwnd) {
                 set(windowControlsTreeLoadingAtom, false);
+                set(windowControlsTreeRefreshingAtom, false);
             }
         }
     }
