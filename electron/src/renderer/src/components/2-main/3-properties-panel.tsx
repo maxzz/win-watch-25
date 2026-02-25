@@ -40,15 +40,7 @@ export function PropertiesPanel() {
                         (prop, idx) => {
                             if (prop.label === "-") {
                                 return (
-                                    // TODO: move it into component
-                                    <div className="contents" key={idx}>
-                                        <div className="h-[5px] border-r border-foreground/20 dark:border-foreground/20 flex items-center">
-                                            <div className="w-full border-b border-foreground/20 dark:border-foreground/20" />
-                                        </div>
-                                        <div className="h-[5px] flex items-center">
-                                            <div className="w-full border-b border-foreground/20 dark:border-foreground/20" />
-                                        </div>
-                                    </div>
+                                    <PropertiesSeparatorRow key={idx} />
                                 );
                             }
                             const nameValue = prop.label === "Bounds" ? boundsValue(strOnly(prop.value)) : prop.value;
@@ -106,6 +98,19 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         { label: "Bounds", value: control.bounds ? `[${control.bounds.left}, ${control.bounds.top}, ${control.bounds.right}, ${control.bounds.bottom}]` : "N/A" },
         { label: "-", value: null },
     ];
+}
+
+function PropertiesSeparatorRow() {
+    return (
+        <div className="contents">
+            <div className="h-[5px] border-r border-foreground/20 dark:border-foreground/20 flex items-center">
+                <div className="w-full border-b border-foreground/20 dark:border-foreground/20" />
+            </div>
+            <div className="h-[5px] flex items-center">
+                <div className="w-full border-b border-foreground/20 dark:border-foreground/20" />
+            </div>
+        </div>
+    );
 }
 
 function boundsValue(boundsStr?: string): string {
