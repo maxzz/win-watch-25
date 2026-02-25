@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+import { atomFamily } from "jotai/utils";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { type ControlNode, type NativeBounds, type WindowInfo } from "./9-tmapi-types";
 import { appSettings } from "./1-ui-settings";
@@ -91,15 +92,27 @@ export const selectedHwndAtom = atom<string | null>(null);
 export const windowControlsTreeAtom = atom<ControlNode | null>(null);
 export const windowControlsTreeLoadingAtom = atom<boolean>(false);
 export const windowControlsTreeErrorAtom = atom<string | null>(null);
+const cachedWindowControlsTreeFamily = atomFamily(
+    (_hwnd: string) => atom<ControlNode | null>(null)
+);
 
 export const refreshWindowControlsTreeAtom = atom(
     null,
-    async (get, set): Promise<void> => {
+    async (get, set, options?: { force?: boolean; }): Promise<void> => {
         const selectedHwnd = get(selectedHwndAtom);
         if (!selectedHwnd) {
             set(windowControlsTreeLoadingAtom, false);
             set(windowControlsTreeErrorAtom, null);
             set(windowControlsTreeAtom, null);
+            return;
+        }
+
+        const forceRefresh = options?.force === true;
+        const cachedTree = get(cachedWindowControlsTreeFamily(selectedHwnd));
+        if (!forceRefresh && cachedTree) {
+            set(windowControlsTreeLoadingAtom, false);
+            set(windowControlsTreeErrorAtom, null);
+            set(windowControlsTreeAtom, cachedTree);
             return;
         }
 
@@ -115,6 +128,7 @@ export const refreshWindowControlsTreeAtom = atom(
             if (get(selectedHwndAtom) !== selectedHwnd) {
                 return;
             }
+            set(cachedWindowControlsTreeFamily(selectedHwnd), tree);
             set(windowControlsTreeAtom, tree);
         } catch (e) {
             console.error("Failed to fetch control tree", e);

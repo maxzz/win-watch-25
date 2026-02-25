@@ -30,7 +30,7 @@ function Button_RefreshControlsTree() {
         <Button
             variant="ghost"
             size="xs"
-            onClick={() => void refreshControlsTree()}
+            onClick={() => void refreshControlsTree({ force: true })}
             title="Refresh controls tree"
             disabled={!selectedHwnd}
         >
