@@ -40,6 +40,7 @@ export function PropertiesPanel() {
                         (prop, idx) => {
                             if (prop.label === "-") {
                                 return (
+                                    // TODO: move it into component
                                     <div className="contents" key={idx}>
                                         <div className="h-[5px] border-r border-foreground/20 dark:border-foreground/20 flex items-center">
                                             <div className="w-full border-b border-foreground/20 dark:border-foreground/20" />
@@ -51,6 +52,8 @@ export function PropertiesPanel() {
                                 );
                             }
                             const nameValue = prop.label === "Bounds" ? boundsValue(strOnly(prop.value)) : prop.value;
+                            // TODO: show control type number as small text or don't show it at all
+                            // TODO: do something with bounds
                             return (
                                 <div className="contents" key={idx}>
                                     <div className="px-1.5 py-px border-r border-foreground/20 dark:border-foreground/20 cursor-default select-none" title={prop.label}>
