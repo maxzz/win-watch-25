@@ -93,7 +93,7 @@ function parseArgs(argv: string[]): Args {
                 "Missing required argument --in <folder>.",
                 "",
                 "Example:",
-                '  pnpm --filter ww-electron run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls"',
+                '  pnpm --filter wwe run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls"',
                 `\n`,
             ].join("\n")
         );

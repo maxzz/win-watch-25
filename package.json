@@ -22,12 +22,12 @@
         "tsx": "^4.19.2"
     },
     "scripts": {
-        "tsc": "pnpm --filter ww-electron run tsc",
-        "dev": "pnpm --filter ww-electron run dev",
-        "dev:debug": "pnpm --filter ww-electron run dev:debug",
+        "tsc": "pnpm --filter wwe run tsc",
+        "dev": "pnpm --filter wwe run dev",
+        "dev:debug": "pnpm --filter wwe run dev:debug",
 
-        "gen": "pnpm --filter ww-electron run gen:icons-temp",
-        "deps:electron:update": "pnpm --filter ww-electron up -L -i",
+        "gen": "pnpm --filter wwe run gen:icons-temp",
+        "deps:electron:update": "pnpm --filter wwe up -L -i",
 
         "build:all": "tsx scripts/build-plugins.ts --debug",
         "build:all:release": "tsx scripts/build-plugins.ts --release",
@@ -38,6 +38,6 @@
         "build:native:release": "tsx scripts/build-plugins.ts --release --native-only",
         "build:napi:release": "tsx scripts/build-plugins.ts --release --napi-only",
 
-        "build:exe": "pnpm build:all:release && pnpm --filter ww-electron run build && pnpm --filter ww-electron exec electron-builder --win --x64"
+        "build:exe": "pnpm build:all:release && pnpm --filter wwe run build && pnpm --filter wwe exec electron-builder --win --x64"
     }
 }
