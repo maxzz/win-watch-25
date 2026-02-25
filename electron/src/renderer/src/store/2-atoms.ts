@@ -94,9 +94,44 @@ export const windowControlsTreeHwndAtom = atom<string | null>(null);
 export const windowControlsTreeLoadingAtom = atom<boolean>(false);
 export const windowControlsTreeRefreshingAtom = atom<boolean>(false);
 export const windowControlsTreeErrorAtom = atom<string | null>(null);
+const CONTROLS_TREE_CACHE_TTL_MS = 60_000;
+const CONTROLS_TREE_CACHE_MAX_ENTRIES = 20;
+type ControlsTreeCacheMeta = {
+    updatedAt: number;
+    lastAccessAt: number;
+};
+const controlsTreeCacheMetaMap = new Map<string, ControlsTreeCacheMeta>();
 const cachedWindowControlsTreeFamily = atomFamily(
     (_hwnd: string) => atom<ControlNode | null>(null)
 );
+
+function removeControlsTreeCacheEntry(set: (a: any, ...args: any[]) => void, hwnd: string): void {
+    controlsTreeCacheMetaMap.delete(hwnd);
+    set(cachedWindowControlsTreeFamily(hwnd), null);
+    cachedWindowControlsTreeFamily.remove(hwnd);
+}
+
+function pruneExpiredControlsTreeCache(set: (a: any, ...args: any[]) => void, now: number): void {
+    for (const [hwnd, meta] of controlsTreeCacheMetaMap.entries()) {
+        if (now - meta.updatedAt > CONTROLS_TREE_CACHE_TTL_MS) {
+            removeControlsTreeCacheEntry(set, hwnd);
+        }
+    }
+}
+
+function pruneOverflowControlsTreeCache(set: (a: any, ...args: any[]) => void): void {
+    if (controlsTreeCacheMetaMap.size <= CONTROLS_TREE_CACHE_MAX_ENTRIES) {
+        return;
+    }
+    const entriesByLastAccessAsc = [...controlsTreeCacheMetaMap.entries()]
+        .sort((a, b) => a[1].lastAccessAt - b[1].lastAccessAt);
+    const entriesToRemoveCount = controlsTreeCacheMetaMap.size - CONTROLS_TREE_CACHE_MAX_ENTRIES;
+    for (let i = 0; i < entriesToRemoveCount; i++) {
+        const entry = entriesByLastAccessAsc[i];
+        if (!entry) break;
+        removeControlsTreeCacheEntry(set, entry[0]);
+    }
+}
 
 export const refreshWindowControlsTreeAtom = atom(
     null,
@@ -111,9 +146,16 @@ export const refreshWindowControlsTreeAtom = atom(
             return;
         }
 
+        const now = Date.now();
+        pruneExpiredControlsTreeCache(set, now);
+
         const forceRefresh = options?.force === true;
         const cachedTree = get(cachedWindowControlsTreeFamily(selectedHwnd));
         if (!forceRefresh && cachedTree) {
+            controlsTreeCacheMetaMap.set(selectedHwnd, {
+                updatedAt: controlsTreeCacheMetaMap.get(selectedHwnd)?.updatedAt ?? now,
+                lastAccessAt: now,
+            });
             set(windowControlsTreeLoadingAtom, false);
             set(windowControlsTreeRefreshingAtom, false);
             set(windowControlsTreeErrorAtom, null);
@@ -138,6 +180,9 @@ export const refreshWindowControlsTreeAtom = atom(
                 return;
             }
             set(cachedWindowControlsTreeFamily(selectedHwnd), tree);
+            const updatedNow = Date.now();
+            controlsTreeCacheMetaMap.set(selectedHwnd, { updatedAt: updatedNow, lastAccessAt: updatedNow });
+            pruneOverflowControlsTreeCache(set);
             set(windowControlsTreeAtom, tree);
             set(windowControlsTreeHwndAtom, selectedHwnd);
         } catch (e) {
