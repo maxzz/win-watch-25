@@ -62,8 +62,8 @@ export function PropertiesPanel() {
 function getControlProperties(control: ControlNode): Array<{ label: string; value: ReactNode; title?: string; }> {
     const legacyItems = control.isLegacyIAccessiblePatternAvailable
         ? [
-            { label: "Legacy CurrentRole", value: <span className="text-[0.5rem]">{formatMsaaRole(control.currentRole)}</span>, title: `decimal: 0x${formatHexU32(control.currentRole)}` },
-            { label: "Legacy CurrentState", value: <span className="text-[0.5rem]">{formatHexU32(control.currentState)}</span>, title: `decimal: 0x${formatHexU32(control.currentState)}` }
+            { label: "Legacy CurrentRole", value: <span className="text-[0.5rem]">{formatMsaaRole(control.currentRole)}</span>, title: `dec: 0x${formatHexU32(control.currentRole)}` },
+            { label: "Legacy CurrentState", value: <span className="text-[0.5rem]">{formatHexU32(control.currentState)}</span>, title: `dec: 0x${formatHexU32(control.currentState)}` }
         ]
         : [];
 
@@ -75,18 +75,17 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
     }
 
     return [
-        { label: "Process ID", value: asHex({ value: String(control.processId), prefix: true }), title: `decimal: ${String(control.processId)}` },
+        { label: "Process ID", value: asHex({ value: String(control.processId), prefix: true }), title: `dec: ${String(control.processId)}` },
         { label: "Framework ID", value: <span className="-ml-1 px-1 text-foreground bg-sky-100 dark:bg-sky-900 border border-sky-300 dark:border-sky-700 rounded">{control.frameworkId}</span> },
         { label: "Native Window Handle", value: normalizeHwnd(control.nativeWindowHandle) },
         { label: "-", value: null },
         { label: "Name", value: <span className="text-blue-800 font-semibold">{control.name}</span> },
         { label: "Classname", value: control.className },
-        { label: "Control Type", value: controlTypeName, title: `decimal: ${control.controlType}, hex: ${formatHexU32(Number(control.controlType))}` },
+        { label: "Control Type", value: controlTypeName, title: `dec: ${control.controlType}, hex: ${formatHexU32(Number(control.controlType))}` },
         { label: "Localized Control Type", value: control.localizedControlType },
         { label: "-", value: null },
-        { label: "Runtime ID", value: hexAccRuntimeId(control.runtimeId) },
-        // { label: "Runtime ID", value: control.runtimeId },
         { label: "Automation ID", value: control.automationId },
+        { label: "Runtime ID", value: hexAccRuntimeId(control.runtimeId), title: `dec: ${control.runtimeId}` },
         { label: "-", value: null },
         { label: "Legacy IAccessible Available", value: String(control.isLegacyIAccessiblePatternAvailable) },
         ...legacyItems,

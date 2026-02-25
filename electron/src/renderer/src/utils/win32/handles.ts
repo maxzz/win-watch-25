@@ -53,7 +53,7 @@ export function hexAccRuntimeId(runtimeId: string | undefined): string {
             if (isNaN(num)) {
                 return part;
             }
-            const numberToFormat = num < 0 ? (num >>> 0) : num;
+            const numberToFormat = num < 0 ? (num >>> 0) : num; // convert negative number to unsigned integer
             return numberToFormat.toString(16).toUpperCase();
         }
     );
