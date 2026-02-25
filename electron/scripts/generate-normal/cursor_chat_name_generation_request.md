@@ -303,7 +303,7 @@ export function IconControlButton({ className, title, ...rest }: HTMLAttributes<
 From repo root:
 
 ```bash
-pnpm --filter win-watch-electron run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls"
+pnpm --filter ww-electron run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls"
 ```
 
 This writes to:

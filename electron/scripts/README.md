@@ -13,7 +13,7 @@ and generates a sibling folder with the same name plus `-temp`, containing inlin
 From repo root:
 
 ```bash
-pnpm --filter win-watch-electron run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls"
+pnpm --filter ww-electron run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls"
 ```
 
 #### CLI arguments
@@ -28,10 +28,10 @@ Examples:
 
 ```bash
 # default output: <in>-temp
-pnpm --filter win-watch-electron run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls"
+pnpm --filter ww-electron run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls"
 
 # custom output folder + keep existing files
-pnpm --filter win-watch-electron run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls" --out "src/renderer/src/components/ui/icons/symbols/controls-temp" --no-clean
+pnpm --filter ww-electron run gen:icons-temp -- --in "src/renderer/src/components/ui/icons/symbols/controls" --out "src/renderer/src/components/ui/icons/symbols/controls-temp" --no-clean
 
 # if global tsx installed
 tsx scripts/generate-normal/generate-normal-icons-from-symbols.ts --in "src/renderer/src/components/ui/icons/symbols/controls"

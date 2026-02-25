@@ -1,5 +1,5 @@
 {
-    "name": "win-watch-electron",
+    "name": "ww-electron",
     "type": "module",
     "version": "1.0.0",
     "description": "Windows UI Automation Monitor",
