@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 import { useAtomValue } from "jotai";
 import { useSnapshot } from "valtio/react";
-import { asHex, classNames, normalizeHwnd } from "@renderer/utils";
+import { asHex, classNames, hexAccRuntimeId, normalizeHwnd } from "@renderer/utils";
 import { formatControlType } from "@renderer/utils/uia/0-uia-control-type-names";
 import { formatHexU32, formatMsaaRole } from "@renderer/utils/msaa/0-msaa-role-names";
 import { appSettings } from "@renderer/store/1-ui-settings";
@@ -84,7 +84,8 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         { label: "Control Type", value: controlTypeName, title: `decimal: ${control.controlType}, hex: ${formatHexU32(Number(control.controlType))}` },
         { label: "Localized Control Type", value: control.localizedControlType },
         { label: "-", value: null },
-        { label: "Runtime ID", value: control.runtimeId },
+        { label: "Runtime ID", value: hexAccRuntimeId(control.runtimeId) },
+        // { label: "Runtime ID", value: control.runtimeId },
         { label: "Automation ID", value: control.automationId },
         { label: "-", value: null },
         { label: "Legacy IAccessible Available", value: String(control.isLegacyIAccessiblePatternAvailable) },

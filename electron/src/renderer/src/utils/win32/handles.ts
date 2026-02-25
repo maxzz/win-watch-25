@@ -18,7 +18,7 @@ export function normalizeHwnd(hwnd: string): string {
     return hwnd;
 }
 
-export function asHexNumber({ value, prefix, digits }: { value: number; prefix?: boolean; digits?: number }): string {
+export function asHexNumber({ value, prefix, digits }: { value: number; prefix?: boolean; digits?: number; }): string {
     let rv = value.toString(16).toUpperCase();
     if (digits) {
         rv = rv.padStart(digits, '0');
@@ -29,10 +29,33 @@ export function asHexNumber({ value, prefix, digits }: { value: number; prefix?:
     return rv;
 }
 
-export function asHex({ value, prefix, digits }: { value: string; prefix?: boolean; digits?: number }): string {
+export function asHex({ value, prefix, digits }: { value: string; prefix?: boolean; digits?: number; }): string {
     const num = parseInt(value);
     if (isNaN(num)) {
         return value;
     }
     return asHexNumber({ value: num, prefix, digits });
+}
+
+/**
+ * Convert runtime ID to hex numbers.
+ * @param runtimeId - The runtime ID to convert as "42.3998860.4.-2147483647.3998860.-4.32".
+ * @returns The runtime ID converted to hex numbers as "2A.17962A83.4.80000001.17962A83.FFFFFFFC.2A".
+ */
+export function hexAccRuntimeId(runtimeId: string | undefined): string {
+    if (!runtimeId) {
+        return "";
+    }
+    const parts = runtimeId.split('.');
+    const hexParts = parts.map(
+        (part) => {
+            const num = parseInt(part, 10);
+            if (isNaN(num)) {
+                return part;
+            }
+            const numberToFormat = num < 0 ? (num >>> 0) : num;
+            return numberToFormat.toString(16).toUpperCase();
+        }
+    );
+    return hexParts.join('.');
 }
