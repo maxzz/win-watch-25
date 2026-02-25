@@ -43,20 +43,13 @@ export function PropertiesPanel() {
                                     <PropertiesSeparatorRow key={idx} />
                                 );
                             }
-                            const nameValue = prop.label === "Bounds" ? boundsValue(strOnly(prop.value)) : prop.value;
-                            // TODO: show control type number as small text or don't show it at all
-                            // TODO: do something with bounds
                             return (
                                 <div className="contents" key={idx}>
                                     <div className="px-1.5 py-px border-r border-foreground/20 dark:border-foreground/20 cursor-default select-none" title={prop.label}>
                                         {prop.label}
                                     </div>
                                     <div className="px-1.5 py-px break-all truncate cursor-default" title={prop.title || strEmpty(prop.value)}>
-                                        {nameValue || (
-                                            <span className="text-muted-foreground italic">
-                                                -
-                                            </span>)
-                                        }
+                                        <PropertyValueContent label={prop.label} value={prop.value} />
                                     </div>
                                 </div>
                             );
@@ -67,6 +60,9 @@ export function PropertiesPanel() {
         </div>
     );
 }
+
+// TODO: show control type number as small text or don't show it at all
+// TODO: do something with bounds
 
 function getControlProperties(control: ControlNode): Array<{ label: string; value: ReactNode; title?: string; }> {
     const legacyItems = control.isLegacyIAccessiblePatternAvailable
@@ -110,6 +106,15 @@ function PropertiesSeparatorRow() {
                 <div className="w-full border-b border-foreground/20 dark:border-foreground/20" />
             </div>
         </div>
+    );
+}
+
+function PropertyValueContent({ label, value }: { label: string; value: ReactNode; }) {
+    const nameValue = label === "Bounds" ? boundsValue(strOnly(value)) : value;
+    return nameValue || (
+        <span className="text-muted-foreground italic">
+            -
+        </span>
     );
 }
 
