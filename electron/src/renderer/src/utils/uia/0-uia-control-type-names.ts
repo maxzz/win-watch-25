@@ -60,9 +60,9 @@ export function getControlTypeName(controlTypeId: string): string {
 /**
  * Get formatted control type display string
  * @param controlTypeId - The numeric control type ID as string
- * @returns Formatted string like "Button (50000)" or just the ID if unknown
+ * @returns Formatted string like "Button" or undefined if unknown.
  */
-export function formatControlType(controlTypeId: string): string {
+export function formatControlType(controlTypeId: string): string | undefined {
     const name = UIA_CONTROL_TYPE_NAMES[controlTypeId];
-    return name ? `${name} (${controlTypeId})` : controlTypeId;
+    return name;
 }

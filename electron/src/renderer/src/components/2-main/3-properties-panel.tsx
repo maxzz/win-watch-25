@@ -39,9 +39,7 @@ export function PropertiesPanel() {
                     {properties.map(
                         (prop, idx) => {
                             if (prop.label === "-") {
-                                return (
-                                    <PropertiesSeparatorRow key={idx} />
-                                );
+                                return <PropertiesSeparatorRow key={idx} />;
                             }
                             return (
                                 <div className="contents" key={idx}>
@@ -61,7 +59,6 @@ export function PropertiesPanel() {
     );
 }
 
-// TODO: show control type number as small text or don't show it at all
 // TODO: do something with bounds
 
 function getControlProperties(control: ControlNode): Array<{ label: string; value: ReactNode; title?: string; }> {
@@ -72,6 +69,13 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         ]
         : [];
 
+    let controlType: ReactNode | undefined = formatControlType(control.controlType);
+    if (controlType) {
+        controlType = <><span className="">{controlType}</span> <span className="text-[0.6rem]">({control.controlType})</span></>;
+    } else {
+        controlType = <span className="text-red-500">{control.controlType}</span>;
+    }
+
     return [
         { label: "Process ID", value: asHex({ value: String(control.processId), prefix: true }), title: `decimal: ${String(control.processId)}` },
         { label: "Framework ID", value: <span className="-ml-1 px-1 text-foreground bg-sky-100 dark:bg-sky-900 border border-sky-300 dark:border-sky-700 rounded">{control.frameworkId}</span> },
@@ -79,7 +83,7 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         { label: "-", value: null },
         { label: "Name", value: <span className="text-blue-800 font-semibold">{control.name}</span> },
         { label: "Classname", value: control.className },
-        { label: "Control Type", value: formatControlType(control.controlType) },
+        { label: "Control Type", value: controlType },
         { label: "Localized Control Type", value: control.localizedControlType },
         { label: "-", value: null },
         { label: "Runtime ID", value: control.runtimeId },
@@ -94,19 +98,6 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         { label: "Bounds", value: control.bounds ? `[${control.bounds.left}, ${control.bounds.top}, ${control.bounds.right}, ${control.bounds.bottom}]` : "N/A" },
         { label: "-", value: null },
     ];
-}
-
-function PropertiesSeparatorRow() {
-    return (
-        <div className="contents">
-            <div className="h-[5px] border-r border-foreground/20 dark:border-foreground/20 flex items-center">
-                <div className="w-full border-b border-foreground/20 dark:border-foreground/20" />
-            </div>
-            <div className="h-[5px] flex items-center">
-                <div className="w-full border-b border-foreground/20 dark:border-foreground/20" />
-            </div>
-        </div>
-    );
 }
 
 function PropertyValueContent({ label, value }: { label: string; value: ReactNode; }) {
@@ -139,4 +130,17 @@ function strEmpty(value: ReactNode): string {
         return value;
     }
     return "";
+}
+
+function PropertiesSeparatorRow() {
+    return (
+        <div className="contents">
+            <div className="h-[5px] border-r border-foreground/20 dark:border-foreground/20 flex items-center">
+                <div className="w-full border-b border-foreground/20 dark:border-foreground/20" />
+            </div>
+            <div className="h-[5px] flex items-center">
+                <div className="w-full border-b border-foreground/20 dark:border-foreground/20" />
+            </div>
+        </div>
+    );
 }
