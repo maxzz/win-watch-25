@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { atomFamily } from "jotai/utils";
+import { atomFamily } from "jotai-family";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { type ControlNode, type NativeBounds, type WindowInfo } from "./9-tmapi-types";
 import { appSettings } from "./1-ui-settings";
