@@ -59,8 +59,6 @@ export function PropertiesPanel() {
     );
 }
 
-// TODO: do something with bounds
-
 function getControlProperties(control: ControlNode): Array<{ label: string; value: ReactNode; title?: string; }> {
     const legacyItems = control.isLegacyIAccessiblePatternAvailable
         ? [
@@ -69,11 +67,11 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         ]
         : [];
 
-    let controlType: ReactNode | undefined = formatControlType(control.controlType);
-    if (controlType) {
-        controlType = <><span className="">{controlType}</span> <span className="text-[0.6rem]">({control.controlType})</span></>;
+    let controlTypeName: ReactNode | undefined = formatControlType(control.controlType);
+    if (controlTypeName) {
+        controlTypeName = <><span className="">{controlTypeName}</span> <span className="text-[0.5rem]">({control.controlType})</span></>;
     } else {
-        controlType = <span className="text-red-500">{control.controlType}</span>;
+        controlTypeName = <span className="text-red-500">{control.controlType}</span>;
     }
 
     return [
@@ -83,7 +81,7 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         { label: "-", value: null },
         { label: "Name", value: <span className="text-blue-800 font-semibold">{control.name}</span> },
         { label: "Classname", value: control.className },
-        { label: "Control Type", value: controlType },
+        { label: "Control Type", value: controlTypeName, title: `decimal: ${control.controlType}, hex: ${formatHexU32(Number(control.controlType))}` },
         { label: "Localized Control Type", value: control.localizedControlType },
         { label: "-", value: null },
         { label: "Runtime ID", value: control.runtimeId },
@@ -99,6 +97,8 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         { label: "-", value: null },
     ];
 }
+
+// TODO: do something with bounds
 
 function PropertyValueContent({ label, value }: { label: string; value: ReactNode; }) {
     const nameValue = label === "Bounds" ? boundsValue(strOnly(value)) : value;
