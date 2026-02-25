@@ -40,7 +40,13 @@ export function PropertiesPanel() {
                         (prop, idx) => {
                             if (prop.label === "-") {
                                 return (
-                                    <div className="col-span-2 py-0.5 h-px border-b border-foreground/20 dark:border-foreground/20" key={idx}>
+                                    <div className="contents" key={idx}>
+                                        <div className="h-[5px] border-r border-foreground/20 dark:border-foreground/20 flex items-center">
+                                            <div className="w-full border-b border-foreground/20 dark:border-foreground/20" />
+                                        </div>
+                                        <div className="h-[5px] flex items-center">
+                                            <div className="w-full border-b border-foreground/20 dark:border-foreground/20" />
+                                        </div>
                                     </div>
                                 );
                             }
