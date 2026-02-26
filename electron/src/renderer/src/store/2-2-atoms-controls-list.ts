@@ -6,6 +6,12 @@ import { appSettings } from "./1-ui-settings";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
 import { getCurrentHighlightBounds } from "./2-4-atoms-bounds";
 
+function getSafeHighlightBlinkCount(): number {
+    const raw = Number(appSettings.highlightBlinkCount);
+    if (!Number.isFinite(raw)) return 3;
+    return Math.max(1, Math.min(10, Math.round(raw)));
+}
+
 //#region Control tree
 
 export const windowControlsTreeAtom = atom<ControlNode | null>(null);
@@ -128,6 +134,14 @@ export const setShowEmptyBoundsNotificationAtom = atom(
     }
 );
 
+export const setHighlightBlinkCountAtom = atom(
+    null,
+    (_get, _set, blinkCount: number): void => {
+        const safeBlinkCount = Math.max(1, Math.min(10, Math.round(blinkCount)));
+        appSettings.highlightBlinkCount = safeBlinkCount;
+    }
+);
+
 export const setAutoHighlightSelectedControlAtom = atom(
     null,
     async (get, _set, enabled: boolean): Promise<void> => {
@@ -149,7 +163,7 @@ export const setAutoHighlightSelectedControlAtom = atom(
             const selectedHandle = get(selectedHwndAtom);
             const b = await getCurrentHighlightBounds(selectedHandle, selected);
             if (!b) return;
-            await tmApi.highlightRect({ ...b }, { blinkCount: 3, color: 0xFF0000, borderWidth: 2 }); // TODO: need to put these into options dialog
+            await tmApi.highlightRect({ ...b }, { blinkCount: getSafeHighlightBlinkCount(), color: 0xFF0000, borderWidth: 2 });
         } catch (e) {
             console.warn("Failed to highlight selected control", e);
         }
@@ -170,7 +184,7 @@ export const setSelectedControlAtom = atom(
             const selectedHandle = get(selectedHwndAtom);
             const b = await getCurrentHighlightBounds(selectedHandle, control);
             if (!b) return;
-            await tmApi.highlightRect({ ...b }, { blinkCount: 3, color: 0xFF0000, borderWidth: 2 }); // TODO: need to put these into options dialog
+            await tmApi.highlightRect({ ...b }, { blinkCount: getSafeHighlightBlinkCount(), color: 0xFF0000, borderWidth: 2 });
         } catch (e) {
             console.warn("Failed to highlight selected control", e);
         }

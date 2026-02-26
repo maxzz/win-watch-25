@@ -5,11 +5,12 @@ import { appSettings } from "@renderer/store/1-ui-settings";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from "../ui/shadcn/dialog";
 import { Label } from "../ui/shadcn/label";
 import { Switch } from "../ui/shadcn/switch";
-import { setAutoHighlightSelectedControlAtom, setShowEmptyBoundsNotificationAtom } from "@renderer/store/2-2-atoms-controls-list";
+import { setAutoHighlightSelectedControlAtom, setHighlightBlinkCountAtom, setShowEmptyBoundsNotificationAtom } from "@renderer/store/2-2-atoms-controls-list";
 
 export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) {
     const settings = useSnapshot(appSettings);
     const setAutoHighlight = useSetAtom(setAutoHighlightSelectedControlAtom);
+    const setHighlightBlinkCount = useSetAtom(setHighlightBlinkCountAtom);
     const setShowEmptyBoundsNotification = useSetAtom(setShowEmptyBoundsNotificationAtom);
 
     return (
@@ -38,6 +39,14 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                         label="Show empty bounds notification"
                         title="Show a notification when selected control bounds are empty"
                     />
+                    <OptionNumber
+                        value={settings.highlightBlinkCount}
+                        onValueChange={setHighlightBlinkCount}
+                        label="Highlight blink count"
+                        title="Blink count used for control/window highlight (1-10)"
+                        min={1}
+                        max={10}
+                    />
                 </div>
             </DialogContent>
         </Dialog>
@@ -53,6 +62,32 @@ function OptionCheckbox({ checked, onCheckedChange, label, disabled, title }: { 
         >
             {label}
             <Switch className={classNames(disabled && "disabled:opacity-100")} checked={checked} onCheckedChange={onCheckedChange} disabled={disabled} />
+        </Label>
+    );
+}
+
+function OptionNumber({ value, onValueChange, label, disabled, title, min, max }: { value: number; onValueChange: (value: number) => void; label: React.ReactNode; disabled?: boolean; title?: string; min: number; max: number; }) {
+    return (
+        <Label
+            className={classNames("text-xs font-normal flex items-center justify-between space-x-2", disabled && "opacity-50")}
+            data-disabled={disabled}
+            title={title}
+        >
+            {label}
+            <input
+                className="h-7 w-16 rounded border border-input bg-background px-2 py-1 text-right text-xs"
+                type="number"
+                value={value}
+                min={min}
+                max={max}
+                step={1}
+                disabled={disabled}
+                onChange={(e) => {
+                    const next = Number(e.target.value);
+                    if (!Number.isFinite(next)) return;
+                    onValueChange(next);
+                }}
+            />
         </Label>
     );
 }

@@ -17,6 +17,7 @@ export interface AppSettings {
     theme: ThemeMode;
     activeWindowMonitoringEnabled: boolean;
     autoHighlightSelectedControl: boolean;
+    highlightBlinkCount: number;
     showEmptyBoundsNotification: boolean;
     panelLayout: PanelLayout; // Panel sizes (percentages) 
     // Properties panel position
@@ -28,6 +29,7 @@ const DEFAULT_SETTINGS: AppSettings = {
     theme: "light",
     activeWindowMonitoringEnabled: true,
     autoHighlightSelectedControl: false,
+    highlightBlinkCount: 3,
     showEmptyBoundsNotification: true,
     panelLayout: {
         "left-panel": 25,

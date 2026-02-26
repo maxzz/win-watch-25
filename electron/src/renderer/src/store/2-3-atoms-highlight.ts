@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
+import { appSettings } from "./1-ui-settings";
 
 //#region Highlight selected window
 
@@ -19,7 +20,8 @@ export const doHighlightSelectedWindowAtom = atom(
             }
 
             const { left, top, right, bottom } = rect;
-            await tmApi.highlightRect({ left, top, right, bottom }, { blinkCount: 3, color: 0xFF8400, borderWidth: 2 });
+            const blinkCount = Math.max(1, Math.min(10, Math.round(Number(appSettings.highlightBlinkCount) || 3)));
+            await tmApi.highlightRect({ left, top, right, bottom }, { blinkCount, color: 0xFF8400, borderWidth: 2 });
 
             notice.success(`Highlighted selected window (handle: ${selectedHandle})`);
         } catch (e) {
