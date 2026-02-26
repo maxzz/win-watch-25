@@ -62,13 +62,13 @@ import { IconControlTreeChild, IconControlTreeRoot } from "@renderer/components/
 
 const USE_FILMSTRIP = false; // Set to true to use the new pixel-art filmstrip icons
 
-const icon3Classes = "shrink-0 size-3 text-blue-700";
-const icon4Classes = "shrink-0 size-4 text-blue-700";
-const icon35Classes = "shrink-0 size-3.5 text-blue-700";
+const icon3Classes = "shrink-0 size-3 text-blue-700 dark:text-sky-500";
+const icon4Classes = "shrink-0 size-4 text-blue-700 dark:text-sky-500";
+const icon35Classes = "shrink-0 size-3.5 text-blue-700 dark:text-sky-500";
 
-const iconButtonClasses = "shrink-0 -ml-0.5 size-4 text-blue-700";
-const iconCustomClasses = "shrink-0 size-3 text-blue-700/50";
-const iconGroupClasses = "shrink-0 -ml-0.5 size-4 text-blue-700";
+const iconButtonClasses = "shrink-0 -ml-0.5 size-4 text-blue-700 dark:text-sky-300";
+const iconCustomClasses = "shrink-0 size-3 text-blue-700/50 dark:text-sky-500/50";
+const iconGroupClasses = "shrink-0 -ml-0.5 size-4 text-blue-700 dark:text-sky-500";
 const iconWindowClasses = "shrink-0 -ml-1 size-4";
 
 /**
