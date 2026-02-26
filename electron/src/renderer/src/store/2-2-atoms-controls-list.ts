@@ -2,7 +2,6 @@ import { atom } from "jotai";
 import { atomFamily } from "jotai-family";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { type ControlNode } from "./9-tmapi-types";
-import { appSettings } from "./1-ui-settings";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
 
 //#region Control tree
@@ -119,13 +118,6 @@ export const refreshWindowControlsTreeAtom = atom(
 );
 
 export const selectedControlAtom = atom<ControlNode | null>(null);
-
-export const setShowEmptyBoundsNotificationAtom = atom(
-    null,
-    (_get, _set, enabled: boolean): void => {
-        appSettings.showEmptyBoundsNotification = enabled;
-    }
-);
 
 export const doInvokeControlAtom = atom(
     null,

@@ -19,6 +19,13 @@ export const setHighlightBlinkCountAtom = atom(
     }
 );
 
+export const setShowEmptyBoundsNotificationAtom = atom(
+    null,
+    (_get, _set, enabled: boolean): void => {
+        appSettings.showEmptyBoundsNotification = enabled;
+    }
+);
+
 export const setAutoHighlightSelectedControlAtom = atom(
     null,
     async (get, _set, enabled: boolean): Promise<void> => {
