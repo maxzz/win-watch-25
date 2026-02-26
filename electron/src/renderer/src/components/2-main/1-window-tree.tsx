@@ -14,7 +14,7 @@ export function WindowTreePanel() {
         <div className="h-full bg-card border-r flex flex-col">
             <WindowTreeHeader />
 
-            <div className="flex-1 overflow-auto">
+            <div className="group/windowtree flex-1 overflow-auto" tabIndex={0}>
                 {windowInfos.map(
                     (windowInfo, i) => (
                         <WindowNode key={i} windowInfo={windowInfo} selectedHandle={selectedHwnd} onSelect={setSelectedHwnd} depth={0} />
@@ -33,7 +33,7 @@ function WindowNode({ windowInfo, selectedHandle, onSelect, depth }: { windowInf
     return (
         <div>
             <div
-                className={classNames("px-2 py-0.5 cursor-pointer flex items-center", isSelected ? "bg-red-500 text-accent-foreground" : "hover:bg-accent/50")}
+                className={getRowClasses(isSelected)}
                 style={{ paddingLeft: `${depth * 12 + 4}px` }}
                 onClick={() => {
                     onSelect(windowInfo.handle);
@@ -72,6 +72,26 @@ function WindowNode({ windowInfo, selectedHandle, onSelect, depth }: { windowInf
         </div>
     );
 }
+
+function getRowClasses(isSelected: boolean): string {
+    return classNames("group relative px-2 py-0.5 cursor-pointer flex items-center", isSelected ? rowSelected : "hover:bg-accent/50");
+}
+
+const rowSelected = "\
+bg-muted-foreground/20 \
+border-primary \
+\
+outline -outline-offset-1 \
+outline-primary dark:outline-primary/50 \
+\
+group-focus/windowtree:bg-blue-100 dark:group-focus/windowtree:bg-blue-900 \
+group-focus/windowtree:outline-blue-500 dark:group-focus/windowtree:outline-blue-500 \
+\
+before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[3px] \
+\
+before:bg-primary dark:before:bg-primary/70 \
+group-focus/windowtree:before:bg-blue-500 group-focus/windowtree:dark:before:bg-blue-500 \
+";
 
 function getWindowNodeTitle(windowInfo: WindowInfo): string {
     const hwnd = normalizeHwnd(windowInfo.handle);
