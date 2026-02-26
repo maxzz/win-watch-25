@@ -3,6 +3,19 @@ import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
 import { appSettings } from "./1-ui-settings";
 
+export function getSafeHighlightBlinkCount(): number {
+    const raw = Number(appSettings.highlightBlinkCount);
+    if (!Number.isFinite(raw)) return 3;
+    return Math.max(1, Math.min(10, Math.round(raw)));
+}
+
+export const setHighlightBlinkCountAtom = atom(
+    null,
+    (_get, _set, blinkCount: number): void => {
+        appSettings.highlightBlinkCount = Math.max(1, Math.min(10, Math.round(blinkCount)));
+    }
+);
+
 //#region Highlight selected window
 
 export const doHighlightSelectedWindowAtom = atom(
@@ -20,7 +33,7 @@ export const doHighlightSelectedWindowAtom = atom(
             }
 
             const { left, top, right, bottom } = rect;
-            const blinkCount = Math.max(1, Math.min(10, Math.round(Number(appSettings.highlightBlinkCount) || 3)));
+            const blinkCount = getSafeHighlightBlinkCount();
             await tmApi.highlightRect({ left, top, right, bottom }, { blinkCount, color: 0xFF8400, borderWidth: 2 });
 
             notice.success(`Highlighted selected window (handle: ${selectedHandle})`);

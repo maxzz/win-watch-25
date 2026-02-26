@@ -5,12 +5,7 @@ import { type ControlNode } from "./9-tmapi-types";
 import { appSettings } from "./1-ui-settings";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
 import { getCurrentHighlightBounds } from "./2-4-atoms-bounds";
-
-function getSafeHighlightBlinkCount(): number {
-    const raw = Number(appSettings.highlightBlinkCount);
-    if (!Number.isFinite(raw)) return 3;
-    return Math.max(1, Math.min(10, Math.round(raw)));
-}
+import { getSafeHighlightBlinkCount } from "./2-3-atoms-highlight";
 
 //#region Control tree
 
@@ -131,14 +126,6 @@ export const setShowEmptyBoundsNotificationAtom = atom(
     null,
     (_get, _set, enabled: boolean): void => {
         appSettings.showEmptyBoundsNotification = enabled;
-    }
-);
-
-export const setHighlightBlinkCountAtom = atom(
-    null,
-    (_get, _set, blinkCount: number): void => {
-        const safeBlinkCount = Math.max(1, Math.min(10, Math.round(blinkCount)));
-        appSettings.highlightBlinkCount = safeBlinkCount;
     }
 );
 
