@@ -6,6 +6,7 @@ import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
 import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
 import { getControlTypeIcon } from "@renderer/utils/uia/1-uia-control-type-icons-svg";
 import { ControlTreeHeader } from "./headers/6-control-tree-header";
+import { classNames } from "@renderer/utils/classnames";
 
 export function ControlTreeLoader() {
     const selectedHwnd = useAtomValue(selectedHwndAtom);
@@ -48,12 +49,10 @@ export function ControlTreeLoader() {
         <div className="h-full bg-card flex flex-col">
             <ControlTreeHeader />
             {hasTreeForSelectedWindow && windowControlsTree
-                ? (
-                    <>
-                        <ControlTreeInlineStatus refreshing={refreshing} error={error} />
-                        <ControlTree windowControlsTree={windowControlsTree} />
-                    </>
-                )
+                ? (<>
+                    <ControlTreeInlineStatus refreshing={refreshing} error={error} />
+                    <ControlTree windowControlsTree={windowControlsTree} />
+                </>)
                 : <ControlTreeStatus hwnd={selectedHwnd} loading={loading || refreshing} error={error} hasTree={false} />
             }
         </div >
@@ -112,7 +111,7 @@ function ControlTreeInlineStatus({ refreshing, error }: { refreshing: boolean; e
 
 function ControlTree({ windowControlsTree }: { windowControlsTree: ControlNode; }) {
     return (
-        <div className="flex-1 overflow-auto">
+        <div className="group/controltree flex-1 overflow-auto" tabIndex={0}>
             <ControlTreeNode node={windowControlsTree} depth={0} />
         </div>
     );
@@ -133,7 +132,7 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
 
     return (<>
         <div
-            className={`px-2 h-5 hover:bg-accent/50 cursor-pointer flex items-center ${isSelected ? 'bg-accent text-accent-foreground' : ''}`}
+            className={getRowClasses(isSelected)}
             style={{ paddingLeft: `${depth * 15 + 4}px` }}
             onClick={() => setSelectedControl(node)}
         >
@@ -174,6 +173,26 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
     </>);
 }
 
+function getRowClasses(isSelected: boolean): string {
+    return classNames("group relative px-2 h-5 cursor-pointer flex items-center", isSelected ? rowSelected : "hover:bg-accent/50");
+}
+
+const rowSelected = "\
+bg-muted-foreground/20 \
+border-primary \
+\
+outline -outline-offset-1 \
+outline-primary dark:outline-primary/50 \
+\
+group-focus/controltree:bg-blue-100 dark:group-focus/controltree:bg-blue-900 \
+group-focus/controltree:outline-blue-500 dark:group-focus/controltree:outline-blue-500 \
+\
+before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[3px] \
+\
+before:bg-primary dark:before:bg-primary/70 \
+group-focus/controltree:before:bg-blue-500 group-focus/controltree:dark:before:bg-blue-500 \
+";
+
 function getNodeText(node: ControlNode): string {
     const typeName = getControlTypeName(node.controlType);
     if (typeName === "Pane") {
@@ -193,3 +212,5 @@ function getNodeText(node: ControlNode): string {
     // }
     return `${typeName}${node.name ? `: "${node.name}"` : ""}`;
 }
+
+//TODO: when "Folow focus" but the new window not in the list then refresh the tree for the new window.
