@@ -5,7 +5,8 @@ import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
 import { ControlTreeHeader } from "./headers/6-control-tree-header";
 import { type ControlNode } from "@renderer/store/9-tmapi-types";
 import { selectedHwndAtom } from "@renderer/store/2-1-atoms-windows-list";
-import { refreshWindowControlsTreeAtom, selectedControlAtom, setSelectedControlAtom, windowControlsTreeAtom, windowControlsTreeErrorAtom, windowControlsTreeHwndAtom, windowControlsTreeLoadingAtom, windowControlsTreeRefreshingAtom, doInvokeControlAtom } from "@renderer/store/2-2-atoms-controls-list";
+import { refreshWindowControlsTreeAtom, selectedControlAtom, windowControlsTreeAtom, windowControlsTreeErrorAtom, windowControlsTreeHwndAtom, windowControlsTreeLoadingAtom, windowControlsTreeRefreshingAtom, doInvokeControlAtom } from "@renderer/store/2-2-atoms-controls-list";
+import { setSelectedControlAtom } from "@renderer/store/2-3-atoms-highlight";
 import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
 import { getControlTypeIcon } from "@renderer/utils/uia/1-uia-control-type-icons-svg";
 

@@ -5,8 +5,8 @@ import { appSettings } from "@renderer/store/1-ui-settings";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from "../ui/shadcn/dialog";
 import { Label } from "../ui/shadcn/label";
 import { Switch } from "../ui/shadcn/switch";
-import { setAutoHighlightSelectedControlAtom, setShowEmptyBoundsNotificationAtom } from "@renderer/store/2-2-atoms-controls-list";
-import { setHighlightBlinkCountAtom } from "@renderer/store/2-3-atoms-highlight";
+import { setShowEmptyBoundsNotificationAtom } from "@renderer/store/2-2-atoms-controls-list";
+import { setAutoHighlightSelectedControlAtom, setHighlightBlinkCountAtom } from "@renderer/store/2-3-atoms-highlight";
 
 export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) {
     const settings = useSnapshot(appSettings);
