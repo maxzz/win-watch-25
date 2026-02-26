@@ -1,7 +1,8 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { useSnapshot } from "valtio/react";
 import { appSettings } from "@renderer/store/1-ui-settings";
-import { refreshWindowControlsTreeAtom, selectedHwndAtom, setAutoHighlightSelectedControlAtom } from "@renderer/store/2-atoms";
+import { selectedHwndAtom } from "@renderer/store/2-1-atoms-windows-list";
+import { refreshWindowControlsTreeAtom, setAutoHighlightSelectedControlAtom } from "@renderer/store/2-2-atoms-controls-list";
 import { Button } from "../../ui/shadcn/button";
 import { Label } from "../../ui/shadcn/label";
 import { Switch } from "../../ui/shadcn/switch";

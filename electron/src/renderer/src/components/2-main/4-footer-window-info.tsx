@@ -1,5 +1,5 @@
 import { useAtomValue } from "jotai";
-import { selectedHwndAtom, windowInfosAtom } from "@renderer/store/2-atoms";
+import { selectedHwndAtom, windowInfosAtom } from "@renderer/store/2-1-atoms-windows-list";
 import { normalizeHwnd, asHexNumber } from "@renderer/utils";
 
 export function FooterWindowInfo() {
