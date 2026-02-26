@@ -3,7 +3,7 @@ import { atomFamily } from "jotai-family";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { type ControlNode, type NativeBounds } from "./9-tmapi-types";
 import { appSettings } from "./1-ui-settings";
-import { selectedHwndAtom } from "./2-atoms-windows-list";
+import { selectedHwndAtom } from "./2-1-atoms-windows-list";
 
 function isBoundsEmpty(bounds: NativeBounds): boolean {
     return bounds.right <= bounds.left || bounds.bottom <= bounds.top;
@@ -236,3 +236,32 @@ export const doInvokeControlAtom = atom(
 );
 
 //#endregion Control tree
+
+//#region comments
+
+// Start monitoring this specific window if needed, or just fetch tree
+// The "StartMonitoring" in API is global for "active window changes".
+// If we want to show controls for the *currently selected* window in the tree, we just fetch controls.
+// If we want to *track* the user's focus, we use startMonitoring.
+// The requirement: "monitor active window ... and show controls inside THIS window".
+// And "List of all top level windows... show windows as items tree...".
+// "Clicking a window switches active monitoring to that window"?
+// Or does it just show that window?
+// Plan: "Clicking a window switches active monitoring to that window".
+// So if user clicks a window in the tree, we act as if it's active?
+// Or we just Inspect it.
+
+// async function load() {
+//     try {
+//         const json = await tmApi.getControlTree(activeHandle!);
+//         if (!mounted) {
+//             return;
+//         }
+//         const tree = JSON.parse(json);
+//         setControlTree(tree);
+//     } catch (e) {
+//         console.error("Failed to fetch control tree", e);
+//     }
+// }
+
+//#endregion comments
