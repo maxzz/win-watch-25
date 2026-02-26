@@ -94,7 +94,7 @@ export const windowControlsTreeHwndAtom = atom<string | null>(null);
 export const windowControlsTreeLoadingAtom = atom<boolean>(false);
 export const windowControlsTreeRefreshingAtom = atom<boolean>(false);
 export const windowControlsTreeErrorAtom = atom<string | null>(null);
-const CONTROLS_TREE_CACHE_TTL_MS = 60_000;
+const CONTROLS_TREE_CACHE_TTL_MS = 60_000; // TTL stands for "Time To Live". 60 seconds.
 const CONTROLS_TREE_CACHE_MAX_ENTRIES = 20;
 type ControlsTreeCacheMeta = {
     updatedAt: number;

@@ -174,7 +174,7 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
 }
 
 function getRowClasses(isSelected: boolean): string {
-    return classNames("group relative px-2 h-5 cursor-pointer flex items-center", isSelected ? rowSelected : "hover:bg-accent/50");
+    return classNames("group relative px-2 h-5 cursor-pointer select-none flex items-center", isSelected ? rowSelected : "hover:bg-accent/50");
 }
 
 const rowSelected = "\
