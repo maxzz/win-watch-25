@@ -161,11 +161,7 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
             <div>
                 {node.children!.map(
                     (child, i) => (
-                        <ControlTreeNode
-                            key={i}
-                            node={child}
-                            depth={depth + 1}
-                        />
+                        <ControlTreeNode node={child} depth={depth + 1} key={i} />
                     )
                 )}
             </div>
@@ -199,7 +195,9 @@ function NodeText({ node }: { node: ControlNode; }): ReactNode {
     return (<>
         {typeName}
         {node.name
-            ? `: "${node.name}"`
+            ? (
+                <> <span className="px-1 text-[0.6rem] text-foreground/70 dark:text-foreground/50 bg-muted-foreground/5 dark:bg-foreground/5 rounded">{node.name}</span></>
+            )
             : null
         }
     </>);
