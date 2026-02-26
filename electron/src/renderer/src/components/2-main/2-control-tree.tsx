@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { refreshWindowControlsTreeAtom, selectedControlAtom, selectedHwndAtom, setSelectedControlAtom, windowControlsTreeAtom, windowControlsTreeErrorAtom, windowControlsTreeHwndAtom, windowControlsTreeLoadingAtom, windowControlsTreeRefreshingAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
-import { type ControlNode } from "@renderer/store/9-tmapi-types";
+import { classNames } from "@renderer/utils/classnames";
 import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
+import { ControlTreeHeader } from "./headers/6-control-tree-header";
+import { type ControlNode } from "@renderer/store/9-tmapi-types";
+import { refreshWindowControlsTreeAtom, selectedControlAtom, selectedHwndAtom, setSelectedControlAtom, windowControlsTreeAtom, windowControlsTreeErrorAtom, windowControlsTreeHwndAtom, windowControlsTreeLoadingAtom, windowControlsTreeRefreshingAtom, doInvokeControlAtom } from "@renderer/store/2-atoms";
 import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
 import { getControlTypeIcon } from "@renderer/utils/uia/1-uia-control-type-icons-svg";
-import { ControlTreeHeader } from "./headers/6-control-tree-header";
-import { classNames } from "@renderer/utils/classnames";
 
 export function ControlTreeLoader() {
     const selectedHwnd = useAtomValue(selectedHwndAtom);
@@ -147,7 +147,7 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
             {controlIcon}
 
             <span className="ml-1 text-xs truncate" title={node.name}>
-                {getNodeText(node)}
+                <NodeText node={node} />
             </span>
 
             {isSelected && (
@@ -173,6 +173,38 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
     </>);
 }
 
+function NodeText({ node }: { node: ControlNode; }): ReactNode {
+    const typeName = getControlTypeName(node.controlType);
+    if (typeName === "Pane") {
+        return <>{
+            node.className
+                ? node.className
+                : typeName
+        }</>;
+    }
+    if (typeName === "Group") {
+        return (<>
+            {
+                node.name
+                    ? `${typeName}: "${node.name}"`
+                    : node.className
+                        ? `${typeName}: ${node.className}`
+                        : typeName
+            }
+        </>);
+    }
+    // if (typeName === "Text") {
+    //     return node.name ? `Text: "${node.name}"` : typeName;
+    // }
+    return (<>
+        {typeName}
+        {node.name
+            ? `: "${node.name}"`
+            : null
+        }
+    </>);
+}
+
 function getRowClasses(isSelected: boolean): string {
     return classNames("group relative px-2 h-5 cursor-pointer select-none flex items-center", isSelected ? rowSelected : "hover:bg-accent/50");
 }
@@ -192,25 +224,5 @@ before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[3px] \
 before:bg-primary dark:before:bg-primary/70 \
 group-focus/controltree:before:bg-blue-500 group-focus/controltree:dark:before:bg-blue-500 \
 ";
-
-function getNodeText(node: ControlNode): string {
-    const typeName = getControlTypeName(node.controlType);
-    if (typeName === "Pane") {
-        return node.className ? node.className : typeName;
-    }
-    if (typeName === "Group") {
-        return (
-            node.name
-                ? `${typeName}: "${node.name}"`
-                : node.className
-                    ? `${typeName}: ${node.className}`
-                    : typeName
-        );
-    }
-    // if (typeName === "Text") {
-    //     return node.name ? `Text: "${node.name}"` : typeName;
-    // }
-    return `${typeName}${node.name ? `: "${node.name}"` : ""}`;
-}
 
 //TODO: when "Folow focus" but the new window not in the list then refresh the tree for the new window.
