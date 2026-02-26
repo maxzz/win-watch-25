@@ -1,6 +1,6 @@
 import { appSettings } from "./1-ui-settings";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
-import { type ControlNode, type NativeBounds } from "./9-tmapi-types";
+import { type ControlNode, type NativeBounds } from "./9-types-tmapi";
 
 export async function getCurrentHighlightBounds(selectedHandle: string | null, control: ControlNode): Promise<NativeBounds | null> {
     const initialBounds = control.bounds;
