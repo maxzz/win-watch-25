@@ -1,49 +1,10 @@
 import { atom } from "jotai";
 import { atomFamily } from "jotai-family";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
-import { type ControlNode, type NativeBounds } from "./9-tmapi-types";
+import { type ControlNode } from "./9-tmapi-types";
 import { appSettings } from "./1-ui-settings";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
-
-function isBoundsEmpty(bounds: NativeBounds): boolean {
-    return bounds.right <= bounds.left || bounds.bottom <= bounds.top;
-}
-
-async function getCurrentHighlightBounds(
-    selectedHandle: string | null,
-    control: ControlNode
-): Promise<NativeBounds | null> {
-    const initialBounds = control.bounds;
-    if (!initialBounds) {
-        notice.info("Selected control has no bounds to highlight.");
-        return null;
-    }
-    if (isBoundsEmpty(initialBounds)) {
-        if (appSettings.showEmptyBoundsNotification) {
-            notice.info("Selected control bounds are empty.");
-        }
-        return null;
-    }
-    if (!selectedHandle || !control.runtimeId) {
-        return initialBounds;
-    }
-
-    const rectJson = await tmApi.getControlCurrentBounds(selectedHandle, control.runtimeId);
-    const currentBounds = JSON.parse(rectJson) as NativeBounds | null;
-
-    if (!currentBounds) {
-        notice.info("Selected control has no current on-screen bounds.");
-        return null;
-    }
-    if (isBoundsEmpty(currentBounds)) {
-        if (appSettings.showEmptyBoundsNotification) {
-            notice.info("Selected control current bounds are empty.");
-        }
-        return null;
-    }
-
-    return currentBounds;
-}
+import { getCurrentHighlightBounds } from "./2-4-atoms-bounds";
 
 //#region Control tree
 
