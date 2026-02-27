@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { type ControlNode } from "./9-types-tmapi";
-import { initializeControlTreeForHwndAtom, type RawControlNode } from "./2-2-atoms-ini-states";
+import { type RawControlNode, initializeControlTreeForHwndAtom } from "./2-2-atoms-ini-states";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
 import { cachedWindowControlsTreeFamily, pruneExpiredControlsTreeCache, pruneOverflowControlsTreeCache, updateControlsTreeCacheMeta } from "./2-2-atoms-cache";
 
@@ -50,9 +50,8 @@ export const refreshWindowControlsTreeAtom = atom(
         try {
             const json = await tmApi.getControlTree(selectedHwnd);
             const rawTree = JSON.parse(json) as RawControlNode;
-            const cachedTreeAtom = cachedWindowControlsTreeFamily(selectedHwnd);
 
-            const { tree, shouldContinue } = set(initializeControlTreeForHwndAtom, {rawTree, selectedHwnd, cachedTreeAtom});
+            const { tree, shouldContinue } = set(initializeControlTreeForHwndAtom, {rawTree, selectedHwnd});
             if (!shouldContinue) {
                 return;
             }
