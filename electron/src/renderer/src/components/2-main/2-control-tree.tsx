@@ -227,3 +227,6 @@ group-focus/controltree:before:bg-blue-500 group-focus/controltree:dark:before:b
 ";
 
 //TODO: when "Folow focus" but the new window not in the list then refresh the tree for the new window.
+//TODO: ControlTreeStatus should be an overlay on the control tree, not a separate component.
+//TODO: Add control tree count to the footer.
+//TODO: Add control tree initial collapse state to each node. instead of "const [expanded, setExpanded] = useState(true);"

@@ -21,12 +21,12 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                     <DialogTitle>
                         Options
                     </DialogTitle>
-                    <DialogDescription>
+                    <DialogDescription className="sr-only">
                         App behavior preferences.
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="mt-1 pb-4 grid gap-2">
+                <div className="mt-4 pb-4 grid gap-2">
                     <OptionCheckbox
                         checked={settings.autoHighlightSelectedControl}
                         onCheckedChange={(checked) => setAutoHighlight(checked)}
