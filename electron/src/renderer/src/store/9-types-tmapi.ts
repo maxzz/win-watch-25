@@ -1,5 +1,3 @@
-import type { PrimitiveAtom } from "jotai";
-
 export type NativeBounds = {
     left: number;
     top: number;
@@ -21,7 +19,6 @@ export interface LegacyProperties {
 }
 
 export interface ControlNode {      // Control node info (obtained from C++ native code by calling ControlTree::GetTreeForWindow)
-    nodeUuid: number;               // generated UI-only unique node ID
     name: string;                   // from IUIAutomationElement::GetCurrentName
     controlType: string;            // from IUIAutomationElement::GetCurrentControlType
     automationId: string;           // from IUIAutomationElement::GetCurrentAutomationId
@@ -41,6 +38,9 @@ export interface ControlNode {      // Control node info (obtained from C++ nati
     bounds: NativeBounds;           // from IUIAutomationElement::GetCurrentBoundingRectangle
     isEnabled: boolean;             // from IUIAutomationElement::GetCurrentIsEnabled
     isVisible: boolean;             // from IUIAutomationElement::GetCurrentIsOffscreen
-    expandedAtom: PrimitiveAtom<boolean>; // UI state atom for control tree expand/collapse
     children?: ControlNode[];
+
+    // UI state atoms
+    expandedAtom: PA<boolean>;      // UI state atom for control tree expand/collapse
+    nodeUuid: number;               // generated UI-only unique node ID
 }

@@ -4,6 +4,7 @@ import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { type ControlNode } from "./9-types-tmapi";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
 import { uuid } from "../utils/uuid";
+import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
 
 //#region Control tree
 
@@ -146,7 +147,7 @@ function getControlNodeUniqueId(node: ControlNode): number {
 }
 
 function getDefaultExpandedState(node: RawControlNode): boolean {
-    return node.controlType !== "Pane";
+    return getControlTypeName(node.controlType) !== "ScrollBar";
 }
 
 function collectNodeUuidByPath(
