@@ -75,9 +75,22 @@ function withExpandedAtom(node: RawControlNode, expandedStateByUniqueId?: Map<nu
 }
 
 function getDefaultExpandedState(node: RawControlNode): boolean {
-    return getControlTypeName(node.controlType) !== "ScrollBar";
-}
+    const controlTypeName = getControlTypeName(node.controlType);   
 
-//TODO: If Pane and its children only Button without children then collapse the ToolBar.
-//TODO: If ToolBar then always collapse it.
-//TODO: If Pane and ClassName is "BrowserCaptionButtonContainer" then always collapse it. // This is chrome browser's caption bar.
+    // If Pane and its children only Button without children then collapse the Pane.
+    if (controlTypeName === "Pane") {
+        return node.children?.every((child) => child.children?.length === 0 && getControlTypeName(child.controlType) === "Button") ?? false;
+    }
+
+    // If ToolBar then always collapse it.
+    if (controlTypeName === "ToolBar") {
+        return true;
+    }
+
+    // If Pane and ClassName is "BrowserCaptionButtonContainer" then always collapse it. // This is chrome browser's caption bar.
+    if (controlTypeName === "BrowserCaptionButtonContainer") {
+        return true;
+    }
+    
+    return false;
+}
