@@ -60,7 +60,7 @@ export function PropertiesPanel() {
 }
 
 function getControlProperties(control: ControlNode): Array<{ label: string; value: ReactNode; title?: string; }> {
-    const legacyItems = control.isLegacyIAccessiblePatternAvailable
+    const legacyItems = control.isLegacyAccAvailable
         ? [
             { label: "Legacy CurrentRole", value: <span className="text-[0.5rem]">{formatMsaaRole(control.currentRole)}</span>, title: `dec: 0x${formatHexU32(control.currentRole)}` },
             { label: "Legacy CurrentState", value: <span className="text-[0.5rem]">{formatHexU32(control.currentState)}</span>, title: `dec: 0x${formatHexU32(control.currentState)}` }
@@ -87,7 +87,7 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         { label: "Automation ID", value: control.automationId },
         { label: "Runtime ID", value: hexAccRuntimeId(control.runtimeId), title: `dec: ${control.runtimeId}` },
         { label: "-", value: null },
-        { label: "Legacy IAccessible Available", value: String(control.isLegacyIAccessiblePatternAvailable) },
+        { label: "Legacy IAccessible Available", value: String(control.isLegacyAccAvailable) },
         ...legacyItems,
         { label: "Has HTML Access", value: control.hasHtmlAccess ? <span className="text-green-500">true</span> : "false" },
         { label: "-", value: null },

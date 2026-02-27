@@ -143,7 +143,7 @@ type RawControlNode = Omit<ControlNode, "nodeUuid" | "expandedAtom" | "children"
 };
 
 function getControlNodeUniqueId(node: ControlNode): number {
-    return node.nodeUuid;
+    return node.nodeUuid; //TODO: OK, I was wrong nodeUuid will be different from render to render. May be switch to runtimeId?
 }
 
 function getDefaultExpandedState(node: RawControlNode): boolean {
