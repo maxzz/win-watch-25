@@ -75,22 +75,34 @@ function withExpandedAtom(node: RawControlNode, expandedStateByUniqueId?: Map<nu
 }
 
 function getDefaultExpandedState(node: RawControlNode): boolean {
-    const controlTypeName = getControlTypeName(node.controlType);   
+    const controlTypeName = getControlTypeName(node.controlType);
+    let rvExpanded = true;
 
     // If Pane and its children only Button without children then collapse the Pane.
     if (controlTypeName === "Pane") {
-        return node.children?.every((child) => child.children?.length === 0 && getControlTypeName(child.controlType) === "Button") ?? false;
+        if (node.className === "BrowserCaptionButtonContainer" || node.className === "TabStrip") { // This is Chrome caption bar: Minimize, Maximize, Close buttons. and chrome tabs.
+            rvExpanded = false;
+        }
+        else {
+            const isOnlyButtons = node.children?.every((child) => !child.children?.length && getControlTypeName(child.controlType) === "Button");
+            if (isOnlyButtons) {
+                rvExpanded = false;
+            }
+        }
+    }
+    else if (controlTypeName === "ToolBar") { // Any ToolBar
+        rvExpanded = false;
+    }
+    else if (controlTypeName === "TabContainerImpl") { // If chrome tabs
+        rvExpanded = false;
+    }
+    else if (controlTypeName === "Tab") {
+        if (node.className === "HorizontalTabStripRegionView") { // Chrome top tabs.
+            rvExpanded = false;
+        }
     }
 
-    // If ToolBar then always collapse it.
-    if (controlTypeName === "ToolBar") {
-        return true;
-    }
+    // console.log(`getDefaultExpandedState(${node.name}) = ${rvExpanded}`);
 
-    // If Pane and ClassName is "BrowserCaptionButtonContainer" then always collapse it. // This is chrome browser's caption bar.
-    if (controlTypeName === "BrowserCaptionButtonContainer") {
-        return true;
-    }
-    
-    return false;
+    return rvExpanded;
 }
