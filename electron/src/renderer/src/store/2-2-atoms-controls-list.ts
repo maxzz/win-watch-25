@@ -1,56 +1,17 @@
 import { atom } from "jotai";
-import { atomFamily } from "jotai-family";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { type ControlNode } from "./9-types-tmapi";
 import { initializeControlTreeForHwndAtom, type RawControlNode } from "./2-2-atoms-ini-states";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
+import { cachedWindowControlsTreeFamily, pruneExpiredControlsTreeCache, pruneOverflowControlsTreeCache, updateControlsTreeCacheMeta } from "./2-2-atoms-cache";
 
 //#region Control tree
 
-export const windowControlsTreeAtom = atom<ControlNode | null>(null);
-export const windowControlsTreeHwndAtom = atom<string | null>(null);
-export const windowControlsTreeLoadingAtom = atom<boolean>(false);
-export const windowControlsTreeRefreshingAtom = atom<boolean>(false);
-export const windowControlsTreeErrorAtom = atom<string | null>(null);
-
-const CONTROLS_TREE_CACHE_TTL_MS = 60_000; // TTL stands for "Time To Live". 60 seconds.
-const CONTROLS_TREE_CACHE_MAX_ENTRIES = 20;
-type ControlsTreeCacheMeta = {
-    updatedAt: number;
-    lastAccessAt: number;
-};
-const controlsTreeCacheMetaMap = new Map<string, ControlsTreeCacheMeta>(); // Map of window handle to cache metadata.
-const cachedWindowControlsTreeFamily = atomFamily(
-    (_hwnd: string) => atom<ControlNode | null>(null)
-);
-
-function removeControlsTreeCacheEntry(set: (a: any, ...args: any[]) => void, hwnd: string): void {
-    controlsTreeCacheMetaMap.delete(hwnd);
-    set(cachedWindowControlsTreeFamily(hwnd), null);
-    cachedWindowControlsTreeFamily.remove(hwnd);
-}
-
-function pruneExpiredControlsTreeCache(set: (a: any, ...args: any[]) => void, now: number): void {
-    for (const [hwnd, meta] of controlsTreeCacheMetaMap.entries()) {
-        if (now - meta.updatedAt > CONTROLS_TREE_CACHE_TTL_MS) {
-            removeControlsTreeCacheEntry(set, hwnd);
-        }
-    }
-}
-
-function pruneOverflowControlsTreeCache(set: (a: any, ...args: any[]) => void): void {
-    if (controlsTreeCacheMetaMap.size <= CONTROLS_TREE_CACHE_MAX_ENTRIES) {
-        return;
-    }
-    const entriesByLastAccessAsc = [...controlsTreeCacheMetaMap.entries()]
-        .sort((a, b) => a[1].lastAccessAt - b[1].lastAccessAt);
-    const entriesToRemoveCount = controlsTreeCacheMetaMap.size - CONTROLS_TREE_CACHE_MAX_ENTRIES;
-    for (let i = 0; i < entriesToRemoveCount; i++) {
-        const entry = entriesByLastAccessAsc[i];
-        if (!entry) break;
-        removeControlsTreeCacheEntry(set, entry[0]);
-    }
-}
+export const windowControlsTreeAtom = atom<ControlNode | null>(null);    // The currently selected window's control tree.
+export const windowControlsTreeHwndAtom = atom<string | null>(null);     // The handle of the currently selected window.
+export const windowControlsTreeLoadingAtom = atom<boolean>(false);       // Whether the tree is currently being loaded.
+export const windowControlsTreeRefreshingAtom = atom<boolean>(false);    // Whether the tree is currently being refreshed.
+export const windowControlsTreeErrorAtom = atom<string | null>(null);    // The error message if the tree failed to load or refresh.
 
 export const refreshWindowControlsTreeAtom = atom(
     null,
@@ -71,10 +32,7 @@ export const refreshWindowControlsTreeAtom = atom(
         const forceRefresh = options?.force === true;
         const cachedTree = get(cachedWindowControlsTreeFamily(selectedHwnd));
         if (!forceRefresh && cachedTree) {
-            controlsTreeCacheMetaMap.set(selectedHwnd, {
-                updatedAt: controlsTreeCacheMetaMap.get(selectedHwnd)?.updatedAt ?? now,
-                lastAccessAt: now,
-            });
+            updateControlsTreeCacheMeta(selectedHwnd, now);
             set(windowControlsTreeLoadingAtom, false);
             set(windowControlsTreeRefreshingAtom, false);
             set(windowControlsTreeErrorAtom, null);
@@ -100,7 +58,7 @@ export const refreshWindowControlsTreeAtom = atom(
             }
             
             const updatedNow = Date.now();
-            controlsTreeCacheMetaMap.set(selectedHwnd, { updatedAt: updatedNow, lastAccessAt: updatedNow });
+            updateControlsTreeCacheMeta(selectedHwnd, updatedNow, updatedNow);
             pruneOverflowControlsTreeCache(set);
             set(windowControlsTreeAtom, tree);
             set(windowControlsTreeHwndAtom, selectedHwnd);
