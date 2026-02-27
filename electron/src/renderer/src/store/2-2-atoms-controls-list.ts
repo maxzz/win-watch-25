@@ -22,11 +22,30 @@ const cachedWindowControlsTreeFamily = atomFamily(
     (_hwnd: string) => atom<ControlNode | null>(null)
 );
 
-function withExpandedAtom(node: Omit<ControlNode, "expandedAtom">, depth: number = 0): ControlNode {
+function collectExpandedStateByRuntimeId(
+    get: (a: any) => any,
+    node: ControlNode,
+    out: Map<string, boolean> = new Map<string, boolean>()
+): Map<string, boolean> {
+    if (!out.has(node.runtimeId)) {
+        out.set(node.runtimeId, get(node.expandedAtom));
+    }
+    for (const child of node.children ?? []) {
+        collectExpandedStateByRuntimeId(get, child, out);
+    }
+    return out;
+}
+
+function withExpandedAtom(
+    node: Omit<ControlNode, "expandedAtom">,
+    expandedStateByRuntimeId?: Map<string, boolean>,
+    depth: number = 0
+): ControlNode {
+    const restoredExpanded = expandedStateByRuntimeId?.get(node.runtimeId);
     return {
         ...node,
-        expandedAtom: atom(depth === 0),
-        children: node.children?.map((child) => withExpandedAtom(child, depth + 1)),
+        expandedAtom: atom(restoredExpanded ?? depth === 0),
+        children: node.children?.map((child) => withExpandedAtom(child, expandedStateByRuntimeId, depth + 1)),
     };
 }
 
@@ -99,7 +118,11 @@ export const refreshWindowControlsTreeAtom = atom(
         try {
             const json = await tmApi.getControlTree(selectedHwnd);
             const rawTree = JSON.parse(json) as Omit<ControlNode, "expandedAtom">;
-            const tree = withExpandedAtom(rawTree);
+            const previousTreeForHwnd = get(cachedWindowControlsTreeFamily(selectedHwnd));
+            const expandedStateByRuntimeId = previousTreeForHwnd
+                ? collectExpandedStateByRuntimeId(get, previousTreeForHwnd)
+                : undefined;
+            const tree = withExpandedAtom(rawTree, expandedStateByRuntimeId);
             // Guard against races: if the selection changed while we were fetching,
             // don't overwrite the tree for the new selection.
             if (get(selectedHwndAtom) !== selectedHwnd) {
