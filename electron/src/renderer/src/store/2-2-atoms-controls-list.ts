@@ -11,43 +11,17 @@ export const windowControlsTreeHwndAtom = atom<string | null>(null);
 export const windowControlsTreeLoadingAtom = atom<boolean>(false);
 export const windowControlsTreeRefreshingAtom = atom<boolean>(false);
 export const windowControlsTreeErrorAtom = atom<string | null>(null);
+
 const CONTROLS_TREE_CACHE_TTL_MS = 60_000; // TTL stands for "Time To Live". 60 seconds.
 const CONTROLS_TREE_CACHE_MAX_ENTRIES = 20;
 type ControlsTreeCacheMeta = {
     updatedAt: number;
     lastAccessAt: number;
 };
-const controlsTreeCacheMetaMap = new Map<string, ControlsTreeCacheMeta>();
+const controlsTreeCacheMetaMap = new Map<string, ControlsTreeCacheMeta>(); // Map of window handle to cache metadata.
 const cachedWindowControlsTreeFamily = atomFamily(
     (_hwnd: string) => atom<ControlNode | null>(null)
 );
-
-function collectExpandedStateByRuntimeId(
-    get: (a: any) => any,
-    node: ControlNode,
-    out: Map<string, boolean> = new Map<string, boolean>()
-): Map<string, boolean> {
-    if (!out.has(node.runtimeId)) {
-        out.set(node.runtimeId, get(node.expandedAtom));
-    }
-    for (const child of node.children ?? []) {
-        collectExpandedStateByRuntimeId(get, child, out);
-    }
-    return out;
-}
-
-function withExpandedAtom(
-    node: Omit<ControlNode, "expandedAtom">,
-    expandedStateByRuntimeId?: Map<string, boolean>,
-    depth: number = 0
-): ControlNode {
-    const restoredExpanded = expandedStateByRuntimeId?.get(node.runtimeId);
-    return {
-        ...node,
-        expandedAtom: atom(restoredExpanded ?? depth === 0),
-        children: node.children?.map((child) => withExpandedAtom(child, expandedStateByRuntimeId, depth + 1)),
-    };
-}
 
 function removeControlsTreeCacheEntry(set: (a: any, ...args: any[]) => void, hwnd: string): void {
     controlsTreeCacheMetaMap.delete(hwnd);
@@ -118,10 +92,13 @@ export const refreshWindowControlsTreeAtom = atom(
         try {
             const json = await tmApi.getControlTree(selectedHwnd);
             const rawTree = JSON.parse(json) as Omit<ControlNode, "expandedAtom">;
+
+            // Collect the expanded state of each control node by runtime ID from the previous tree.
             const previousTreeForHwnd = get(cachedWindowControlsTreeFamily(selectedHwnd));
-            const expandedStateByRuntimeId = previousTreeForHwnd
-                ? collectExpandedStateByRuntimeId(get, previousTreeForHwnd)
-                : undefined;
+            const expandedStateByRuntimeId =
+                previousTreeForHwnd
+                    ? collectExpandedStateByRuntimeId(get, previousTreeForHwnd)
+                    : undefined;
             const tree = withExpandedAtom(rawTree, expandedStateByRuntimeId);
             // Guard against races: if the selection changed while we were fetching,
             // don't overwrite the tree for the new selection.
@@ -152,6 +129,31 @@ export const refreshWindowControlsTreeAtom = atom(
 export const selectedControlAtom = atom<ControlNode | null>(null);
 
 //#endregion Control tree
+
+//#region Node expansion state management
+
+// Collect the expanded state of each control node by runtime ID.
+function collectExpandedStateByRuntimeId(get: Getter, node: ControlNode, out: Map<string, boolean> = new Map<string, boolean>()): Map<string, boolean> {
+    if (!out.has(node.runtimeId)) {
+        out.set(node.runtimeId, get(node.expandedAtom));
+    }
+    for (const child of node.children ?? []) {
+        collectExpandedStateByRuntimeId(get, child, out);
+    }
+    return out;
+}
+
+// Restore the expanded state of each control node by runtime ID.
+function withExpandedAtom(node: Omit<ControlNode, "expandedAtom">, expandedStateByRuntimeId?: Map<string, boolean>, depth: number = 0): ControlNode {
+    const restoredExpanded = expandedStateByRuntimeId?.get(node.runtimeId);
+    return {
+        ...node,
+        expandedAtom: atom(restoredExpanded ?? depth === 0),
+        children: node.children?.map((child) => withExpandedAtom(child, expandedStateByRuntimeId, depth + 1)),
+    };
+}
+
+//#endregion Node expansion state management
 
 //#region comments
 
