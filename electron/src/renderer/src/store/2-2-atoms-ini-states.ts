@@ -53,3 +53,19 @@ export function withExpandedAtom(
         children: node.children?.map((child, index) => withExpandedAtom(child, expandedStateByUniqueId, nodeUuidByPath, `${path}.${index}`)),
     };
 }
+
+export function buildInitializedControlTree(
+    get: Getter,
+    rawTree: RawControlNode,
+    previousTreeForHwnd: ControlNode | null
+): ControlNode {
+    const expandedStateByUniqueId =
+        previousTreeForHwnd
+            ? collectExpandedStateByUniqueId(get, previousTreeForHwnd)
+            : undefined;
+    const nodeUuidByPath =
+        previousTreeForHwnd
+            ? collectNodeUuidByPath(previousTreeForHwnd)
+            : undefined;
+    return withExpandedAtom(rawTree, expandedStateByUniqueId, nodeUuidByPath);
+}
