@@ -2,8 +2,8 @@ import { atom } from "jotai";
 import { atomFamily } from "jotai-family";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { type ControlNode } from "./9-types-tmapi";
+import { type RawControlNode, buildInitializedControlTree } from "./2-2-atoms-ini-states";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
-import { buildInitializedControlTree, type RawControlNode } from "./2-2-atoms-ini-states";
 
 //#region Control tree
 
@@ -93,7 +93,7 @@ export const refreshWindowControlsTreeAtom = atom(
         try {
             const json = await tmApi.getControlTree(selectedHwnd);
             const rawTree = JSON.parse(json) as RawControlNode;
-            
+
             const previousTreeForHwnd = get(cachedWindowControlsTreeFamily(selectedHwnd));
             const tree = buildInitializedControlTree(get, rawTree, previousTreeForHwnd);
             // Guard against races: if the selection changed while we were fetching,

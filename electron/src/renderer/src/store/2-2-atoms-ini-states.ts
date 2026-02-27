@@ -15,7 +15,7 @@ function getDefaultExpandedState(node: RawControlNode): boolean {
     return getControlTypeName(node.controlType) !== "ScrollBar";
 }
 
-export function collectNodeUuidByPath(
+function collectNodeUuidByPath(
     node: ControlNode,
     path: string = "0",
     out: Map<string, number> = new Map<string, number>()
@@ -26,7 +26,7 @@ export function collectNodeUuidByPath(
 }
 
 // Collect the expanded state of each control node by unique ID.
-export function collectExpandedStateByUniqueId(get: Getter, node: ControlNode, out: Map<number, boolean> = new Map<number, boolean>()): Map<number, boolean> {
+function collectExpandedStateByUniqueId(get: Getter, node: ControlNode, out: Map<number, boolean> = new Map<number, boolean>()): Map<number, boolean> {
     const uniqueId = getControlNodeUniqueId(node);
     if (!out.has(uniqueId)) {
         out.set(uniqueId, get(node.expandedAtom));
@@ -38,7 +38,7 @@ export function collectExpandedStateByUniqueId(get: Getter, node: ControlNode, o
 }
 
 // Restore the expanded state of each control node by unique ID.
-export function withExpandedAtom(
+function withExpandedAtom(
     node: RawControlNode,
     expandedStateByUniqueId?: Map<number, boolean>,
     nodeUuidByPath?: Map<string, number>,
