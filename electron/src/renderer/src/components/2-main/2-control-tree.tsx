@@ -1,5 +1,5 @@
-import { type ReactNode, useEffect, useState } from "react";
-import { useAtomValue, useSetAtom } from "jotai";
+import { type ReactNode, useEffect } from "react";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { classNames } from "@renderer/utils/classnames";
 import { ChevronRight, ChevronDown, MousePointerClick } from "lucide-react";
 import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
@@ -126,7 +126,7 @@ function ControlTreeNode({ node, depth }: { node: ControlNode; depth: number; })
     const setSelectedControl = useSetAtom(setSelectedControlAtom);
     const invokeControl = useSetAtom(doInvokeControlAtom);
 
-    const [expanded, setExpanded] = useState(true);
+    const [expanded, setExpanded] = useAtom(node.expandedAtom);
 
     const isSelected = selectedControl === node; // simple reference check, might need ID check
     const hasChildren = node.children && node.children.length > 0;
@@ -229,4 +229,3 @@ group-focus/controltree:before:bg-blue-500 group-focus/controltree:dark:before:b
 //TODO: when "Folow focus" but the new window not in the list then refresh the tree for the new window.
 //TODO: ControlTreeStatus should be an overlay on the control tree, not a separate component.
 //TODO: Add control tree count to the footer.
-//TODO: Add control tree initial collapse state to each node. instead of "const [expanded, setExpanded] = useState(true);"

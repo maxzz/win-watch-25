@@ -22,6 +22,14 @@ const cachedWindowControlsTreeFamily = atomFamily(
     (_hwnd: string) => atom<ControlNode | null>(null)
 );
 
+function withExpandedAtom(node: Omit<ControlNode, "expandedAtom">, depth: number = 0): ControlNode {
+    return {
+        ...node,
+        expandedAtom: atom(depth === 0),
+        children: node.children?.map((child) => withExpandedAtom(child, depth + 1)),
+    };
+}
+
 function removeControlsTreeCacheEntry(set: (a: any, ...args: any[]) => void, hwnd: string): void {
     controlsTreeCacheMetaMap.delete(hwnd);
     set(cachedWindowControlsTreeFamily(hwnd), null);
@@ -90,7 +98,8 @@ export const refreshWindowControlsTreeAtom = atom(
 
         try {
             const json = await tmApi.getControlTree(selectedHwnd);
-            const tree: ControlNode = JSON.parse(json) as ControlNode;
+            const rawTree = JSON.parse(json) as Omit<ControlNode, "expandedAtom">;
+            const tree = withExpandedAtom(rawTree);
             // Guard against races: if the selection changed while we were fetching,
             // don't overwrite the tree for the new selection.
             if (get(selectedHwndAtom) !== selectedHwnd) {

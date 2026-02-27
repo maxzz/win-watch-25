@@ -1,3 +1,5 @@
+import type { PrimitiveAtom } from "jotai";
+
 export type NativeBounds = {
     left: number;
     top: number;
@@ -38,5 +40,6 @@ export interface ControlNode {      // Control node info (obtained from C++ nati
     bounds: NativeBounds;           // from IUIAutomationElement::GetCurrentBoundingRectangle
     isEnabled: boolean;             // from IUIAutomationElement::GetCurrentIsEnabled
     isVisible: boolean;             // from IUIAutomationElement::GetCurrentIsOffscreen
+    expandedAtom: PrimitiveAtom<boolean>; // UI state atom for control tree expand/collapse
     children?: ControlNode[];
 }
