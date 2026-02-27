@@ -83,8 +83,7 @@ export const refreshWindowControlsTreeAtom = atom(
             return;
         }
 
-        const isShowingCurrentWindowTree =
-            get(windowControlsTreeAtom) !== null && get(windowControlsTreeHwndAtom) === selectedHwnd;
+        const isShowingCurrentWindowTree = get(windowControlsTreeAtom) !== null && get(windowControlsTreeHwndAtom) === selectedHwnd;
 
         set(windowControlsTreeLoadingAtom, !isShowingCurrentWindowTree);
         set(windowControlsTreeRefreshingAtom, isShowingCurrentWindowTree);

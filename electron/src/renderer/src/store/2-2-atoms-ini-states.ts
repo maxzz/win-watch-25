@@ -7,22 +7,16 @@ export type RawControlNode = Omit<ControlNode, "nodeUuid" | "expandedAtom" | "ch
     children?: RawControlNode[];
 };
 
-function getControlNodeUniqueId(node: ControlNode): number {
-    return node.nodeUuid; //TODO: OK, I was wrong nodeUuid will be different from render to render. May be switch to runtimeId?
-}
-
-function getDefaultExpandedState(node: RawControlNode): boolean {
-    return getControlTypeName(node.controlType) !== "ScrollBar";
-}
-
-function collectNodeUuidByPath(
-    node: ControlNode,
-    path: string = "0",
-    out: Map<string, number> = new Map<string, number>()
-): Map<string, number> {
-    out.set(path, node.nodeUuid);
-    node.children?.forEach((child, index) => collectNodeUuidByPath(child, `${path}.${index}`, out));
-    return out;
+export function buildInitializedControlTree(get: Getter, rawTree: RawControlNode, previousTreeForHwnd: ControlNode | null): ControlNode {
+    const expandedStateByUniqueId =
+        previousTreeForHwnd
+            ? collectExpandedStateByUniqueId(get, previousTreeForHwnd)
+            : undefined;
+    const nodeUuidByPath =
+        previousTreeForHwnd
+            ? collectNodeUuidByPath(previousTreeForHwnd)
+            : undefined;
+    return withExpandedAtom(rawTree, expandedStateByUniqueId, nodeUuidByPath);
 }
 
 // Collect the expanded state of each control node by unique ID.
@@ -37,13 +31,19 @@ function collectExpandedStateByUniqueId(get: Getter, node: ControlNode, out: Map
     return out;
 }
 
+// Recursively collect the node UUID by path.
+function collectNodeUuidByPath(node: ControlNode, path: string = "0", out: Map<string, number> = new Map<string, number>()): Map<string, number> {
+    out.set(path, node.nodeUuid);
+    node.children?.forEach((child, index) => collectNodeUuidByPath(child, `${path}.${index}`, out));
+    return out;
+}
+
+function getControlNodeUniqueId(node: ControlNode): number {
+    return node.nodeUuid; //TODO: OK, I was wrong nodeUuid will be different from render to render. May be switch to runtimeId?
+}
+
 // Restore the expanded state of each control node by unique ID.
-function withExpandedAtom(
-    node: RawControlNode,
-    expandedStateByUniqueId?: Map<number, boolean>,
-    nodeUuidByPath?: Map<string, number>,
-    path: string = "0"
-): ControlNode {
+function withExpandedAtom(node: RawControlNode, expandedStateByUniqueId?: Map<number, boolean>, nodeUuidByPath?: Map<string, number>, path: string = "0"): ControlNode {
     const nodeUuid = nodeUuidByPath?.get(path) ?? uuid.asRelativeNumber();
     const restoredExpanded = expandedStateByUniqueId?.get(nodeUuid);
     return {
@@ -54,18 +54,6 @@ function withExpandedAtom(
     };
 }
 
-export function buildInitializedControlTree(
-    get: Getter,
-    rawTree: RawControlNode,
-    previousTreeForHwnd: ControlNode | null
-): ControlNode {
-    const expandedStateByUniqueId =
-        previousTreeForHwnd
-            ? collectExpandedStateByUniqueId(get, previousTreeForHwnd)
-            : undefined;
-    const nodeUuidByPath =
-        previousTreeForHwnd
-            ? collectNodeUuidByPath(previousTreeForHwnd)
-            : undefined;
-    return withExpandedAtom(rawTree, expandedStateByUniqueId, nodeUuidByPath);
+function getDefaultExpandedState(node: RawControlNode): boolean {
+    return getControlTypeName(node.controlType) !== "ScrollBar";
 }
