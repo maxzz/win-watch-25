@@ -93,13 +93,13 @@ export const refreshWindowControlsTreeAtom = atom(
             const json = await tmApi.getControlTree(selectedHwnd);
             const rawTree = JSON.parse(json) as Omit<ControlNode, "expandedAtom">;
 
-            // Collect the expanded state of each control node by runtime ID from the previous tree.
+            // Collect the expanded state of each control node by unique node ID from the previous tree.
             const previousTreeForHwnd = get(cachedWindowControlsTreeFamily(selectedHwnd));
-            const expandedStateByRuntimeId =
+            const expandedStateByUniqueId =
                 previousTreeForHwnd
-                    ? collectExpandedStateByRuntimeId(get, previousTreeForHwnd)
+                    ? collectExpandedStateByUniqueId(get, previousTreeForHwnd)
                     : undefined;
-            const tree = withExpandedAtom(rawTree, expandedStateByRuntimeId);
+            const tree = withExpandedAtom(rawTree, expandedStateByUniqueId);
             // Guard against races: if the selection changed while we were fetching,
             // don't overwrite the tree for the new selection.
             if (get(selectedHwndAtom) !== selectedHwnd) {
@@ -132,29 +132,37 @@ export const selectedControlAtom = atom<ControlNode | null>(null);
 
 //#region Node expansion state management
 
-// Collect the expanded state of each control node by runtime ID.
-function collectExpandedStateByRuntimeId(get: Getter, node: ControlNode, out: Map<string, boolean> = new Map<string, boolean>()): Map<string, boolean> {
-    if (!out.has(node.runtimeId)) {
-        out.set(node.runtimeId, get(node.expandedAtom));
+function getControlNodeUniqueId(node: ControlNode | Omit<ControlNode, "expandedAtom">): string {
+    if ("expandedAtom" in node) {
+        return node.expandedAtom.toString();
+    }
+    return node.runtimeId;
+}
+
+// Collect the expanded state of each control node by unique ID.
+function collectExpandedStateByUniqueId(get: Getter, node: ControlNode, out: Map<string, boolean> = new Map<string, boolean>()): Map<string, boolean> {
+    const uniqueId = getControlNodeUniqueId(node);
+    if (!out.has(uniqueId)) {
+        out.set(uniqueId, get(node.expandedAtom));
     }
     for (const child of node.children ?? []) {
-        collectExpandedStateByRuntimeId(get, child, out);
+        collectExpandedStateByUniqueId(get, child, out);
     }
     return out;
 }
 
-// Restore the expanded state of each control node by runtime ID.
-function withExpandedAtom(node: Omit<ControlNode, "expandedAtom">, expandedStateByRuntimeId?: Map<string, boolean>, depth: number = 0): ControlNode {
-    const restoredExpanded = expandedStateByRuntimeId?.get(node.runtimeId);
+// Restore the expanded state of each control node by unique ID.
+function withExpandedAtom(node: Omit<ControlNode, "expandedAtom">, expandedStateByUniqueId?: Map<string, boolean>, depth: number = 0): ControlNode {
+    const restoredExpanded = expandedStateByUniqueId?.get(getControlNodeUniqueId(node));
     return {
         ...node,
         expandedAtom: atom(restoredExpanded ?? depth === 0),
-        children: node.children?.map((child) => withExpandedAtom(child, expandedStateByRuntimeId, depth + 1)),
+        children: node.children?.map((child) => withExpandedAtom(child, expandedStateByUniqueId, depth + 1)),
     };
 }
 
 //#endregion Node expansion state management
-
+ 
 //#region comments
 
 // Start monitoring this specific window if needed, or just fetch tree
