@@ -21,6 +21,7 @@ export interface LegacyProperties {
 }
 
 export interface ControlNode {      // Control node info (obtained from C++ native code by calling ControlTree::GetTreeForWindow)
+    nodeUuid: number;               // generated UI-only unique node ID
     name: string;                   // from IUIAutomationElement::GetCurrentName
     controlType: string;            // from IUIAutomationElement::GetCurrentControlType
     automationId: string;           // from IUIAutomationElement::GetCurrentAutomationId

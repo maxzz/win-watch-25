@@ -3,6 +3,7 @@ import { atomFamily } from "jotai-family";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { type ControlNode } from "./9-types-tmapi";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
+import { uuid } from "../utils/uuid";
 
 //#region Control tree
 
@@ -91,7 +92,7 @@ export const refreshWindowControlsTreeAtom = atom(
 
         try {
             const json = await tmApi.getControlTree(selectedHwnd);
-            const rawTree = JSON.parse(json) as Omit<ControlNode, "expandedAtom">;
+            const rawTree = JSON.parse(json) as RawControlNode;
 
             // Collect the expanded state of each control node by unique node ID from the previous tree.
             const previousTreeForHwnd = get(cachedWindowControlsTreeFamily(selectedHwnd));
@@ -99,7 +100,11 @@ export const refreshWindowControlsTreeAtom = atom(
                 previousTreeForHwnd
                     ? collectExpandedStateByUniqueId(get, previousTreeForHwnd)
                     : undefined;
-            const tree = withExpandedAtom(rawTree, expandedStateByUniqueId);
+            const nodeUuidByPath =
+                previousTreeForHwnd
+                    ? collectNodeUuidByPath(previousTreeForHwnd)
+                    : undefined;
+            const tree = withExpandedAtom(rawTree, expandedStateByUniqueId, nodeUuidByPath);
             // Guard against races: if the selection changed while we were fetching,
             // don't overwrite the tree for the new selection.
             if (get(selectedHwndAtom) !== selectedHwnd) {
@@ -132,15 +137,30 @@ export const selectedControlAtom = atom<ControlNode | null>(null);
 
 //#region Node expansion state management
 
-function getControlNodeUniqueId(node: ControlNode | Omit<ControlNode, "expandedAtom">): string {
-    if ("expandedAtom" in node) {
-        return node.expandedAtom.toString();
-    }
-    return node.runtimeId;
+type RawControlNode = Omit<ControlNode, "nodeUuid" | "expandedAtom" | "children"> & {
+    children?: RawControlNode[];
+};
+
+function getControlNodeUniqueId(node: ControlNode): number {
+    return node.nodeUuid;
+}
+
+function getDefaultExpandedState(node: RawControlNode): boolean {
+    return node.controlType !== "Pane";
+}
+
+function collectNodeUuidByPath(
+    node: ControlNode,
+    path: string = "0",
+    out: Map<string, number> = new Map<string, number>()
+): Map<string, number> {
+    out.set(path, node.nodeUuid);
+    node.children?.forEach((child, index) => collectNodeUuidByPath(child, `${path}.${index}`, out));
+    return out;
 }
 
 // Collect the expanded state of each control node by unique ID.
-function collectExpandedStateByUniqueId(get: Getter, node: ControlNode, out: Map<string, boolean> = new Map<string, boolean>()): Map<string, boolean> {
+function collectExpandedStateByUniqueId(get: Getter, node: ControlNode, out: Map<number, boolean> = new Map<number, boolean>()): Map<number, boolean> {
     const uniqueId = getControlNodeUniqueId(node);
     if (!out.has(uniqueId)) {
         out.set(uniqueId, get(node.expandedAtom));
@@ -152,12 +172,19 @@ function collectExpandedStateByUniqueId(get: Getter, node: ControlNode, out: Map
 }
 
 // Restore the expanded state of each control node by unique ID.
-function withExpandedAtom(node: Omit<ControlNode, "expandedAtom">, expandedStateByUniqueId?: Map<string, boolean>, depth: number = 0): ControlNode {
-    const restoredExpanded = expandedStateByUniqueId?.get(getControlNodeUniqueId(node));
+function withExpandedAtom(
+    node: RawControlNode,
+    expandedStateByUniqueId?: Map<number, boolean>,
+    nodeUuidByPath?: Map<string, number>,
+    path: string = "0"
+): ControlNode {
+    const nodeUuid = nodeUuidByPath?.get(path) ?? uuid.asRelativeNumber();
+    const restoredExpanded = expandedStateByUniqueId?.get(nodeUuid);
     return {
         ...node,
-        expandedAtom: atom(restoredExpanded ?? depth === 0),
-        children: node.children?.map((child) => withExpandedAtom(child, expandedStateByUniqueId, depth + 1)),
+        nodeUuid,
+        expandedAtom: atom(restoredExpanded ?? getDefaultExpandedState(node)),
+        children: node.children?.map((child, index) => withExpandedAtom(child, expandedStateByUniqueId, nodeUuidByPath, `${path}.${index}`)),
     };
 }
 
