@@ -6,7 +6,7 @@ import { appSettings } from "@renderer/store/1-ui-settings";
 import { formatHexU32, formatMsaaRole } from "@renderer/utils/msaa/0-msaa-role-names";
 import { type ControlNode } from "@renderer/store/9-types-tmapi";
 import { formatControlType } from "@renderer/utils/uia/0-uia-control-type-names";
-import { selectedControlAtom } from "@renderer/store/2-2-atoms-controls-list";
+import { selectedControlAtom } from "@renderer/store/2-2-1-atoms-controls-list";
 import { PropertiesPanelHeader } from "./headers/7-properties-panel-header";
 
 export function PropertiesPanel() {

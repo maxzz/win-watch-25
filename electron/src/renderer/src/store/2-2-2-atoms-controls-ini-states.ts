@@ -3,7 +3,7 @@ import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names
 import { uuid } from "../utils/uuid";
 import { type ControlNode } from "./9-types-tmapi";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
-import { cachedWindowControlsTreeFamily } from "./2-2-atoms-cache";
+import { cachedWindowControlsTreeFamily } from "./2-2-3-atoms-cache";
 
 export type RawControlNode = Omit<ControlNode, "nodeUuid" | "expandedAtom" | "children"> & {
     children?: RawControlNode[];
@@ -77,3 +77,7 @@ function withExpandedAtom(node: RawControlNode, expandedStateByUniqueId?: Map<nu
 function getDefaultExpandedState(node: RawControlNode): boolean {
     return getControlTypeName(node.controlType) !== "ScrollBar";
 }
+
+//TODO: If Pane and its children only Button without children then collapse the ToolBar.
+//TODO: If ToolBar then always collapse it.
+//TODO: If Pane and ClassName is "BrowserCaptionButtonContainer" then always collapse it. // This is chrome browser's caption bar.
