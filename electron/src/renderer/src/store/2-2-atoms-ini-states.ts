@@ -1,7 +1,8 @@
-import { atom } from "jotai";
+import { atom, type PrimitiveAtom } from "jotai";
 import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
 import { uuid } from "../utils/uuid";
 import { type ControlNode } from "./9-types-tmapi";
+import { selectedHwndAtom } from "./2-1-atoms-windows-list";
 
 export type RawControlNode = Omit<ControlNode, "nodeUuid" | "expandedAtom" | "children"> & {
     children?: RawControlNode[];
@@ -18,6 +19,33 @@ export function buildInitializedControlTree(get: Getter, rawTree: RawControlNode
             : undefined;
     return withExpandedAtom(rawTree, expandedStateByUniqueId, nodeUuidByPath);
 }
+
+export type InitializeControlTreeResult = {
+    tree: ControlNode;
+    shouldContinue: boolean;
+};
+
+export const initializeControlTreeForHwndAtom = atom(
+    null,
+    (
+        get,
+        set,
+        args: {
+            rawTree: RawControlNode;
+            selectedHwnd: string;
+            cachedTreeAtom: PrimitiveAtom<ControlNode | null>;
+        }
+    ): InitializeControlTreeResult => {
+        const previousTreeForHwnd = get(args.cachedTreeAtom);
+        const tree = buildInitializedControlTree(get, args.rawTree, previousTreeForHwnd);
+        // Guard against race conditions: if the selection changed while we were fetching, don't overwrite the tree for the new selection.
+        if (get(selectedHwndAtom) !== args.selectedHwnd) {
+            return { tree, shouldContinue: false };
+        }
+        set(args.cachedTreeAtom, tree);
+        return { tree, shouldContinue: true };
+    }
+);
 
 // Collect the expanded state of each control node by unique ID.
 function collectExpandedStateByUniqueId(get: Getter, node: ControlNode, out: Map<number, boolean> = new Map<number, boolean>()): Map<number, boolean> {
