@@ -80,7 +80,10 @@ function getDefaultExpandedState(node: RawControlNode): boolean {
 
     // If Pane and its children only Button without children then collapse the Pane.
     if (controlTypeName === "Pane") {
-        if (node.className === "BrowserCaptionButtonContainer" || node.className === "TabStrip") { // This is Chrome caption bar: Minimize, Maximize, Close buttons. and chrome tabs.
+        if (node.className === "BrowserCaptionButtonContainer" || // This is Chrome caption bar: Minimize, Maximize, Close buttons. and chrome tabs.
+            node.className === "TabStrip" ||
+            node.className === "ReBarWindow32" || // This Windows 11 explorer breadcrumb bar and address bar.
+            node.className === "UIRibbonCommandBarDock") { // This is menu bar in the windows 11 explorer.
             rvExpanded = false;
         }
         else {
@@ -90,7 +93,16 @@ function getDefaultExpandedState(node: RawControlNode): boolean {
             }
         }
     }
+    else if (controlTypeName === "TitleBar") { // Windows 11 explorer TitleBar
+        rvExpanded = false;
+    }
     else if (controlTypeName === "ToolBar") { // Any ToolBar
+        rvExpanded = false;
+    }
+    else if (controlTypeName === "StatusBar") { // Any StatusBar
+        rvExpanded = false;
+    }
+    else if (controlTypeName === "ScrollBar") { // Any ScrollBar
         rvExpanded = false;
     }
     else if (controlTypeName === "TabContainerImpl") { // If chrome tabs
@@ -99,6 +111,15 @@ function getDefaultExpandedState(node: RawControlNode): boolean {
     else if (controlTypeName === "Tab") {
         if (node.className === "HorizontalTabStripRegionView") { // Chrome top tabs.
             rvExpanded = false;
+        }
+    }
+    else if (controlTypeName === "ListItem") {
+        // and only child is a Text control then collapse the ListItem.
+        if (node.children?.length === 1) {
+            const childControlTypeName = getControlTypeName(node.children[0].controlType);
+            if (childControlTypeName === "Text" || childControlTypeName === "Edit") {
+                rvExpanded = false;
+            }
         }
     }
 
