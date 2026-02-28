@@ -6,12 +6,14 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } 
 import { Label } from "../ui/shadcn/label";
 import { Switch } from "../ui/shadcn/switch";
 import { setAutoHighlightSelectedControlAtom, setHighlightBlinkCountAtom, setShowEmptyBoundsNotificationAtom } from "@renderer/store/2-3-atoms-highlight";
+import { setExcludeOwnAppWindowsAtom } from "@renderer/store/2-1-atoms-windows-list";
 
 export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) {
     const settings = useSnapshot(appSettings);
     const setAutoHighlight = useSetAtom(setAutoHighlightSelectedControlAtom);
     const setHighlightBlinkCount = useSetAtom(setHighlightBlinkCountAtom);
     const setShowEmptyBoundsNotification = useSetAtom(setShowEmptyBoundsNotificationAtom);
+    const setExcludeOwnAppWindows = useSetAtom(setExcludeOwnAppWindowsAtom);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -41,7 +43,7 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                     />
                     <OptionCheckbox
                         checked={settings.excludeOwnAppWindows}
-                        onCheckedChange={(checked) => appSettings.excludeOwnAppWindows = checked}
+                        onCheckedChange={(checked) => void setExcludeOwnAppWindows(checked)}
                         label="Exclude this app windows"
                         title="Hide this app's top-level windows from the list and prefer the next window in z-order"
                     />

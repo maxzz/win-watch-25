@@ -50,6 +50,31 @@ export const ensureWindowInListAtom = atom(
     }
 );
 
+export const setExcludeOwnAppWindowsAtom = atom(
+    null,
+    async (get, set, enabled: boolean): Promise<void> => {
+        appSettings.excludeOwnAppWindows = enabled;
+        await set(doRefreshWindowInfosAtom);
+
+        const windows = get(windowInfosAtom);
+        const selected = get(selectedHwndAtom);
+        if (!selected) {
+            return;
+        }
+
+        const selectedStillExists = windows.some((w) => areWindowHandlesEqual(w.handle, selected));
+        if (selectedStillExists) {
+            return;
+        }
+
+        const active = get(activeHwndAtom);
+        const activeInList = active ? windows.find((w) => areWindowHandlesEqual(w.handle, active)) : undefined;
+        const next = activeInList?.handle ?? windows[0]?.handle ?? null;
+        set(selectedHwndAtom, next);
+        set(activeHwndAtom, next);
+    }
+);
+
 // Call this on app startup. It guarantees we only fetch the initial window list once,
 // even if the React tree mounts twice in dev (StrictMode).
 let didRefreshWindowInfosOnAppStart = false;
