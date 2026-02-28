@@ -85,7 +85,7 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         { label: "Localized Control Type", value: control.localizedControlType },
         { label: "-", value: null },
         { label: "Automation ID", value: control.automationId },
-        { label: "Runtime ID", value: hexAccRuntimeId(control.runtimeId), title: `dec: ${control.runtimeId}` },
+        { label: "Runtime ID", value: getRuntimeIdValue(control.runtimeId), title: `dec: ${control.runtimeId}` },
         { label: "-", value: null },
         { label: "Legacy IAccessible Available", value: String(control.isLegacyAccAvailable) },
         ...legacyItems,
@@ -107,6 +107,13 @@ function PropertyValueContent({ label, value }: { label: string; value: ReactNod
             -
         </span>
     );
+}
+
+function getRuntimeIdValue(runtimeId: string): ReactNode {
+    if (!runtimeId) {
+        return <span className="text-red-500 font-semibold">emptys</span>;
+    }
+    return hexAccRuntimeId(runtimeId);
 }
 
 function boundsValue(boundsStr?: string): string {
