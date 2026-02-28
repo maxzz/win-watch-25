@@ -30,7 +30,9 @@ export const ensureWindowInListAtom = atom(
     (get, set, window: Partial<WindowInfo> & { handle: string; }): void => {
         const current = get(windowInfosAtom);
         const alreadyExists = current.some((w) => areWindowHandlesEqual(w.handle, window.handle));
-        if (alreadyExists) return;
+        if (alreadyExists) {
+            return;
+        }
 
         const synthetic: WindowInfo = {
             handle: window.handle,
@@ -58,7 +60,6 @@ export const doOnAppStartRefreshWindowInfosAtom = atom(
     }
 );
 
-//export const activeWindowInfoAtom = atom<WindowInfo | null>(null);
 export const activeHwndAtom = atom<string | null>(null);
 export const selectedHwndAtom = atom<string | null>(null);
 
