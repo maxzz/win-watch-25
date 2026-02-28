@@ -1,6 +1,9 @@
+import { atom, getDefaultStore } from "jotai";
 import { appSettings } from "./8-ui-settings";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { type ControlNode, type NativeBounds } from "./9-types-tmapi";
+
+// Get the current highlight bounds.
 
 export async function getCurrentHighlightBounds(selectedHandle: string | null, control: ControlNode): Promise<NativeBounds | null> {
     const initialBounds = control.bounds;
@@ -10,7 +13,7 @@ export async function getCurrentHighlightBounds(selectedHandle: string | null, c
     }
     if (isBoundsEmpty(initialBounds)) {
         if (appSettings.showEmptyBoundsNotification) {
-            notice.info("Selected control bounds are empty.");
+            triggerEmptyBoundsFlash();
         }
         return null;
     }
@@ -27,7 +30,7 @@ export async function getCurrentHighlightBounds(selectedHandle: string | null, c
     }
     if (isBoundsEmpty(currentBounds)) {
         if (appSettings.showEmptyBoundsNotification) {
-            notice.info("Selected control current bounds are empty.");
+            triggerEmptyBoundsFlash();
         }
         return null;
     }
@@ -38,3 +41,21 @@ export async function getCurrentHighlightBounds(selectedHandle: string | null, c
 function isBoundsEmpty(bounds: NativeBounds): boolean {
     return bounds.right <= bounds.left || bounds.bottom <= bounds.top;
 }
+
+// Trigger a flash of the empty bounds badge.
+
+export const emptyBoundsFlashTokenAtom = atom(0);
+export const triggerEmptyBoundsFlashAtom = atom(
+    null,
+    (get, set): void => {
+        set(emptyBoundsFlashTokenAtom, get(emptyBoundsFlashTokenAtom) + 1);
+    }
+);
+
+const defaultJotaiStore = getDefaultStore();
+
+function triggerEmptyBoundsFlash(): void {
+    defaultJotaiStore.set(triggerEmptyBoundsFlashAtom);
+}
+
+//
