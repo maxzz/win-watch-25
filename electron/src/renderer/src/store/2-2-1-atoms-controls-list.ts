@@ -3,7 +3,7 @@ import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { type ControlNode } from "./9-types-tmapi";
 import { type RawControlNode, initializeControlTreeForHwndAtom } from "./2-2-2-atoms-controls-ini-states";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
-import { cachedWindowControlsTreeFamily, pruneExpiredControlsTreeCache, pruneOverflowControlsTreeCache, updateControlsTreeCacheMeta } from "./2-2-3-atoms-cache";
+import { cachedWindowControlsTreeFamily, pruneExpiredControlsTreeCache, pruneOverflowControlsTreeCache, updateControlsTreeCacheMeta } from "./2-2-3-atoms-controls-cache";
 
 //#region Control tree
 

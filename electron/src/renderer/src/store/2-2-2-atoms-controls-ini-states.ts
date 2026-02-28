@@ -3,7 +3,7 @@ import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names
 import { uuid } from "../utils/uuid";
 import { type ControlNode } from "./9-types-tmapi";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
-import { cachedWindowControlsTreeFamily } from "./2-2-3-atoms-cache";
+import { cachedWindowControlsTreeFamily } from "./2-2-3-atoms-controls-cache";
 
 export type RawControlNode = Omit<ControlNode, "nodeUuid" | "expandedAtom" | "children"> & {
     children?: RawControlNode[];
