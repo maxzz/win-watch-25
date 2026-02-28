@@ -15,10 +15,18 @@ import { IconRefresh } from "../../ui/icons";
 export function ControlTreeHeader() {
     return (
         <div className="px-2 py-1 pr-0 h-7 border-b bg-muted/20 flex items-center justify-between select-none">
-            <span className="text-xs font-semibold flex items-center gap-1">
-                Control Hierarchy
-                <EmptyBoundsFlashBadge />
-            </span>
+            <div className="flex items-center gap-1">
+                <span className="text-xs font-semibold">
+                    Control Hierarchy:
+                </span>
+
+                <div className="self-stretch relative w-px">
+                    <div className="absolute left-0 top-0 pt-px w-max h-full">
+                        <EmptyBoundsFlashBadge />
+                        {/* <div className="px-2 pb-0.5 text-[0.6rem] text-white bg-red-500 rounded">empty bounds</div> */}
+                    </div>
+                </div>
+            </div>
 
             <div className="flex items-center gap-0">
                 <ControlTreeAutoHighlightToggle />
@@ -52,16 +60,16 @@ function EmptyBoundsFlashBadge() {
     return (
         <AnimatePresence initial={false}>
             {activeToken !== null && (
-                <motion.span
+                <motion.div
                     key={activeToken}
-                    className="px-2 text-xs font-semibold text-white bg-red-500"
+                    className="px-2 pb-0.5 text-[0.6rem] text-white bg-red-500 rounded"
                     initial={{ opacity: 0, scale: 0.92 }}
                     animate={{ opacity: [0, 1, 1, 0], scale: [0.92, 1.06, 1.0, 0.98] }}
                     transition={{ duration: 1.55, times: [0, 0.2, 0.45, 1], ease: "easeOut" }}
                     exit={{ opacity: 0, transition: { duration: 0.08 } }}
                 >
-                    Empty
-                </motion.span>
+                    empty bounds
+                </motion.div>
             )}
         </AnimatePresence>
     );
