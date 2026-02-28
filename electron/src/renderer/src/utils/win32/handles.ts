@@ -37,6 +37,33 @@ export function asHex({ value, prefix, digits }: { value: string; prefix?: boole
     return asHexNumber({ value: num, prefix, digits });
 }
 
+function parseHwnd(value: string): bigint | null {
+    const trimmed = value?.trim();
+    if (!trimmed) return null;
+    try {
+        if (/^0x[0-9a-f]+$/i.test(trimmed)) {
+            return BigInt(trimmed);
+        }
+        if (/^[0-9]+$/.test(trimmed)) {
+            return BigInt(trimmed);
+        }
+        if (/^[0-9a-f]+$/i.test(trimmed)) {
+            return BigInt(`0x${trimmed}`);
+        }
+    } catch {
+        // ignore parse errors and fallback to string equality
+    }
+    return null;
+}
+
+export function areWindowHandlesEqual(a: string, b: string): boolean {
+    if (a === b) return true;
+    const parsedA = parseHwnd(a);
+    const parsedB = parseHwnd(b);
+    if (parsedA === null || parsedB === null) return false;
+    return parsedA === parsedB;
+}
+
 /**
  * Convert runtime ID to hex numbers.
  * @param runtimeId - The runtime ID to convert as "42.3998860.4.-2147483647.3998860.-4.32".

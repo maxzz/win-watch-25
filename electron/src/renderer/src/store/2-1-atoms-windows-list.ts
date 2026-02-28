@@ -1,38 +1,12 @@
 import { atom } from "jotai";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
+import { areWindowHandlesEqual } from "@renderer/utils/win32/handles";
 import { type WindowInfo } from "./9-types-tmapi";
 
 //#region Window list
 
 export const windowInfosAtom = atom<WindowInfo[]>([]);
 export const windowInfosLoadingAtom = atom<boolean>(false);
-
-function parseHwnd(value: string): bigint | null {
-    const trimmed = value?.trim();
-    if (!trimmed) return null;
-    try {
-        if (/^0x[0-9a-f]+$/i.test(trimmed)) {
-            return BigInt(trimmed);
-        }
-        if (/^[0-9]+$/.test(trimmed)) {
-            return BigInt(trimmed);
-        }
-        if (/^[0-9a-f]+$/i.test(trimmed)) {
-            return BigInt(`0x${trimmed}`);
-        }
-    } catch {
-        // ignore parse errors and fallback to string equality
-    }
-    return null;
-}
-
-export function areWindowHandlesEqual(a: string, b: string): boolean {
-    if (a === b) return true;
-    const parsedA = parseHwnd(a);
-    const parsedB = parseHwnd(b);
-    if (parsedA === null || parsedB === null) return false;
-    return parsedA === parsedB;
-}
 
 export const doRefreshWindowInfosAtom = atom(
     null,
