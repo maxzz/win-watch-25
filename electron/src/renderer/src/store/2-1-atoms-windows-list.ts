@@ -79,9 +79,33 @@ export const applyActiveWindowChangedAtom = atom(
         const incomingHandle = typeof info?.handle === "string" ? info.handle : null;
         if (!incomingHandle) return;
 
+        const previousActive = get(activeHwndAtom);
         const windows = get(windowInfosAtom);
         const matchedWindow = windows.find((w) => areWindowHandlesEqual(w.handle, incomingHandle));
         let selectedHandle = matchedWindow?.handle ?? incomingHandle;
+
+        // Keep UI focused on the new active window immediately.
+        set(activeHwndAtom, selectedHandle);
+        set(selectedHwndAtom, selectedHandle);
+
+        const activeChanged =
+            previousActive === null
+                ? true
+                : !areWindowHandlesEqual(previousActive, incomingHandle);
+
+        let previousHandleBecameInvalid = false;
+        if (activeChanged && previousActive) {
+            try {
+                previousHandleBecameInvalid = !(await tmApi.isWindowHandleValid(previousActive));
+            } catch (e) {
+                console.warn(`Failed to validate previous active window handle: ${previousActive}`, e);
+            }
+        }
+
+        const shouldRefreshList = !matchedWindow || previousHandleBecameInvalid;
+        if (!shouldRefreshList) {
+            return;
+        }
 
         if (!matchedWindow) {
             set(ensureWindowInListAtom, {
@@ -91,10 +115,11 @@ export const applyActiveWindowChangedAtom = atom(
                 processId: typeof info.processId === "number" ? info.processId : 0,
                 className: typeof info.className === "string" ? info.className : "",
             });
-            await set(doRefreshWindowInfosAtom);
-            const refreshedMatch = get(windowInfosAtom).find((w) => areWindowHandlesEqual(w.handle, incomingHandle));
-            selectedHandle = refreshedMatch?.handle ?? selectedHandle;
         }
+
+        await set(doRefreshWindowInfosAtom);
+        const refreshedMatch = get(windowInfosAtom).find((w) => areWindowHandlesEqual(w.handle, incomingHandle));
+        selectedHandle = refreshedMatch?.handle ?? selectedHandle;
 
         set(activeHwndAtom, selectedHandle);
         set(selectedHwndAtom, selectedHandle);

@@ -214,6 +214,10 @@ WM_API const char* GetControlCurrentBoundsJson(HWND hwnd, const char* runtimeId)
     return _strdup(json.str().c_str());
 }
 
+WM_API bool IsWindowHandleValid(HWND hwnd) {
+    return IsWindow(hwnd) != FALSE;
+}
+
 WM_API bool InvokeControl(HWND hwnd, const char* runtimeId) {
     return ControlTree::InvokeControl(hwnd, runtimeId);
 }

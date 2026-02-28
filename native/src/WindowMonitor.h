@@ -54,6 +54,9 @@ extern "C" {
     // Returns JSON: {"left": number, "top": number, "right": number, "bottom": number} or null if not found.
     WM_API const char* GetControlCurrentBoundsJson(HWND hwnd, const char* runtimeId);
 
+    // Check whether a window handle is currently valid.
+    WM_API bool IsWindowHandleValid(HWND hwnd);
+
     // Invoke a control (e.g. click)
     WM_API bool InvokeControl(HWND hwnd, const char* runtimeId);
     

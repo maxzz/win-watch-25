@@ -38,6 +38,7 @@ interface WinWatchApi {
     hideHighlight: () => Promise<void>;
     getWindowRect: (handle: string) => Promise<string>;
     getControlCurrentBounds: (handle: string, runtimeId: string) => Promise<string>;
+    isWindowHandleValid: (handle: string) => Promise<boolean>;
     quitApp: () => Promise<void>;
 }
 

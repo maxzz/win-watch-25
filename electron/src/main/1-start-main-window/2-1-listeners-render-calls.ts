@@ -72,4 +72,10 @@ export function setListenersRenderCalls() {
         if (!winwatchPlugin) return 'null';
         return winwatchPlugin.getControlCurrentBounds(handle, runtimeId);
     });
+
+    // Check whether a window handle is currently valid
+    ipcMain.handle('is-window-handle-valid', (_, handle: string) => {
+        if (!winwatchPlugin) return false;
+        return winwatchPlugin.isWindowHandleValid(handle);
+    });
 }

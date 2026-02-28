@@ -213,6 +213,24 @@ Napi::Value GetControlCurrentBoundsWrapper(const Napi::CallbackInfo& info) {
     return result;
 }
 
+Napi::Value IsWindowHandleValidWrapper(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 1 || !info[0].IsString()) {
+        Napi::TypeError::New(env, "String expected (window handle)").ThrowAsJavaScriptException();
+        return Napi::Boolean::New(env, false);
+    }
+
+    std::string handleStr = info[0].As<Napi::String>().Utf8Value();
+    HWND hwnd = nullptr;
+    if (!TryParseHwnd(handleStr, hwnd)) {
+        Napi::TypeError::New(env, "Invalid window handle string (expected hex like 0x000000001234ABCD)").ThrowAsJavaScriptException();
+        return Napi::Boolean::New(env, false);
+    }
+
+    return Napi::Boolean::New(env, IsWindowHandleValid(hwnd));
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     InitializeMonitor();
     
@@ -225,6 +243,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "hideHighlight"), Napi::Function::New(env, HideHighlightWrapper));
     exports.Set(Napi::String::New(env, "getWindowRect"), Napi::Function::New(env, GetWindowRectWrapper));
     exports.Set(Napi::String::New(env, "getControlCurrentBounds"), Napi::Function::New(env, GetControlCurrentBoundsWrapper));
+    exports.Set(Napi::String::New(env, "isWindowHandleValid"), Napi::Function::New(env, IsWindowHandleValidWrapper));
     
     return exports;
 }
