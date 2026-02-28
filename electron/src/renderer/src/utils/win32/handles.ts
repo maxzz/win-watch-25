@@ -37,33 +37,6 @@ export function asHex({ value, prefix, digits }: { value: string; prefix?: boole
     return asHexNumber({ value: num, prefix, digits });
 }
 
-function parseHwnd(value: string): bigint | null {
-    const trimmed = value?.trim();
-    if (!trimmed) return null;
-    try {
-        if (/^0x[0-9a-f]+$/i.test(trimmed)) {
-            return BigInt(trimmed);
-        }
-        if (/^[0-9]+$/.test(trimmed)) {
-            return BigInt(trimmed);
-        }
-        if (/^[0-9a-f]+$/i.test(trimmed)) {
-            return BigInt(`0x${trimmed}`);
-        }
-    } catch {
-        // ignore parse errors and fallback to string equality
-    }
-    return null;
-}
-
-export function areWindowHandlesEqual(a: string, b: string): boolean {
-    if (a === b) return true;
-    const parsedA = parseHwnd(a);
-    const parsedB = parseHwnd(b);
-    if (parsedA === null || parsedB === null) return false;
-    return parsedA === parsedB;
-}
-
 /**
  * Convert runtime ID to hex numbers.
  * @param runtimeId - The runtime ID to convert as "42.3998860.4.-2147483647.3998860.-4.32".
@@ -85,4 +58,50 @@ export function hexAccRuntimeId(runtimeId: string | undefined): string {
         }
     );
     return hexParts.join('.');
+}
+
+/**
+ * Compare two window handles.
+ * The handles are stringified as "0x000000001234ABCD" or "1234ABCD".
+ * The handles are converted to bigint to avoid overflow and precision issues.
+ * The handles are compared using the bigint equality.
+ * The handles are converted back to string to return the result.
+ * @param a - The first handle to compare
+ * @param b - The second handle to compare
+ * @returns True if the handles are equal, false otherwise
+ */
+export function areWindowHandlesEqual(a: string, b: string): boolean {
+    if (a === b) {
+        return true;
+    }
+    const parsedA = parseHwnd(a);
+    if (parsedA === null) {
+        return false;
+    }
+    const parsedB = parseHwnd(b);
+    if (parsedB === null) {
+        return false;
+    }
+    return parsedA === parsedB;
+}
+
+function parseHwnd(value: string): bigint | null { // bigint is used to avoid overflow and precision issues.
+    const trimmed = value?.trim();
+    if (!trimmed) {
+        return null;
+    }
+    try {
+        if (/^0x[0-9a-f]+$/i.test(trimmed)) {
+            return BigInt(trimmed);
+        }
+        if (/^[0-9]+$/.test(trimmed)) {
+            return BigInt(trimmed);
+        }
+        if (/^[0-9a-f]+$/i.test(trimmed)) {
+            return BigInt(`0x${trimmed}`);
+        }
+    } catch {
+        // ignore parse errors and fallback to string equality
+    }
+    return null;
 }
