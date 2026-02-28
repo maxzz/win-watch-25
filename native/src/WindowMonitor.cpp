@@ -11,24 +11,49 @@
 #include <cstdlib>
 
 static ActiveWindowChangedCallback g_Callback = nullptr;
-static HWINEVENTHOOK g_hHook = nullptr;
+static HWINEVENTHOOK g_hForegroundHook = nullptr;
+static HWINEVENTHOOK g_hLifecycleHook = nullptr;
+static HWINEVENTHOOK g_hMinimizeHook = nullptr;
 static std::mutex g_Mutex;
+static HWND g_LastEmittedHwnd = nullptr;
+
+static void EmitActiveWindowChangedLocked(HWND hwnd) {
+    if (!g_Callback) {
+        return;
+    }
+    if (!hwnd || !IsWindow(hwnd)) {
+        return;
+    }
+    if (g_LastEmittedHwnd == hwnd) {
+        return;
+    }
+    g_LastEmittedHwnd = hwnd;
+    // Handle format is always canonical fixed-width hex (0x...),
+    // same formatter as WindowList and ControlTree.
+    std::string json = "{\"handle\":\"" + HwndToHexString(hwnd) + "\"}";
+    g_Callback(json.c_str());
+}
 
 void CALLBACK WinEventProc(HWINEVENTHOOK hWinEventHook, DWORD event, HWND hwnd, LONG idObject, LONG idChild, DWORD dwEventThread, DWORD dwmsEventTime) {
     UNREFERENCED_PARAMETER(hWinEventHook);
     UNREFERENCED_PARAMETER(dwEventThread);
     UNREFERENCED_PARAMETER(dwmsEventTime);
-    if (event == EVENT_SYSTEM_FOREGROUND && idObject == OBJID_WINDOW && idChild == CHILDID_SELF) {
-        std::lock_guard<std::mutex> lock(g_Mutex);
-        if (g_Callback) {
-            // We just send a simple JSON with the handle for now
-            // The frontend can then request the full tree
-            // Handle format is always canonical fixed-width hex (0x...),
-            // same formatter as WindowList and ControlTree.
-            std::string json = "{\"handle\":\"" + HwndToHexString(hwnd) + "\"}";
-            // Or better, reuse WindowList logic to get quick info
-            g_Callback(json.c_str());
-        }
+    if (idObject != OBJID_WINDOW || idChild != CHILDID_SELF) {
+        return;
+    }
+
+    std::lock_guard<std::mutex> lock(g_Mutex);
+
+    if (event == EVENT_SYSTEM_FOREGROUND) {
+        EmitActiveWindowChangedLocked(hwnd);
+        return;
+    }
+
+    if (event == EVENT_OBJECT_DESTROY || event == EVENT_SYSTEM_MINIMIZESTART) {
+        // Foreground close/minimize transitions are not always delivered as
+        // EVENT_SYSTEM_FOREGROUND. Re-sample current foreground explicitly.
+        HWND foreground = GetForegroundWindow();
+        EmitActiveWindowChangedLocked(foreground);
     }
 }
 
@@ -51,7 +76,8 @@ WM_API void CleanupMonitor() {
 WM_API void StartActiveWindowMonitoring(ActiveWindowChangedCallback callback) {
     std::lock_guard<std::mutex> lock(g_Mutex);
     g_Callback = callback;
-    if (!g_hHook) {
+    g_LastEmittedHwnd = nullptr;
+    if (!g_hForegroundHook) {
         // Run hook on a separate thread? 
         // SetWinEventHook requires a message loop if we want to catch events from all processes.
         // Actually, for EVENT_SYSTEM_FOREGROUND out of context (WINEVENT_OUTOFCONTEXT), 
@@ -64,16 +90,34 @@ WM_API void StartActiveWindowMonitoring(ActiveWindowChangedCallback callback) {
         // For simplicity, we assume the caller pumps messages or we might need a worker thread with a message loop.
         // But for now, let's try standard hook.
         
-        g_hHook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, NULL, WinEventProc, 0, 0, WINEVENT_OUTOFCONTEXT | WINEVENT_SKIPOWNPROCESS);
+        g_hForegroundHook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, NULL, WinEventProc, 0, 0, WINEVENT_OUTOFCONTEXT | WINEVENT_SKIPOWNPROCESS);
     }
+    if (!g_hLifecycleHook) {
+        g_hLifecycleHook = SetWinEventHook(EVENT_OBJECT_DESTROY, EVENT_OBJECT_DESTROY, NULL, WinEventProc, 0, 0, WINEVENT_OUTOFCONTEXT | WINEVENT_SKIPOWNPROCESS);
+    }
+    if (!g_hMinimizeHook) {
+        g_hMinimizeHook = SetWinEventHook(EVENT_SYSTEM_MINIMIZESTART, EVENT_SYSTEM_MINIMIZESTART, NULL, WinEventProc, 0, 0, WINEVENT_OUTOFCONTEXT | WINEVENT_SKIPOWNPROCESS);
+    }
+
+    // Emit current foreground once when monitoring starts, so renderer can sync immediately.
+    EmitActiveWindowChangedLocked(GetForegroundWindow());
 }
 
 WM_API void StopActiveWindowMonitoring() {
     std::lock_guard<std::mutex> lock(g_Mutex);
     g_Callback = nullptr;
-    if (g_hHook) {
-        UnhookWinEvent(g_hHook);
-        g_hHook = nullptr;
+    g_LastEmittedHwnd = nullptr;
+    if (g_hForegroundHook) {
+        UnhookWinEvent(g_hForegroundHook);
+        g_hForegroundHook = nullptr;
+    }
+    if (g_hLifecycleHook) {
+        UnhookWinEvent(g_hLifecycleHook);
+        g_hLifecycleHook = nullptr;
+    }
+    if (g_hMinimizeHook) {
+        UnhookWinEvent(g_hMinimizeHook);
+        g_hMinimizeHook = nullptr;
     }
 }
 
