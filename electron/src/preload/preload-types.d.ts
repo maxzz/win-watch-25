@@ -28,7 +28,7 @@ interface HighlightOptions {
 // API exposed by preload script
 
 interface WinWatchApi {
-    getTopLevelWindows: () => Promise<string>; // The returned data is stringified WindowInfo[]
+    getTopLevelWindows: (options?: { excludeOwnAppWindows?: boolean; }) => Promise<string>; // The returned data is stringified WindowInfo[]
     getControlTree: (handle: string) => Promise<string>;
     startMonitoring: (handle: string) => Promise<boolean>;
     stopMonitoring: () => Promise<boolean>;
@@ -39,6 +39,7 @@ interface WinWatchApi {
     getWindowRect: (handle: string) => Promise<string>;
     getControlCurrentBounds: (handle: string, runtimeId: string) => Promise<string>;
     isWindowHandleValid: (handle: string) => Promise<boolean>;
+    isOwnAppWindowHandle: (handle: string) => Promise<boolean>;
     quitApp: () => Promise<void>;
 }
 

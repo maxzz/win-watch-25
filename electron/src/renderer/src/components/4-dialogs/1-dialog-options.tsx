@@ -39,6 +39,12 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                         label="Show empty bounds notification"
                         title="Show a notification when selected control bounds are empty"
                     />
+                    <OptionCheckbox
+                        checked={settings.excludeOwnAppWindows}
+                        onCheckedChange={(checked) => appSettings.excludeOwnAppWindows = checked}
+                        label="Exclude this app windows"
+                        title="Hide this app's top-level windows from the list and prefer the next window in z-order"
+                    />
                     <OptionNumber
                         value={settings.highlightBlinkCount}
                         onValueChange={setHighlightBlinkCount}

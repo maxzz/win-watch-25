@@ -2,6 +2,7 @@ import { atom } from "jotai";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { areWindowHandlesEqual } from "@renderer/utils/win32/handles";
 import { type WindowInfo } from "./9-types-tmapi";
+import { appSettings } from "./8-ui-settings";
 
 //#region Window list
 
@@ -13,7 +14,9 @@ export const doRefreshWindowInfosAtom = atom(
     async (_get, set): Promise<void> => {
         set(windowInfosLoadingAtom, true);
         try {
-            const json = await tmApi.getTopLevelWindows();
+            const json = await tmApi.getTopLevelWindows({
+                excludeOwnAppWindows: appSettings.excludeOwnAppWindows,
+            });
             const data = JSON.parse(json) as WindowInfo[];
             set(windowInfosAtom, data);
         } catch (e) {
@@ -80,13 +83,25 @@ export const applyActiveWindowChangedAtom = atom(
         if (!incomingHandle) return;
 
         const previousActive = get(activeHwndAtom);
+        const excludeOwnAppWindows = appSettings.excludeOwnAppWindows;
+        let isOwnAppWindow = false;
+        if (excludeOwnAppWindows) {
+            try {
+                isOwnAppWindow = await tmApi.isOwnAppWindowHandle(incomingHandle);
+            } catch (e) {
+                console.warn(`Failed to detect whether handle belongs to own app: ${incomingHandle}`, e);
+            }
+        }
+
         const windows = get(windowInfosAtom);
         const matchedWindow = windows.find((w) => areWindowHandlesEqual(w.handle, incomingHandle));
         let selectedHandle = matchedWindow?.handle ?? incomingHandle;
 
-        // Keep UI focused on the new active window immediately.
-        set(activeHwndAtom, selectedHandle);
-        set(selectedHwndAtom, selectedHandle);
+        // Keep UI focused on the new active window immediately (unless we should treat it as excluded own app window).
+        if (!(excludeOwnAppWindows && isOwnAppWindow)) {
+            set(activeHwndAtom, selectedHandle);
+            set(selectedHwndAtom, selectedHandle);
+        }
 
         const activeChanged =
             previousActive === null
@@ -107,7 +122,7 @@ export const applyActiveWindowChangedAtom = atom(
             return;
         }
 
-        if (!matchedWindow) {
+        if (!matchedWindow && !(excludeOwnAppWindows && isOwnAppWindow)) {
             set(ensureWindowInListAtom, {
                 handle: incomingHandle,
                 title: typeof info.title === "string" ? info.title : "",
@@ -118,8 +133,16 @@ export const applyActiveWindowChangedAtom = atom(
         }
 
         await set(doRefreshWindowInfosAtom);
-        const refreshedMatch = get(windowInfosAtom).find((w) => areWindowHandlesEqual(w.handle, incomingHandle));
-        selectedHandle = refreshedMatch?.handle ?? selectedHandle;
+        const refreshed = get(windowInfosAtom);
+        const refreshedMatch = refreshed.find((w) => areWindowHandlesEqual(w.handle, incomingHandle));
+
+        if (excludeOwnAppWindows && isOwnAppWindow) {
+            // "Second active window": when app window is foreground and excluded from list,
+            // select the topmost remaining external window in z-order.
+            selectedHandle = refreshed[0]?.handle ?? null;
+        } else {
+            selectedHandle = refreshedMatch?.handle ?? selectedHandle;
+        }
 
         set(activeHwndAtom, selectedHandle);
         set(selectedHwndAtom, selectedHandle);

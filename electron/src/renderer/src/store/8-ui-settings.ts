@@ -16,6 +16,7 @@ export interface AppSettings {
     showFooter: boolean;
     theme: ThemeMode;
     activeWindowMonitoringEnabled: boolean;
+    excludeOwnAppWindows: boolean;
     autoHighlightSelectedControl: boolean;
     highlightBlinkCount: number;
     showEmptyBoundsNotification: boolean;
@@ -28,6 +29,7 @@ const DEFAULT_SETTINGS: AppSettings = {
     showFooter: true,
     theme: "light",
     activeWindowMonitoringEnabled: true,
+    excludeOwnAppWindows: false,
     autoHighlightSelectedControl: false,
     highlightBlinkCount: 3,
     showEmptyBoundsNotification: true,
