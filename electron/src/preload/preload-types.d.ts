@@ -28,12 +28,12 @@ interface HighlightOptions {
 // API exposed by preload script
 
 interface WinWatchApi {
-    getTopLevelWindows: () => Promise<string>;
+    getTopLevelWindows: () => Promise<string>; // The returned data is stringified WindowInfo[]
     getControlTree: (handle: string) => Promise<string>;
     startMonitoring: (handle: string) => Promise<boolean>;
     stopMonitoring: () => Promise<boolean>;
     invokeControl: (handle: string, runtimeId: string) => Promise<boolean>;
-    onActiveWindowChanged: (callback: (data: string) => void) => () => void;
+    onActiveWindowChanged: (callback: (data: string) => void) => () => void; // The format of the data is the same as the one returned by getTopLevelWindows: stringified WindowInfo.
     highlightRect: (bounds: Rect4, options?: HighlightOptions) => Promise<void>;
     hideHighlight: () => Promise<void>;
     getWindowRect: (handle: string) => Promise<string>;

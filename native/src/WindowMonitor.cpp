@@ -23,6 +23,8 @@ void CALLBACK WinEventProc(HWINEVENTHOOK hWinEventHook, DWORD event, HWND hwnd, 
         if (g_Callback) {
             // We just send a simple JSON with the handle for now
             // The frontend can then request the full tree
+            // Handle format is always canonical fixed-width hex (0x...),
+            // same formatter as WindowList and ControlTree.
             std::string json = "{\"handle\":\"" + HwndToHexString(hwnd) + "\"}";
             // Or better, reuse WindowList logic to get quick info
             g_Callback(json.c_str());

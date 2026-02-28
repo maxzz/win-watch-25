@@ -1,13 +1,12 @@
 import { useEffect } from "react";
 import { useSetAtom } from "jotai";
-import { activeHwndAtom, doOnAppStartRefreshWindowInfosAtom, selectedHwndAtom } from "../2-1-atoms-windows-list";
+import { activeHwndAtom, applyActiveWindowChangedAtom, doOnAppStartRefreshWindowInfosAtom } from "../2-1-atoms-windows-list";
 import { useSnapshot } from "valtio";
 import { appSettings } from "../8-ui-settings";
-import { notice } from "@renderer/components/ui/local-ui/7-toaster";
 
 export function useActiveWindow() {
     const setActiveHwnd = useSetAtom(activeHwndAtom);
-    const setSelectedHwnd = useSetAtom(selectedHwndAtom);
+    const applyActiveWindowChanged = useSetAtom(applyActiveWindowChangedAtom);
     const { activeWindowMonitoringEnabled } = useSnapshot(appSettings);
 
     useEffect(
@@ -20,34 +19,13 @@ export function useActiveWindow() {
             // Listen for active window changes from backend
             const unsubscribe = tmApi.onActiveWindowChanged(
                 (data) => {
-                    try {
-                        const info = JSON.parse(data);
-                        console.log("♻️useActiveWindow", info);
-
-                        // We might receive partial info, or just handle
-                        // Here we should update active handle
-                        // But if we are in "manual select" mode, we might want to respect user choice
-                        // The requirement says "Active Window Monitoring", so it should update.
-                        // Convert handle to same format (hex string usually)
-                        // The backend sends decimal string in my C++ code? "std::to_string((long long)hwnd)"
-                        // WindowList sends hex pointer string usually. I should align them.
-                        // C++ WindowList: (void*)handle -> stream << handle -> hex usually? No, pointer output is hex.
-                        // C++ WindowMonitor: std::to_string((long long)hwnd) -> decimal.
-                        // I should fix C++ to be consistent. But assuming decimal handle string for now.
-
-                        setActiveHwnd(info?.handle);
-                        setSelectedHwnd(info?.handle);
-                    } catch (e) {
-                        console.error("Error parsing active window update", e);
-                        notice.error("Error parsing active window update");
-                        setActiveHwnd(null);
-                    }
+                    void applyActiveWindowChanged(data);
                 }
             );
 
             return unsubscribe;
         },
-        [activeWindowMonitoringEnabled]);
+        [activeWindowMonitoringEnabled, applyActiveWindowChanged, setActiveHwnd]);
 }
 
 export function useMonitorActiveWindow() {
