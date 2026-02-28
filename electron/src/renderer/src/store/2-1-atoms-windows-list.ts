@@ -84,21 +84,13 @@ export const applyActiveWindowChangedAtom = atom(
 
         const previousActive = get(activeHwndAtom);
         const excludeOwnAppWindows = appSettings.excludeOwnAppWindows;
-        let isOwnAppWindow = false;
-        if (excludeOwnAppWindows) {
-            try {
-                isOwnAppWindow = await tmApi.isOwnAppWindowHandle(incomingHandle);
-            } catch (e) {
-                console.warn(`Failed to detect whether handle belongs to own app: ${incomingHandle}`, e);
-            }
-        }
-
         const windows = get(windowInfosAtom);
         const matchedWindow = windows.find((w) => areWindowHandlesEqual(w.handle, incomingHandle));
-        let selectedHandle = matchedWindow?.handle ?? incomingHandle;
+        let selectedHandle: string | null = matchedWindow?.handle ?? incomingHandle;
 
-        // Keep UI focused on the new active window immediately (unless we should treat it as excluded own app window).
-        if (!(excludeOwnAppWindows && isOwnAppWindow)) {
+        // Keep UI focused on the new active window immediately unless exclusion is enabled
+        // and this handle is not part of the filtered list (it might be our own app window).
+        if (!(excludeOwnAppWindows && !matchedWindow)) {
             set(activeHwndAtom, selectedHandle);
             set(selectedHwndAtom, selectedHandle);
         }
@@ -122,7 +114,7 @@ export const applyActiveWindowChangedAtom = atom(
             return;
         }
 
-        if (!matchedWindow && !(excludeOwnAppWindows && isOwnAppWindow)) {
+        if (!matchedWindow && !excludeOwnAppWindows) {
             set(ensureWindowInListAtom, {
                 handle: incomingHandle,
                 title: typeof info.title === "string" ? info.title : "",
@@ -136,10 +128,10 @@ export const applyActiveWindowChangedAtom = atom(
         const refreshed = get(windowInfosAtom);
         const refreshedMatch = refreshed.find((w) => areWindowHandlesEqual(w.handle, incomingHandle));
 
-        if (excludeOwnAppWindows && isOwnAppWindow) {
-            // "Second active window": when app window is foreground and excluded from list,
-            // select the topmost remaining external window in z-order.
-            selectedHandle = refreshed[0]?.handle ?? null;
+        if (excludeOwnAppWindows) {
+            // With exclusion enabled, if active handle is not present after refresh,
+            // pick the topmost remaining window (second-active behavior).
+            selectedHandle = refreshedMatch?.handle ?? refreshed[0]?.handle ?? null;
         } else {
             selectedHandle = refreshedMatch?.handle ?? selectedHandle;
         }

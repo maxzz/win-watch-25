@@ -20,7 +20,13 @@ void OnActiveWindowChanged(const char* windowInfoJson) {
 
 Napi::Value GetTopLevelWindowsWrapper(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
-    const char* json = GetTopLevelWindowsJson();
+    DWORD excludeProcessId = 0;
+    if (info.Length() >= 1 && info[0].IsNumber()) {
+        excludeProcessId = static_cast<DWORD>(info[0].As<Napi::Number>().Uint32Value());
+    }
+    const char* json = excludeProcessId != 0
+        ? GetTopLevelWindowsJsonEx(excludeProcessId)
+        : GetTopLevelWindowsJson();
     Napi::String result = Napi::String::New(env, json ? json : "[]");
     FreeString(json);
     return result;

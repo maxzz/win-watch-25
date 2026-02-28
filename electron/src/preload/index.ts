@@ -37,9 +37,6 @@ const mainLocalApi: WinWatchApi = {
 
     // Check whether a window handle is currently valid
     isWindowHandleValid: (handle: string) => ipcRenderer.invoke('is-window-handle-valid', handle),
-
-    // Check whether a window handle belongs to this app
-    isOwnAppWindowHandle: (handle: string) => ipcRenderer.invoke('is-own-app-window-handle', handle),
 };
 
 try {

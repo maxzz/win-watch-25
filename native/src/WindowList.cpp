@@ -2,16 +2,24 @@
 #include "Utils.h"
 #include <psapi.h>
 
-std::vector<WindowInfo> WindowList::EnumerateTopLevelWindows() {
+struct EnumTopLevelWindowsContext {
+    std::vector<WindowInfo>* windows;
+    DWORD excludeProcessId;
+};
+
+std::vector<WindowInfo> WindowList::EnumerateTopLevelWindows(DWORD excludeProcessId) {
     std::vector<WindowInfo> windows;
-    EnumWindows(EnumWindowsProc, (LPARAM)&windows);
+    EnumTopLevelWindowsContext context{ &windows, excludeProcessId };
+    EnumWindows(EnumWindowsProc, reinterpret_cast<LPARAM>(&context));
     return windows;
 }
 
 BOOL CALLBACK WindowList::EnumWindowsProc(HWND hwnd, LPARAM lParam) {
     if (!IsWindowVisible(hwnd)) return TRUE;
 
-    std::vector<WindowInfo>* pWindows = (std::vector<WindowInfo>*)lParam;
+    auto* context = reinterpret_cast<EnumTopLevelWindowsContext*>(lParam);
+    if (!context || !context->windows) return TRUE;
+    std::vector<WindowInfo>* pWindows = context->windows;
     
     WindowInfo info;
     info.handle = hwnd;
@@ -20,6 +28,10 @@ BOOL CALLBACK WindowList::EnumWindowsProc(HWND hwnd, LPARAM lParam) {
     info.className = GetWindowClassNameStr(hwnd);
     GetWindowThreadProcessId(hwnd, &info.processId);
     GetWindowRect(hwnd, &info.rect);  // Get window rectangle in screen coordinates
+
+    if (context->excludeProcessId != 0 && info.processId == context->excludeProcessId) {
+        return TRUE;
+    }
 
     // Filter out empty titles or common invisible system windows if desired
     // For now, keep most

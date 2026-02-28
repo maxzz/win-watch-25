@@ -127,6 +127,12 @@ WM_API const char* GetTopLevelWindowsJson() {
     return _strdup(json.c_str());
 }
 
+WM_API const char* GetTopLevelWindowsJsonEx(DWORD excludeProcessId) {
+    auto windows = WindowList::EnumerateTopLevelWindows(excludeProcessId);
+    std::string json = WindowList::ToJson(windows);
+    return _strdup(json.c_str());
+}
+
 WM_API const char* GetControlTreeJson(HWND hwnd) {
     auto root = ControlTree::GetTreeForWindow(hwnd);
     std::string json = ControlTree::ToJson(root);

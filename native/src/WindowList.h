@@ -15,7 +15,7 @@ struct WindowInfo {
 
 class WindowList {
 public:
-    static std::vector<WindowInfo> EnumerateTopLevelWindows();
+    static std::vector<WindowInfo> EnumerateTopLevelWindows(DWORD excludeProcessId = 0);
     static std::string ToJson(const std::vector<WindowInfo>& windows);
     
 private:

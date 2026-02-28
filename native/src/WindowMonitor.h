@@ -28,6 +28,7 @@ extern "C" {
 
     // Get list of all top-level windows as JSON string
     WM_API const char* GetTopLevelWindowsJson();
+    WM_API const char* GetTopLevelWindowsJsonEx(DWORD excludeProcessId);
 
     // Get control tree for a specific window handle as JSON string
     WM_API const char* GetControlTreeJson(HWND hwnd);
