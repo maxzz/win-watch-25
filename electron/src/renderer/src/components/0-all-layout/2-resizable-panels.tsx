@@ -1,6 +1,6 @@
 import { useSetAtom } from "jotai";
 import { useSnapshot } from "valtio";
-import { appSettings, setPanelLayoutAtom } from "@renderer/store/1-ui-settings";
+import { appSettings, setPanelLayoutAtom } from "@renderer/store/8-ui-settings";
 import { WindowTreePanel } from "../2-main/1-window-tree";
 import { ControlTreeLoader } from "../2-main/2-control-tree";
 import { PropertiesPanel } from "../2-main/3-properties-panel";

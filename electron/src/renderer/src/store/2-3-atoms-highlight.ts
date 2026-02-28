@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
-import { appSettings } from "./1-ui-settings";
+import { appSettings } from "./8-ui-settings";
 import { type ControlNode } from "./9-types-tmapi";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
 import { selectedControlAtom } from "./2-2-1-atoms-controls-list";

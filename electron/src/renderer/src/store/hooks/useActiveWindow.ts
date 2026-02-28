@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSetAtom } from "jotai";
 import { activeHwndAtom, doOnAppStartRefreshWindowInfosAtom, selectedHwndAtom } from "../2-1-atoms-windows-list";
 import { useSnapshot } from "valtio";
-import { appSettings } from "../1-ui-settings";
+import { appSettings } from "../8-ui-settings";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster";
 
 export function useActiveWindow() {

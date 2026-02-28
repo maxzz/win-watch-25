@@ -1,6 +1,6 @@
 import { useSnapshot } from "valtio";
 import { classNames } from "@renderer/utils";
-import { appSettings } from "@renderer/store/1-ui-settings";
+import { appSettings } from "@renderer/store/8-ui-settings";
 import { PanelBottomIcon, PanelRightIcon } from "lucide-react";
 import { Button } from "../ui/shadcn/button";
 import { TopMenu } from "./1-top-menu";

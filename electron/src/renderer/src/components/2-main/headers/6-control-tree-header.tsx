@@ -1,6 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { useSnapshot } from "valtio/react";
-import { appSettings } from "@renderer/store/1-ui-settings";
+import { appSettings } from "@renderer/store/8-ui-settings";
 import { selectedHwndAtom } from "@renderer/store/2-1-atoms-windows-list";
 import { refreshWindowControlsTreeAtom } from "@renderer/store/2-2-1-atoms-controls-list";
 import { setAutoHighlightSelectedControlAtom } from "@renderer/store/2-3-atoms-highlight";

@@ -2,7 +2,7 @@ import { type ReactNode } from "react";
 import { useAtomValue } from "jotai";
 import { useSnapshot } from "valtio/react";
 import { asHex, classNames, hexAccRuntimeId, normalizeHwnd } from "@renderer/utils";
-import { appSettings } from "@renderer/store/1-ui-settings";
+import { appSettings } from "@renderer/store/8-ui-settings";
 import { formatHexU32, formatMsaaRole } from "@renderer/utils/msaa/0-msaa-role-names";
 import { type ControlNode } from "@renderer/store/9-types-tmapi";
 import { formatControlType } from "@renderer/utils/uia/0-uia-control-type-names";

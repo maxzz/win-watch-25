@@ -1,4 +1,4 @@
-import { appSettings } from "./1-ui-settings";
+import { appSettings } from "./8-ui-settings";
 import { notice } from "@renderer/components/ui/local-ui/7-toaster/7-toaster";
 import { type ControlNode, type NativeBounds } from "./9-types-tmapi";
 
