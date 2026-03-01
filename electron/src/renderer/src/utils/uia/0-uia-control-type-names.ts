@@ -4,49 +4,53 @@
  * https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-controltype-ids
  */
 
-const UIA_CONTROL_TYPE_NAMES: Record<string, string> = {
-    "50000": "Button",
-    "50001": "Calendar",
-    "50002": "CheckBox",
-    "50003": "ComboBox",
-    "50004": "Edit",
-    "50005": "Hyperlink",
-    "50006": "Image",
-    "50007": "ListItem",
-    "50008": "List",
-    "50009": "Menu",
-    "50010": "MenuBar",
-    "50011": "MenuItem",
-    "50012": "ProgressBar",
-    "50013": "RadioButton",
-    "50014": "ScrollBar",
-    "50015": "Slider",
-    "50016": "Spinner",
-    "50017": "StatusBar",
-    "50018": "Tab",
-    "50019": "TabItem",
-    "50020": "Text",
-    "50021": "ToolBar", //Symbol_uia_Toolbar
-    "50022": "ToolTip", //Symbol_uia_Tooltip
-    "50023": "Tree",
-    "50024": "TreeItem",
-    "50025": "Custom",
-    "50026": "Group",
-    "50027": "Thumb",
-    "50028": "DataGrid",
-    "50029": "DataItem",
-    "50030": "Document",
-    "50031": "SplitButton",
-    "50032": "Window",
-    "50033": "Pane",
-    "50034": "Header",
-    "50035": "HeaderItem",
-    "50036": "Table",
-    "50037": "TitleBar",
-    "50038": "Separator",
-    "50039": "SemanticZoom",
-    "50040": "AppBar",
-};
+export enum UiaControlTypeId {
+    Button = "50000",
+    Calendar = "50001",
+    CheckBox = "50002",
+    ComboBox = "50003",
+    Edit = "50004",
+    Hyperlink = "50005",
+    Image = "50006",
+    ListItem = "50007",
+    List = "50008",
+    Menu = "50009",
+    MenuBar = "50010",
+    MenuItem = "50011",
+    ProgressBar = "50012",
+    RadioButton = "50013",
+    ScrollBar = "50014",
+    Slider = "50015",
+    Spinner = "50016",
+    StatusBar = "50017",
+    Tab = "50018",
+    TabItem = "50019",
+    Text = "50020",
+    ToolBar = "50021", //Symbol_uia_Toolbar
+    ToolTip = "50022", //Symbol_uia_Tooltip
+    Tree = "50023",
+    TreeItem = "50024",
+    Custom = "50025",
+    Group = "50026",
+    Thumb = "50027",
+    DataGrid = "50028",
+    DataItem = "50029",
+    Document = "50030",
+    SplitButton = "50031",
+    Window = "50032",
+    Pane = "50033",
+    Header = "50034",
+    HeaderItem = "50035",
+    Table = "50036",
+    TitleBar = "50037",
+    Separator = "50038",
+    SemanticZoom = "50039",
+    AppBar = "50040",
+}
+
+const UIA_CONTROL_TYPE_NAMES: Record<string, string> = Object.fromEntries(
+    Object.entries(UiaControlTypeId).map(([name, id]) => [id, name])
+);
 
 /**
  * Get human-readable control type name from numeric ID
