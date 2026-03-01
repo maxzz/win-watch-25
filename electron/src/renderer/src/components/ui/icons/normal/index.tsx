@@ -15,6 +15,7 @@ export * from "./25-sliders";
 export * from "./26-broken-img";
 
 export * from "./27-dnd-target";
+export * from "./51-desktop-computer-pc";
 export * from "./27-microscope";
 export * from "./27-not-in-use";
 export * from "./27-stop-circle";
