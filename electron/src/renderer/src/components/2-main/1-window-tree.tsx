@@ -3,7 +3,7 @@ import { useAtom, useAtomValue } from "jotai";
 import { classNames, normalizeHwnd } from "@renderer/utils";
 import { type WindowInfo } from "@renderer/store/9-types-tmapi";
 import { WindowTreeHeader } from "./headers/5-window-tree-header";
-import { IconL_AppWindow, IconL_ChevronDown, IconL_ChevronRight } from "../ui/icons";
+import { IconL_AppWindow, IconL_ChevronDown, IconL_ChevronRight, IconL_Layout } from "../ui/icons";
 import { selectedHwndAtom, windowInfosAtom } from "@renderer/store/2-1-atoms-windows-list";
 
 export function WindowTreePanel() {
@@ -50,7 +50,7 @@ function WindowNode({ windowInfo, selectedHandle, onSelect, depth }: { windowInf
                     )}
                 </span>
 
-                <IconL_AppWindow className="shrink-0 mr-0.5 size-3.5 text-muted-foreground" />
+                <WindowNodeIcon windowInfo={windowInfo} />
 
                 <span className="text-xs truncate">
                     {/* <span className="ml-1 text-xs text-muted-foreground">
@@ -71,6 +71,14 @@ function WindowNode({ windowInfo, selectedHandle, onSelect, depth }: { windowInf
             )}
         </div>
     );
+}
+
+function WindowNodeIcon({ windowInfo }: { windowInfo: WindowInfo; }) {
+    const iconClasses = "shrink-0 mr-0.5 size-3.5 text-muted-foreground";
+    if (windowInfo.className === "Progman" && windowInfo.processName.toLowerCase() === "explorer.exe") {
+        return <IconL_Layout className={iconClasses} />;
+    }
+    return <IconL_AppWindow className={iconClasses} />;
 }
 
 function getRowClasses(isSelected: boolean): string {
