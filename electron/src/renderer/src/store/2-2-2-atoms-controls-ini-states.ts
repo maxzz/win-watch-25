@@ -1,5 +1,5 @@
 import { atom, type PrimitiveAtom } from "jotai";
-import { getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
+import { ControlId, getControlTypeName } from "@renderer/utils/uia/0-uia-control-type-names";
 import { uuid } from "../utils/uuid";
 import { type ControlNode } from "./9-types-tmapi";
 import { selectedHwndAtom } from "./2-1-atoms-windows-list";
@@ -75,11 +75,11 @@ function withExpandedAtom(node: RawControlNode, expandedStateByUniqueId?: Map<nu
 }
 
 function getDefaultExpandedState(node: RawControlNode): boolean {
-    const controlTypeName = getControlTypeName(node.controlType);
+    const controlTypeId = node.controlType;
     let rvExpanded = true;
 
     // If Pane and its children only Button without children then collapse the Pane.
-    if (controlTypeName === "Pane") {
+    if (controlTypeId === ControlId.Pane) {
         if (node.className === "BrowserCaptionButtonContainer" || // This is Chrome caption bar: Minimize, Maximize, Close buttons. and chrome tabs.
             node.className === "TabStrip" ||
             node.className === "ReBarWindow32" || // This Windows 11 explorer breadcrumb bar and address bar.
@@ -87,37 +87,37 @@ function getDefaultExpandedState(node: RawControlNode): boolean {
             rvExpanded = false;
         }
         else {
-            const isOnlyButtons = node.children?.every((child) => !child.children?.length && getControlTypeName(child.controlType) === "Button");
+            const isOnlyButtons = node.children?.every((child) => !child.children?.length && child.controlType === ControlId.Button);
             if (isOnlyButtons) {
                 rvExpanded = false;
             }
         }
     }
-    else if (controlTypeName === "TitleBar") { // Windows 11 explorer TitleBar
+    else if (controlTypeId === ControlId.TitleBar) { // Windows 11 explorer TitleBar
         rvExpanded = false;
     }
-    else if (controlTypeName === "ToolBar") { // Any ToolBar
+    else if (controlTypeId === ControlId.ToolBar) { // Any ToolBar
         rvExpanded = false;
     }
-    else if (controlTypeName === "StatusBar") { // Any StatusBar
+    else if (controlTypeId === ControlId.StatusBar) { // Any StatusBar
         rvExpanded = false;
     }
-    else if (controlTypeName === "ScrollBar") { // Any ScrollBar
+    else if (controlTypeId === ControlId.ScrollBar) { // Any ScrollBar
         rvExpanded = false;
     }
-    else if (controlTypeName === "TabContainerImpl") { // If chrome tabs
-        rvExpanded = false;
-    }
-    else if (controlTypeName === "Tab") {
+    // else if (controlTypeId === ControlId.TabContainerImpl) { // If chrome tabs
+    //     rvExpanded = false;
+    // }
+    else if (controlTypeId === ControlId.Tab) {
         if (node.className === "HorizontalTabStripRegionView") { // Chrome top tabs.
             rvExpanded = false;
         }
     }
-    else if (controlTypeName === "ListItem") {
+    else if (controlTypeId === ControlId.ListItem) {
         // and only child is a Text control then collapse the ListItem.
         if (node.children?.length === 1) {
-            const childControlTypeName = getControlTypeName(node.children[0].controlType);
-            if (childControlTypeName === "Text" || childControlTypeName === "Edit") {
+            const childControlTypeId = node.children[0].controlType;
+            if (childControlTypeId === ControlId.Text || childControlTypeId === ControlId.Edit) {
                 rvExpanded = false;
             }
         }
