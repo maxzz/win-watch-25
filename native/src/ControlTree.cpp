@@ -170,6 +170,11 @@ void ControlTree::WalkTree(IUIAutomationElement* element, ControlNode& node) {
     } else {
         node.nativeWindowHandle = nullptr;
     }
+    if (node.nativeWindowHandle && IsWindow(node.nativeWindowHandle)) {
+        node.parentWindowHandle = GetAncestor(node.nativeWindowHandle, GA_PARENT);
+    } else {
+        node.parentWindowHandle = nullptr;
+    }
 
     node.hasHtmlAccess = TryGetHtmlElement(element);
 
@@ -252,6 +257,7 @@ std::string ControlTree::ToJson(const ControlNode& node) {
     json << "\"className\":\"" << EscapeJson(node.className) << "\",";
     json << "\"runtimeId\":\"" << EscapeJson(node.runtimeId) << "\",";
     json << "\"nativeWindowHandle\":\"" << (node.nativeWindowHandle ? HwndToHexString(node.nativeWindowHandle) : "") << "\",";
+    json << "\"parentWindowHandle\":\"" << (node.parentWindowHandle ? HwndToHexString(node.parentWindowHandle) : "") << "\",";
     json << "\"hasHtmlAccess\":" << (node.hasHtmlAccess ? "true" : "false") << ",";
     json << "\"isLegacyIAccessiblePatternAvailable\":" << (node.isLegacyIAccessiblePatternAvailable ? "true" : "false") << ",";
     json << "\"currentRole\":" << node.currentRole << ",";

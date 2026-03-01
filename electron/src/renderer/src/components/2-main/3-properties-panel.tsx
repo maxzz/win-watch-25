@@ -78,6 +78,7 @@ function getControlProperties(control: ControlNode): Array<{ label: string; valu
         { label: "Process ID", value: asHex({ value: String(control.processId), prefix: true }), title: `dec: ${String(control.processId)}` },
         { label: "Framework ID", value: <span className="-ml-1 px-1 text-foreground bg-sky-100 dark:bg-sky-900 border border-sky-300 dark:border-sky-700 rounded">{control.frameworkId}</span> },
         { label: "Native Window Handle", value: normalizeHwnd(control.nativeWindowHandle) },
+        { label: "Parent Window Handle", value: normalizeHwnd(control.parentWindowHandle) },
         { label: "-", value: null },
         { label: "Name", value: <span className="text-blue-800 font-semibold">{control.name}</span> },
         { label: "Classname", value: control.className },

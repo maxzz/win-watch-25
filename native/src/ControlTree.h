@@ -11,6 +11,7 @@ struct ControlNode {
     std::string className;
     std::string runtimeId;
     HWND nativeWindowHandle = nullptr;
+    HWND parentWindowHandle = nullptr;
     bool hasHtmlAccess = false;
     bool isLegacyIAccessiblePatternAvailable = false;
     DWORD currentRole = 0;
