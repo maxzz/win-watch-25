@@ -75,9 +75,16 @@ function WindowNode({ windowInfo, selectedHandle, onSelect, depth }: { windowInf
 
 function WindowNodeIcon({ windowInfo }: { windowInfo: WindowInfo; }) {
     const iconClasses = "shrink-0 mr-0.5 size-3.5 text-muted-foreground";
+    
     if (windowInfo.className === "Progman" && windowInfo.processName.toLowerCase() === "explorer.exe") {
         return <IconDesktopComputerPc className={iconClasses} />;
     }
+
+    if (windowInfo.className === "Windows.UI.Core.CoreWindow" && windowInfo.title === "Windows Input Experience") {
+        const iconClasses2 = "shrink-0 mr-0.5 size-3.5 text-orange-500/50";
+        return <IconL_AppWindow className={iconClasses2} />;
+    }
+    
     return <IconL_AppWindow className={iconClasses} />;
 }
 
