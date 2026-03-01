@@ -81,8 +81,9 @@ function getDefaultExpandedState(node: RawControlNode): boolean {
     // If Pane and its children only Button without children then collapse the Pane.
     if (controlTypeId === ControlId.Pane) {
         if (node.className === "BrowserCaptionButtonContainer" || // This is Chrome caption bar: Minimize, Maximize, Close buttons. and chrome tabs.
-            node.className === "TabStrip" ||
             node.className === "ReBarWindow32" || // This Windows 11 explorer breadcrumb bar and address bar.
+            node.className === "TabStrip" || // This is chrome tabs.
+            node.className === "TabContainerImpl" || // This is chrome tabs under "TabStrip".
             node.className === "UIRibbonCommandBarDock") { // This is menu bar in the windows 11 explorer.
             rvExpanded = false;
         }
@@ -105,9 +106,6 @@ function getDefaultExpandedState(node: RawControlNode): boolean {
     else if (controlTypeId === ControlId.ScrollBar) { // Any ScrollBar
         rvExpanded = false;
     }
-    // else if (controlTypeId === ControlId.TabContainerImpl) { // If chrome tabs
-    //     rvExpanded = false;
-    // }
     else if (controlTypeId === ControlId.Tab) {
         if (node.className === "HorizontalTabStripRegionView") { // Chrome top tabs.
             rvExpanded = false;
