@@ -4,7 +4,7 @@
  * https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-controltype-ids
  */
 
-export enum UiaControlTypeId {
+export enum ControlId {
     Button      /**/ = "50000",
     Calendar    /**/ = "50001",
     CheckBox    /**/ = "50002",
@@ -49,7 +49,7 @@ export enum UiaControlTypeId {
 }
 
 const UIA_CONTROL_TYPE_NAMES: Record<string, string> = Object.fromEntries(
-    Object.entries(UiaControlTypeId).map(([name, id]) => [id, name])
+    Object.entries(ControlId).map(([name, id]) => [id, name])
 );
 
 /**
