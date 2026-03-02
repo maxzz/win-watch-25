@@ -119,6 +119,14 @@ function getDefaultExpandedState(node: RawControlNode): boolean {
                 rvExpanded = false;
             }
         }
+    } else if (controlTypeId === ControlId.SplitButton || controlTypeId === ControlId.Button) {
+        // If SplitButton or Button and has only one child text or image control then collapse the SplitButton or Button.
+        if (node.children?.length === 1) {
+            const childControlTypeId = node.children[0].controlType;
+            if (childControlTypeId === ControlId.Text || childControlTypeId === ControlId.Image) {
+                rvExpanded = false;
+            }
+        }
     }
 
     // console.log(`getDefaultExpandedState(${node.name}) = ${rvExpanded}`);
