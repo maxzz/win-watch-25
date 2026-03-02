@@ -1,0 +1,1 @@
+TODO: Add toggle "Once" if "Follow focus" is enabled.
