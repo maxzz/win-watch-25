@@ -17,6 +17,7 @@ export interface AppSettings {
     winlist_SortWindows: boolean;               // Whether to sort the window list by process name
     controls_AutoHighlight: boolean;            // Whether to auto highlight the selected control
     controls_highlightBlinks: number;           // The number of blinks for the highlight
+    controls_highlightBorderWidth: number;      // Border width used for the highlight rectangle
     controls_ShowEmptyBoundsNotice: boolean;    // Whether to show a notification when the selected control bounds are empty
     ui_showFooter: boolean;                     // Whether to show the footer
     ui_theme: ThemeMode;                        // The theme: 'light' or 'dark'
@@ -30,6 +31,7 @@ const DEFAULT_SETTINGS: AppSettings = {
     winlist_SortWindows: true,
     controls_AutoHighlight: true,
     controls_highlightBlinks: 3,
+    controls_highlightBorderWidth: 2,
     controls_ShowEmptyBoundsNotice: true,
     ui_showFooter: true,
     ui_theme: "light",

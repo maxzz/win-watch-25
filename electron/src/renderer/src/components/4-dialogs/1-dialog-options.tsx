@@ -5,13 +5,14 @@ import { appSettings } from "@renderer/store/8-ui-settings";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from "../ui/shadcn/dialog";
 import { Label } from "../ui/shadcn/label";
 import { Switch } from "../ui/shadcn/switch";
-import { setAutoHighlightSelectedControlAtom, setHighlightBlinkCountAtom, setShowEmptyBoundsNotificationAtom } from "@renderer/store/2-3-atoms-highlight";
+import { setAutoHighlightSelectedControlAtom, setHighlightBlinkCountAtom, setHighlightBorderWidthAtom, setShowEmptyBoundsNotificationAtom } from "@renderer/store/2-3-atoms-highlight";
 import { setExcludeOwnAppWindowsAtom, setSortWindowsByProcessNameAtom } from "@renderer/store/2-1-atoms-windows-list";
 
 export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) {
     const settings = useSnapshot(appSettings);
     const setAutoHighlight = useSetAtom(setAutoHighlightSelectedControlAtom);
     const setHighlightBlinkCount = useSetAtom(setHighlightBlinkCountAtom);
+    const setHighlightBorderWidth = useSetAtom(setHighlightBorderWidthAtom);
     const setShowEmptyBoundsNotification = useSetAtom(setShowEmptyBoundsNotificationAtom);
     const setExcludeOwnAppWindows = useSetAtom(setExcludeOwnAppWindowsAtom);
     const setSortWindowsByProcessName = useSetAtom(setSortWindowsByProcessNameAtom);
@@ -59,6 +60,14 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                         title="Blink count used for control/window highlight (1-10)"
                         min={1}
                         max={10}
+                    />
+                    <OptionNumber
+                        value={settings.controls_highlightBorderWidth}
+                        onValueChange={setHighlightBorderWidth}
+                        label="Highlight border width"
+                        title="Border width used for control/window highlight (1-20)"
+                        min={1}
+                        max={20}
                     />
                     <OptionCheckbox
                         checked={settings.controls_ShowEmptyBoundsNotice}

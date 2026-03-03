@@ -12,10 +12,23 @@ export function getSafeHighlightBlinkCount(): number {
     return Math.max(1, Math.min(10, Math.round(raw)));
 }
 
+export function getSafeHighlightBorderWidth(): number {
+    const raw = Number(appSettings.controls_highlightBorderWidth);
+    if (!Number.isFinite(raw)) return 2;
+    return Math.max(1, Math.min(20, Math.round(raw)));
+}
+
 export const setHighlightBlinkCountAtom = atom(
     null,
     (_get, _set, blinkCount: number): void => {
         appSettings.controls_highlightBlinks = Math.max(1, Math.min(10, Math.round(blinkCount)));
+    }
+);
+
+export const setHighlightBorderWidthAtom = atom(
+    null,
+    (_get, _set, borderWidth: number): void => {
+        appSettings.controls_highlightBorderWidth = Math.max(1, Math.min(20, Math.round(borderWidth)));
     }
 );
 
@@ -47,7 +60,7 @@ export const setAutoHighlightSelectedControlAtom = atom(
             const selectedHandle = get(selectedHwndAtom);
             const b = await getCurrentHighlightBounds(selectedHandle, selected);
             if (!b) return;
-            await tmApi.highlightRect({ ...b }, { blinkCount: getSafeHighlightBlinkCount(), color: 0xFF0000, borderWidth: 2 });
+            await tmApi.highlightRect({ ...b }, { blinkCount: getSafeHighlightBlinkCount(), color: 0xFF0000, borderWidth: getSafeHighlightBorderWidth() });
         } catch (e) {
             console.warn("Failed to highlight selected control", e);
         }
@@ -68,7 +81,7 @@ export const setSelectedControlAtom = atom(
             const selectedHandle = get(selectedHwndAtom);
             const b = await getCurrentHighlightBounds(selectedHandle, control);
             if (!b) return;
-            await tmApi.highlightRect({ ...b }, { blinkCount: getSafeHighlightBlinkCount(), color: 0xFF0000, borderWidth: 2 });
+            await tmApi.highlightRect({ ...b }, { blinkCount: getSafeHighlightBlinkCount(), color: 0xFF0000, borderWidth: getSafeHighlightBorderWidth() });
         } catch (e) {
             console.warn("Failed to highlight selected control", e);
         }
@@ -93,7 +106,8 @@ export const doHighlightSelectedWindowAtom = atom(
 
             const { left, top, right, bottom } = rect;
             const blinkCount = getSafeHighlightBlinkCount();
-            await tmApi.highlightRect({ left, top, right, bottom }, { blinkCount, color: 0xFF8400, borderWidth: 2 });
+            const borderWidth = getSafeHighlightBorderWidth();
+            await tmApi.highlightRect({ left, top, right, bottom }, { blinkCount, color: 0xFF8400, borderWidth });
 
             notice.success(`Highlighted selected window (handle: ${selectedHandle})`);
         } catch (e) {
