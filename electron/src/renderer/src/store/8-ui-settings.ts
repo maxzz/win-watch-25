@@ -13,15 +13,15 @@ export type PanelId = "left-panel" | "right-panel" | "controls-panel" | "control
 export type PanelLayout = Record<PanelId, number>;
 
 export interface AppSettings {
-    winlist_ActiveWinMonEnabled: boolean; // Whether to monitor the active window
-    winlist_ExcludeUs: boolean; // Whether to exclude the own app windows from the window list
-    winlist_SortWindows: boolean; // Whether to sort the window list by process name
-    controls_AutoHighlight: boolean;
-    controls_highlightBlinks: number; // The number of blinks for the highlight
-    controls_ShowEmptyBoundsNotice: boolean; // Whether to show a notification when the selected control bounds are empty
-    ui_showFooter: boolean;
-    ui_theme: ThemeMode;
-    ui_panels_Layout: PanelLayout; // Panel sizes (percentages) 
+    winlist_ActiveWinMonEnabled: boolean;       // Whether to monitor the active window
+    winlist_ExcludeUs: boolean;                 // Whether to exclude the own app windows from the window list
+    winlist_SortWindows: boolean;               // Whether to sort the window list by process name
+    controls_AutoHighlight: boolean;            // Whether to auto highlight the selected control
+    controls_highlightBlinks: number;           // The number of blinks for the highlight
+    controls_ShowEmptyBoundsNotice: boolean;    // Whether to show a notification when the selected control bounds are empty
+    ui_showFooter: boolean;                     // Whether to show the footer
+    ui_theme: ThemeMode;                        // The theme: 'light' or 'dark'
+    ui_panels_Layout: PanelLayout;              // Panel sizes (percentages) 
     ui_panels_PropPos: PropertiesPanelPosition; // The position of the properties panel: 'bottom' or 'right'
 }
 
