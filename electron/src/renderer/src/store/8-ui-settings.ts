@@ -26,9 +26,9 @@ export interface AppSettings {
 
 const DEFAULT_SETTINGS: AppSettings = {
     winlist_ActiveWinMonEnabled: true,
-    winlist_ExcludeUs: false,
+    winlist_ExcludeUs: true,
     winlist_SortWindows: true,
-    controls_AutoHighlight: false,
+    controls_AutoHighlight: true,
     controls_highlightBlinks: 3,
     controls_ShowEmptyBoundsNotice: true,
     ui_showFooter: true,
