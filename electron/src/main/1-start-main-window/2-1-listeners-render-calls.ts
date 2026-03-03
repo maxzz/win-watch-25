@@ -1,5 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import { winwatchPlugin } from "../0-all/1-load-plugin";
+import { appWindow } from "./9-app-window-instance";
+import { applyZoomAction } from "./5-app-menu";
 
 type GetTopLevelWindowsOptions = {
     excludeOwnAppWindows?: boolean;
@@ -82,5 +84,16 @@ export function setListenersRenderCalls() {
     ipcMain.handle('is-window-handle-valid', (_, handle: string) => {
         if (!winwatchPlugin) return false;
         return winwatchPlugin.isWindowHandleValid(handle);
+    });
+
+    ipcMain.handle("zoom-action", (_, action: "in" | "out" | "reset") => {
+        const win = appWindow.wnd ?? BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0];
+        if (!win) return 0;
+        return applyZoomAction(win, action);
+    });
+
+    ipcMain.handle("get-zoom-level", () => {
+        const win = appWindow.wnd ?? BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0];
+        return win?.webContents.getZoomLevel() ?? 0;
     });
 }

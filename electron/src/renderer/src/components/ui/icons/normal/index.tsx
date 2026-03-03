@@ -19,6 +19,9 @@ export * from "./51-desktop-computer-pc";
 export * from "./27-microscope";
 export * from "./27-not-in-use";
 export * from "./27-stop-circle";
+export * from "./29-1-zoom-minus";
+export * from "./29-2-zoom-plus";
+export * from "./29-3-zoom-reset";
 
 export * from "./30-1-theme-moon";
 export * from "./30-2-theme-sun";

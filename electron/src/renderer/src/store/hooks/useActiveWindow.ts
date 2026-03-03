@@ -3,6 +3,7 @@ import { useSetAtom } from "jotai";
 import { activeHwndAtom, applyActiveWindowChangedAtom, doOnAppStartRefreshWindowInfosAtom } from "../2-1-atoms-windows-list";
 import { useSnapshot } from "valtio";
 import { appSettings } from "../8-ui-settings";
+import { zoomLevelAtom } from "../2-6-atoms-zoom";
 
 export function useActiveWindow() {
     const { winlist_ActiveWinMonEnabled: activeWindowMonitoringEnabled } = useSnapshot(appSettings);
@@ -67,10 +68,18 @@ export function useMonitorActiveWindow() {
 
 export function useAppStartInitialize() {
     const refreshWindowInfosOnStart = useSetAtom(doOnAppStartRefreshWindowInfosAtom);
+    const setZoomLevel = useSetAtom(zoomLevelAtom);
 
     useEffect(
         () => {
             refreshWindowInfosOnStart();
+            tmApi.getZoomLevel().then(setZoomLevel).catch(() => undefined);
+
+            const unsubscribeZoom = tmApi.onZoomChanged((level) => {
+                setZoomLevel(level);
+            });
+
+            return unsubscribeZoom;
         },
-        []);
+        [refreshWindowInfosOnStart, setZoomLevel]);
 }

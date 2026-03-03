@@ -39,6 +39,9 @@ interface WinWatchApi {
     getWindowRect: (handle: string) => Promise<string>;                              // Gets the rectangle of a window in screen coordinates
     getControlCurrentBounds: (handle: string, runtimeId: string) => Promise<string>; // Gets the current bounds of a control by runtime ID
     isWindowHandleValid: (handle: string) => Promise<boolean>;                       // Checks if a window handle is valid
+    zoomAction: (action: "in" | "out" | "reset") => Promise<number>;                 // Applies zoom change and returns the resulting zoom level
+    getZoomLevel: () => Promise<number>;                                             // Returns current window zoom level
+    onZoomChanged: (callback: (level: number) => void) => () => void;                // Subscribes to zoom changes emitted from main process
     quitApp: () => Promise<void>;                                                    // Quits the application
 }
 

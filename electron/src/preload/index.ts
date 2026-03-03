@@ -37,6 +37,19 @@ const mainLocalApi: WinWatchApi = {
 
     // Check whether a window handle is currently valid
     isWindowHandleValid: (handle: string) => ipcRenderer.invoke('is-window-handle-valid', handle),
+
+    // Apply zoom action in main process and return resulting zoom level
+    zoomAction: (action: "in" | "out" | "reset") => ipcRenderer.invoke("zoom-action", action),
+
+    // Get current zoom level from main process
+    getZoomLevel: () => ipcRenderer.invoke("get-zoom-level"),
+
+    // Listen for zoom changes from backend
+    onZoomChanged: (callback: (level: number) => void) => {
+        const subscription = (_event: unknown, level: number) => callback(level);
+        ipcRenderer.on("zoom-changed", subscription);
+        return () => ipcRenderer.removeListener("zoom-changed", subscription);
+    },
 };
 
 try {
