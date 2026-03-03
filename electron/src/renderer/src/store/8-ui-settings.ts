@@ -7,10 +7,9 @@ const STORE_KEY = "win-watch-25";
 const STORE_VER = "v1.0";
 const STORAGE_ID = `${STORE_KEY}__${STORE_VER}`;
 
-export type PropertiesPanelPosition = 'bottom' | 'right';
-
-export type PanelId = "left-panel" | "right-panel" | "controls-panel" | "control-props-panel";
-export type PanelLayout = Record<PanelId, number>;
+type PropertiesPanelPosition = 'bottom' | 'right';
+type PanelId = "left-panel" | "right-panel" | "controls-panel" | "control-props-panel";
+type PanelLayout = Record<PanelId, number>;
 
 export interface AppSettings {
     winlist_ActiveWinMonEnabled: boolean;       // Whether to monitor the active window
@@ -37,8 +36,8 @@ const DEFAULT_SETTINGS: AppSettings = {
     ui_panels_Layout: {
         "left-panel": 25,
         "right-panel": 75,
-        "controls-panel": 20,
-        "control-props-panel": 80,
+        "controls-panel": 70,
+        "control-props-panel": 30,
     },
     ui_panels_PropPos: 'right',
 };
