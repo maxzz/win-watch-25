@@ -6,32 +6,12 @@ import { selectedHwndAtom } from "./2-1-atoms-windows-list";
 import { selectedControlAtom } from "./2-2-1-atoms-controls-list";
 import { getCurrentHighlightBounds } from "./2-4-atoms-bounds";
 
+//#region Highlight blink count
+
 export function getSafeHighlightBlinkCount(): number {
     const raw = Number(appSettings.controls_highlightBlinks);
     if (!Number.isFinite(raw)) return 3;
     return Math.max(1, Math.min(10, Math.round(raw)));
-}
-
-export function getSafeHighlightBorderWidth(): number {
-    const raw = Number(appSettings.controls_highlightBorderWidth);
-    if (!Number.isFinite(raw)) return 2;
-    return Math.max(1, Math.min(20, Math.round(raw)));
-}
-
-function normalizeHexColor(color: string): string {
-    const input = String(color ?? "").trim();
-    if (/^#[0-9a-fA-F]{6}$/.test(input)) {
-        return input.toLowerCase();
-    }
-    return "#ff0000";
-}
-
-export function getSafeHighlightBorderColorHex(): string {
-    return normalizeHexColor(appSettings.controls_highlightBorderColor);
-}
-
-export function getSafeHighlightBorderColorValue(): number {
-    return Number.parseInt(getSafeHighlightBorderColorHex().slice(1), 16);
 }
 
 export const setHighlightBlinkCountAtom = atom(
@@ -41,6 +21,16 @@ export const setHighlightBlinkCountAtom = atom(
     }
 );
 
+//#endregion Highlight blink count
+
+//#region Highlight border width
+
+export function getSafeHighlightBorderWidth(): number {
+    const raw = Number(appSettings.controls_highlightBorderWidth);
+    if (!Number.isFinite(raw)) return 2;
+    return Math.max(1, Math.min(20, Math.round(raw)));
+}
+
 export const setHighlightBorderWidthAtom = atom(
     null,
     (_get, _set, borderWidth: number): void => {
@@ -48,12 +38,34 @@ export const setHighlightBorderWidthAtom = atom(
     }
 );
 
+//#endregion Highlight border width
+
+//#region Highlight border color
+
+export function getSafeHighlightBorderColorHex(): string {
+    return normalizeHexColor(appSettings.controls_highlightBorderColor);
+}
+
+export function getSafeHighlightBorderColorValue(): number {
+    return Number.parseInt(getSafeHighlightBorderColorHex().slice(1), 16);
+}
+
 export const setHighlightBorderColorAtom = atom(
     null,
     (_get, _set, color: string): void => {
         appSettings.controls_highlightBorderColor = normalizeHexColor(color);
     }
 );
+
+function normalizeHexColor(color: string): string {
+    const input = String(color ?? "").trim();
+    if (/^#[0-9a-fA-F]{6}$/.test(input)) {
+        return input.toLowerCase();
+    }
+    return "#ff0000";
+}
+
+//#endregion Highlight border color
 
 export const setShowEmptyBoundsNotificationAtom = atom(
     null,
