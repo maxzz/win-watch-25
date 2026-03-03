@@ -31,8 +31,8 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="mt-1 pb-4 grid gap-1.5">
-                    <div className="text-xs font-semibold border-b border-border pb-1">Windows list</div>
+                <div className="pb-4 grid gap-1">
+                    <div className="mt-1.5 text-xs font-semibold border-b border-border pb-1">Windows list</div>
 
                     <OptionCheckbox
                         checked={settings.winlist_ExcludeUs}
@@ -47,7 +47,7 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                         title="Sort acquired windows alphabetically by process name"
                     />
 
-                    <div className="text-xs font-semibold border-b border-border pb-1">Controls list</div>
+                    <div className="mt-1.5 text-xs font-semibold border-b border-border pb-1">Controls list</div>
                     <OptionCheckbox
                         checked={settings.controls_AutoHighlight}
                         onCheckedChange={(checked) => setAutoHighlight(checked)}
@@ -91,12 +91,12 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
 function OptionCheckbox({ checked, onCheckedChange, label, disabled, title }: { checked: boolean, onCheckedChange: (checked: boolean) => void, label: React.ReactNode, disabled?: boolean; title?: string; }) {
     return (
         <Label
-            className={classNames("text-xs font-normal flex items-center justify-between space-x-1", disabled && "opacity-50")}
+            className={classNames("h-5 text-xs font-normal flex items-center justify-between gap-x-1", disabled && "opacity-50")}
             data-disabled={disabled}
             title={title}
         >
             {label}
-            <Switch className={classNames(disabled && "disabled:opacity-100")} checked={checked} onCheckedChange={onCheckedChange} disabled={disabled} />
+            <Switch className={classNames("scale-90", disabled && "disabled:opacity-100")} checked={checked} onCheckedChange={onCheckedChange} disabled={disabled} />
         </Label>
     );
 }
@@ -104,13 +104,13 @@ function OptionCheckbox({ checked, onCheckedChange, label, disabled, title }: { 
 function OptionNumber({ value, onValueChange, label, disabled, title, min, max }: { value: number; onValueChange: (value: number) => void; label: React.ReactNode; disabled?: boolean; title?: string; min: number; max: number; }) {
     return (
         <Label
-            className={classNames("text-xs font-normal flex items-center justify-between space-x-2", disabled && "opacity-50")}
+            className={classNames("text-xs font-normal flex items-center justify-between gap-x-2", disabled && "opacity-50")}
             data-disabled={disabled}
             title={title}
         >
             {label}
             <input
-                className="h-7 w-16 rounded border border-input bg-background px-2 py-1 text-right text-xs"
+                className="px-2 h-6 w-16 rounded border border-input bg-background text-right text-xs"
                 type="number"
                 value={value}
                 min={min}
@@ -136,7 +136,7 @@ function OptionColor({ value, onValueChange, label, disabled, title }: { value: 
         >
             {label}
             <input
-                className="h-7 w-16 rounded border border-input bg-background p-1"
+                className="-m-0.5 h-7 w-[68px] rounded-2xl overflow-hidden"
                 type="color"
                 value={value}
                 disabled={disabled}
