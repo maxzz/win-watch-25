@@ -5,7 +5,7 @@ import { appSettings } from "@renderer/store/8-ui-settings";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } from "../ui/shadcn/dialog";
 import { Label } from "../ui/shadcn/label";
 import { Switch } from "../ui/shadcn/switch";
-import { setAutoHighlightSelectedControlAtom, setHighlightBlinkCountAtom, setHighlightBorderWidthAtom, setShowEmptyBoundsNotificationAtom } from "@renderer/store/2-3-atoms-highlight";
+import { setAutoHighlightSelectedControlAtom, setHighlightBlinkCountAtom, setHighlightBorderColorAtom, setHighlightBorderWidthAtom, setShowEmptyBoundsNotificationAtom } from "@renderer/store/2-3-atoms-highlight";
 import { setExcludeOwnAppWindowsAtom, setSortWindowsByProcessNameAtom } from "@renderer/store/2-1-atoms-windows-list";
 
 export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) {
@@ -13,6 +13,7 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
     const setAutoHighlight = useSetAtom(setAutoHighlightSelectedControlAtom);
     const setHighlightBlinkCount = useSetAtom(setHighlightBlinkCountAtom);
     const setHighlightBorderWidth = useSetAtom(setHighlightBorderWidthAtom);
+    const setHighlightBorderColor = useSetAtom(setHighlightBorderColorAtom);
     const setShowEmptyBoundsNotification = useSetAtom(setShowEmptyBoundsNotificationAtom);
     const setExcludeOwnAppWindows = useSetAtom(setExcludeOwnAppWindowsAtom);
     const setSortWindowsByProcessName = useSetAtom(setSortWindowsByProcessNameAtom);
@@ -69,6 +70,12 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                         min={1}
                         max={20}
                     />
+                    <OptionColor
+                        value={settings.controls_highlightBorderColor}
+                        onValueChange={setHighlightBorderColor}
+                        label="Highlight border color"
+                        title="Border color used for control/window highlight"
+                    />
                     <OptionCheckbox
                         checked={settings.controls_ShowEmptyBoundsNotice}
                         onCheckedChange={(checked) => setShowEmptyBoundsNotification(checked)}
@@ -115,6 +122,25 @@ function OptionNumber({ value, onValueChange, label, disabled, title, min, max }
                     if (!Number.isFinite(next)) return;
                     onValueChange(next);
                 }}
+            />
+        </Label>
+    );
+}
+
+function OptionColor({ value, onValueChange, label, disabled, title }: { value: string; onValueChange: (value: string) => void; label: React.ReactNode; disabled?: boolean; title?: string; }) {
+    return (
+        <Label
+            className={classNames("text-xs font-normal flex items-center justify-between space-x-2", disabled && "opacity-50")}
+            data-disabled={disabled}
+            title={title}
+        >
+            {label}
+            <input
+                className="h-7 w-16 rounded border border-input bg-background p-1"
+                type="color"
+                value={value}
+                disabled={disabled}
+                onChange={(e) => onValueChange(e.target.value)}
             />
         </Label>
     );
