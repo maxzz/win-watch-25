@@ -37,13 +37,13 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                     <OptionCheckbox
                         checked={settings.winlist_ExcludeUs}
                         onCheckedChange={(checked) => void setExcludeOwnAppWindows(checked)}
-                        label="Exclude this app windows"
+                        label="Exclude windows of our application"
                         title="Hide this app's top-level windows from the list and prefer the next window in z-order"
                     />
                     <OptionCheckbox
                         checked={settings.winlist_SortWindows}
                         onCheckedChange={(checked) => void setSortWindowsByProcessName(checked)}
-                        label="Sort windows by process name"
+                        label="Sort windows list by process name"
                         title="Sort acquired windows alphabetically by process name"
                     />
 
@@ -51,14 +51,14 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                     <OptionCheckbox
                         checked={settings.controls_AutoHighlight}
                         onCheckedChange={(checked) => setAutoHighlight(checked)}
-                        label="Auto highlight bounds"
+                        label="Auto highlight selected control bounds"
                         title="Auto highlight the selected control"
                     />
                     <OptionNumber
                         value={settings.controls_highlightBlinks}
                         onValueChange={setHighlightBlinkCount}
                         label="Highlight blink count"
-                        title="Blink count used for control/window highlight (1-10)"
+                        title="Blink count used for control/window highlight (count, min: 1, max: 10)"
                         min={1}
                         max={10}
                     />
@@ -66,7 +66,7 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                         value={settings.controls_highlightBorderWidth}
                         onValueChange={setHighlightBorderWidth}
                         label="Highlight border width"
-                        title="Border width used for control/window highlight (1-20)"
+                        title="Border width used for control/window highlight (pixels, min: 1, max: 20)"
                         min={1}
                         max={20}
                     />
@@ -135,13 +135,15 @@ function OptionColor({ value, onValueChange, label, disabled, title }: { value: 
             title={title}
         >
             {label}
+            {/* <div className="overflow-hidden"> */}
             <input
-                className="-m-0.5 h-7 w-[68px] rounded-2xl overflow-hidden"
+                className="-mx-0.5 -my-1 h-8 w-[68px] rounded-xl"
                 type="color"
                 value={value}
                 disabled={disabled}
                 onChange={(e) => onValueChange(e.target.value)}
             />
+            {/* </div> */}
         </Label>
     );
 }
