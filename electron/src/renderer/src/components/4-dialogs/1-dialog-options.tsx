@@ -29,19 +29,9 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="mt-4 pb-4 grid gap-2">
-                    <OptionCheckbox
-                        checked={settings.controls_AutoHighlight}
-                        onCheckedChange={(checked) => setAutoHighlight(checked)}
-                        label="Auto highlight"
-                        title="Auto highlight the selected control"
-                    />
-                    <OptionCheckbox
-                        checked={settings.controls_ShowEmptyBoundsNotice}
-                        onCheckedChange={(checked) => setShowEmptyBoundsNotification(checked)}
-                        label="Show empty bounds notification"
-                        title="Show a notification when selected control bounds are empty"
-                    />
+                <div className="mt-1 pb-4 grid gap-1.5">
+                    <div className="text-xs font-semibold border-b border-border pb-1">Windows list</div>
+
                     <OptionCheckbox
                         checked={settings.winlist_ExcludeUs}
                         onCheckedChange={(checked) => void setExcludeOwnAppWindows(checked)}
@@ -54,6 +44,14 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                         label="Sort windows by process name"
                         title="Sort acquired windows alphabetically by process name"
                     />
+
+                    <div className="text-xs font-semibold border-b border-border pb-1">Controls list</div>
+                    <OptionCheckbox
+                        checked={settings.controls_AutoHighlight}
+                        onCheckedChange={(checked) => setAutoHighlight(checked)}
+                        label="Auto highlight bounds"
+                        title="Auto highlight the selected control"
+                    />
                     <OptionNumber
                         value={settings.controls_highlightBlinks}
                         onValueChange={setHighlightBlinkCount}
@@ -61,6 +59,12 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                         title="Blink count used for control/window highlight (1-10)"
                         min={1}
                         max={10}
+                    />
+                    <OptionCheckbox
+                        checked={settings.controls_ShowEmptyBoundsNotice}
+                        onCheckedChange={(checked) => setShowEmptyBoundsNotification(checked)}
+                        label="Show empty bounds notification"
+                        title="Show a notification when selected control bounds are empty"
                     />
                 </div>
             </DialogContent>
