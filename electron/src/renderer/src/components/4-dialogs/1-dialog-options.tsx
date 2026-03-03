@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, } 
 import { Label } from "../ui/shadcn/label";
 import { Switch } from "../ui/shadcn/switch";
 import { setAutoHighlightSelectedControlAtom, setHighlightBlinkCountAtom, setShowEmptyBoundsNotificationAtom } from "@renderer/store/2-3-atoms-highlight";
-import { setExcludeOwnAppWindowsAtom } from "@renderer/store/2-1-atoms-windows-list";
+import { setExcludeOwnAppWindowsAtom, setSortWindowsByProcessNameAtom } from "@renderer/store/2-1-atoms-windows-list";
 
 export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) {
     const settings = useSnapshot(appSettings);
@@ -14,6 +14,7 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
     const setHighlightBlinkCount = useSetAtom(setHighlightBlinkCountAtom);
     const setShowEmptyBoundsNotification = useSetAtom(setShowEmptyBoundsNotificationAtom);
     const setExcludeOwnAppWindows = useSetAtom(setExcludeOwnAppWindowsAtom);
+    const setSortWindowsByProcessName = useSetAtom(setSortWindowsByProcessNameAtom);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -46,6 +47,12 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
                         onCheckedChange={(checked) => void setExcludeOwnAppWindows(checked)}
                         label="Exclude this app windows"
                         title="Hide this app's top-level windows from the list and prefer the next window in z-order"
+                    />
+                    <OptionCheckbox
+                        checked={settings.sortWindowsByProcessName}
+                        onCheckedChange={(checked) => void setSortWindowsByProcessName(checked)}
+                        label="Sort windows by process name"
+                        title="Sort acquired windows alphabetically by process name"
                     />
                     <OptionNumber
                         value={settings.highlightBlinkCount}

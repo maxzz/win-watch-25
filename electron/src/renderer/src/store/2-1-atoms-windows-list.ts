@@ -9,6 +9,32 @@ import { appSettings } from "./8-ui-settings";
 export const windowInfosAtom = atom<WindowInfo[]>([]);
 export const windowInfosLoadingAtom = atom<boolean>(false);
 
+function getWindowInfosWithAppliedSort(windowInfos: WindowInfo[]): WindowInfo[] {
+    if (!appSettings.sortWindowsByProcessName) {
+        return windowInfos;
+    }
+    return sortWindowInfosByProcessName(windowInfos);
+}
+
+function sortWindowInfosByProcessName(windowInfos: WindowInfo[]): WindowInfo[] {
+    return windowInfos
+        .map((windowInfo) => ({
+            ...windowInfo,
+            children: windowInfo.children ? sortWindowInfosByProcessName(windowInfo.children) : undefined,
+        }))
+        .sort((a, b) => {
+            const processNameComparison = (a.processName ?? "").localeCompare(b.processName ?? "", undefined, { sensitivity: "base" });
+            if (processNameComparison !== 0) {
+                return processNameComparison;
+            }
+            const titleComparison = (a.title ?? "").localeCompare(b.title ?? "", undefined, { sensitivity: "base" });
+            if (titleComparison !== 0) {
+                return titleComparison;
+            }
+            return (a.handle ?? "").localeCompare(b.handle ?? "", undefined, { sensitivity: "base" });
+        });
+}
+
 export const doRefreshWindowInfosAtom = atom(
     null,
     async (_get, set): Promise<void> => {
@@ -18,7 +44,7 @@ export const doRefreshWindowInfosAtom = atom(
                 excludeOwnAppWindows: appSettings.excludeOwnAppWindows,
             });
             const data = JSON.parse(json) as WindowInfo[];
-            set(windowInfosAtom, data);
+            set(windowInfosAtom, getWindowInfosWithAppliedSort(data));
         } catch (e) {
             notice.error("Failed to fetch windows");
             console.error("Failed to fetch windows", e);
@@ -46,7 +72,7 @@ export const ensureWindowInListAtom = atom(
             rect: window.rect ?? { left: 0, top: 0, right: 0, bottom: 0 },
             children: window.children,
         };
-        set(windowInfosAtom, [synthetic, ...current]);
+        set(windowInfosAtom, getWindowInfosWithAppliedSort([synthetic, ...current]));
     }
 );
 
@@ -72,6 +98,14 @@ export const setExcludeOwnAppWindowsAtom = atom(
         const next = activeInList?.handle ?? windows[0]?.handle ?? null;
         set(selectedHwndAtom, next);
         set(activeHwndAtom, next);
+    }
+);
+
+export const setSortWindowsByProcessNameAtom = atom(
+    null,
+    async (_get, set, enabled: boolean): Promise<void> => {
+        appSettings.sortWindowsByProcessName = enabled;
+        await set(doRefreshWindowInfosAtom);
     }
 );
 

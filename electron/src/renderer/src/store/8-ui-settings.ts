@@ -17,6 +17,7 @@ export interface AppSettings {
     theme: ThemeMode;
     activeWindowMonitoringEnabled: boolean;
     excludeOwnAppWindows: boolean;
+    sortWindowsByProcessName: boolean;
     autoHighlightSelectedControl: boolean;
     highlightBlinkCount: number;
     showEmptyBoundsNotification: boolean;
@@ -30,6 +31,7 @@ const DEFAULT_SETTINGS: AppSettings = {
     theme: "light",
     activeWindowMonitoringEnabled: true,
     excludeOwnAppWindows: false,
+    sortWindowsByProcessName: false,
     autoHighlightSelectedControl: false,
     highlightBlinkCount: 3,
     showEmptyBoundsNotification: true,

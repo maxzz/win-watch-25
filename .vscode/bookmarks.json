@@ -1,11 +1,21 @@
 {
 	"files": [
 		{
+			"path": "package.json",
+			"bookmarks": [
+				{
+					"line": 23,
+					"column": 8,
+					"label": "root. package.json"
+				}
+			]
+		},
+		{
 			"path": "electron/src/assets/docs/todos.md",
 			"bookmarks": [
 				{
 					"line": 0,
-					"column": 4,
+					"column": 1,
 					"label": "TODOs"
 				}
 			]
