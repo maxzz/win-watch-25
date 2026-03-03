@@ -15,7 +15,7 @@ export const doRefreshWindowInfosAtom = atom(
         set(windowInfosLoadingAtom, true);
         try {
             const json = await tmApi.getTopLevelWindows({
-                excludeOwnAppWindows: appSettings.excludeOwnAppWindows,
+                excludeOwnAppWindows: appSettings.winlist_ExcludeUs,
             });
             const data = JSON.parse(json) as WindowInfo[];
             set(windowInfosAtom, getWindowInfosWithAppliedSort(data));
@@ -53,7 +53,7 @@ export const ensureWindowInListAtom = atom(
 export const setExcludeOwnAppWindowsAtom = atom(
     null,
     async (get, set, enabled: boolean): Promise<void> => {
-        appSettings.excludeOwnAppWindows = enabled;
+        appSettings.winlist_ExcludeUs = enabled;
         await set(doRefreshWindowInfosAtom);
 
         const windows = get(windowInfosAtom);
@@ -78,7 +78,7 @@ export const setExcludeOwnAppWindowsAtom = atom(
 export const setSortWindowsByProcessNameAtom = atom(
     null,
     async (_get, set, enabled: boolean): Promise<void> => {
-        appSettings.sortWindowsByProcessName = enabled;
+        appSettings.winlist_SortWindows = enabled;
         await set(doRefreshWindowInfosAtom);
     }
 );
@@ -116,7 +116,7 @@ export const applyActiveWindowChangedAtom = atom(
         if (!incomingHandle) return;
 
         const previousActive = get(activeHwndAtom);
-        const excludeOwnAppWindows = appSettings.excludeOwnAppWindows;
+        const excludeOwnAppWindows = appSettings.winlist_ExcludeUs;
         const windows = get(windowInfosAtom);
         const matchedWindow = windows.find((w) => areWindowHandlesEqual(w.handle, incomingHandle));
         let selectedHandle: string | null = matchedWindow?.handle ?? incomingHandle;
@@ -177,7 +177,7 @@ export const applyActiveWindowChangedAtom = atom(
 //#region sort windows list
 
 function getWindowInfosWithAppliedSort(windowInfos: WindowInfo[]): WindowInfo[] {
-    if (!appSettings.sortWindowsByProcessName) {
+    if (!appSettings.winlist_SortWindows) {
         return windowInfos;
     }
     return sortWindowInfosByProcessName(windowInfos);

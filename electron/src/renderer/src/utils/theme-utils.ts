@@ -8,14 +8,14 @@ export function isThemeDark(theme: string) {
 
 export function toggleTheme(theme: string) {
     if (theme === 'dark') {
-        appSettings.theme = 'light';
+        appSettings.ui_theme = 'light';
     } 
     else if (theme === 'light') {
-        appSettings.theme = 'dark';
+        appSettings.ui_theme = 'dark';
     } 
     else {
         const isSystemDark = getIsSystemDark();
-        appSettings.theme = isSystemDark ? 'light' : 'dark';
+        appSettings.ui_theme = isSystemDark ? 'light' : 'dark';
     }
 }
 

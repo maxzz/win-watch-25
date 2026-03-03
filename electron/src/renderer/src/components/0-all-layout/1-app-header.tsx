@@ -22,12 +22,12 @@ export function AppHeader({ className }: { className?: string; }) {
 
 function Button_TogglePropertiesPosition() {
     const settings = useSnapshot(appSettings);
-    const isPropertiesOnRight = settings.propertiesPanelPosition === 'right';
+    const isPropertiesOnRight = settings.ui_panels_PropPos === 'right';
     return (
         <Button
             variant="outline"
             size="xs"
-            onClick={() => appSettings.propertiesPanelPosition = settings.propertiesPanelPosition === 'bottom' ? 'right' : 'bottom'}
+            onClick={() => appSettings.ui_panels_PropPos = settings.ui_panels_PropPos === 'bottom' ? 'right' : 'bottom'}
             title={isPropertiesOnRight ? "Move properties panel to bottom" : "Move properties panel to right"}
         >
             {isPropertiesOnRight ? <PanelBottomIcon className="size-4" /> : <PanelRightIcon className="size-4" />}

@@ -12,7 +12,7 @@ export async function getCurrentHighlightBounds(selectedHandle: string | null, c
         return null;
     }
     if (isBoundsEmpty(initialBounds)) {
-        if (appSettings.showEmptyBoundsNotification) {
+        if (appSettings.controls_ShowEmptyBoundsNotice) {
             triggerEmptyBoundsFlash();
         }
         return null;
@@ -29,7 +29,7 @@ export async function getCurrentHighlightBounds(selectedHandle: string | null, c
         return null;
     }
     if (isBoundsEmpty(currentBounds)) {
-        if (appSettings.showEmptyBoundsNotification) {
+        if (appSettings.controls_ShowEmptyBoundsNotice) {
             triggerEmptyBoundsFlash();
         }
         return null;

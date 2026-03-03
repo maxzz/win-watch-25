@@ -5,7 +5,7 @@ import { useSnapshot } from "valtio";
 import { appSettings } from "../8-ui-settings";
 
 export function useActiveWindow() {
-    const { activeWindowMonitoringEnabled } = useSnapshot(appSettings);
+    const { winlist_ActiveWinMonEnabled: activeWindowMonitoringEnabled } = useSnapshot(appSettings);
     const setActiveHwnd = useSetAtom(activeHwndAtom);
     const applyActiveWindowChanged = useSetAtom(applyActiveWindowChangedAtom);
 
@@ -30,7 +30,7 @@ export function useActiveWindow() {
 
 export function useMonitorActiveWindow() {
     const setActiveHwnd = useSetAtom(activeHwndAtom);
-    const { activeWindowMonitoringEnabled } = useSnapshot(appSettings);
+    const { winlist_ActiveWinMonEnabled: activeWindowMonitoringEnabled } = useSnapshot(appSettings);
 
     useEffect(
         () => {

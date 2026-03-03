@@ -31,31 +31,31 @@ export function DialogOptions({ open, onOpenChange }: { open: boolean; onOpenCha
 
                 <div className="mt-4 pb-4 grid gap-2">
                     <OptionCheckbox
-                        checked={settings.autoHighlightSelectedControl}
+                        checked={settings.controls_AutoHighlight}
                         onCheckedChange={(checked) => setAutoHighlight(checked)}
                         label="Auto highlight"
                         title="Auto highlight the selected control"
                     />
                     <OptionCheckbox
-                        checked={settings.showEmptyBoundsNotification}
+                        checked={settings.controls_ShowEmptyBoundsNotice}
                         onCheckedChange={(checked) => setShowEmptyBoundsNotification(checked)}
                         label="Show empty bounds notification"
                         title="Show a notification when selected control bounds are empty"
                     />
                     <OptionCheckbox
-                        checked={settings.excludeOwnAppWindows}
+                        checked={settings.winlist_ExcludeUs}
                         onCheckedChange={(checked) => void setExcludeOwnAppWindows(checked)}
                         label="Exclude this app windows"
                         title="Hide this app's top-level windows from the list and prefer the next window in z-order"
                     />
                     <OptionCheckbox
-                        checked={settings.sortWindowsByProcessName}
+                        checked={settings.winlist_SortWindows}
                         onCheckedChange={(checked) => void setSortWindowsByProcessName(checked)}
                         label="Sort windows by process name"
                         title="Sort acquired windows alphabetically by process name"
                     />
                     <OptionNumber
-                        value={settings.highlightBlinkCount}
+                        value={settings.controls_highlightBlinks}
                         onValueChange={setHighlightBlinkCount}
                         label="Highlight blink count"
                         title="Blink count used for control/window highlight (1-10)"

@@ -5,7 +5,7 @@ import { Button } from "../ui/shadcn/button";
 import { IconThemeMoon, IconThemeSun } from "../ui/icons/normal";
 
 export function ButtonThemeToggle() {
-    const { theme } = useSnapshot(appSettings);
+    const { ui_theme: theme } = useSnapshot(appSettings);
     const isDark = isThemeDark(theme);
 
     return (

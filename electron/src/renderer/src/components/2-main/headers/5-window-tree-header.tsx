@@ -30,14 +30,14 @@ export function WindowTreeHeader() {
 
 function Button_FollowFocus() {
     const settings = useSnapshot(appSettings);
-    const enabled = settings.activeWindowMonitoringEnabled;
+    const enabled = settings.winlist_ActiveWinMonEnabled;
     return (
         <Label className="text-xs font-normal text-muted-foreground cursor-pointer gap-0" title={enabled ? "Stop following the focused window" : "Follow the focused window"}>
             <span className="pb-0.5">Follow focus:</span>
             <Switch
                 className="scale-75"
                 checked={enabled}
-                onCheckedChange={(checked) => appSettings.activeWindowMonitoringEnabled = checked}
+                onCheckedChange={(checked) => appSettings.winlist_ActiveWinMonEnabled = checked}
             />
         </Label>
     );

@@ -12,7 +12,7 @@ import { PropertiesPanelHeader } from "./headers/7-properties-panel-header";
 export function PropertiesPanel() {
     const control = useAtomValue(selectedControlAtom);
 
-    const { propertiesPanelPosition } = useSnapshot(appSettings);
+    const { ui_panels_PropPos: propertiesPanelPosition } = useSnapshot(appSettings);
     const isPropertiesOnRight = propertiesPanelPosition === 'right';
 
     if (!control) {

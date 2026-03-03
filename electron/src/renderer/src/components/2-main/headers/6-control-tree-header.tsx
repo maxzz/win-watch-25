@@ -93,7 +93,7 @@ function Button_RefreshControlsTree() {
 }
 
 function ControlTreeAutoHighlightToggle() {
-    const { autoHighlightSelectedControl } = useSnapshot(appSettings);
+    const { controls_AutoHighlight: autoHighlightSelectedControl } = useSnapshot(appSettings);
     const setAutoHighlightSelectedControl = useSetAtom(setAutoHighlightSelectedControlAtom);
 
     return (

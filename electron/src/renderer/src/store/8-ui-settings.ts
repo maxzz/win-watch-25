@@ -13,35 +13,34 @@ export type PanelId = "left-panel" | "right-panel" | "controls-panel" | "control
 export type PanelLayout = Record<PanelId, number>;
 
 export interface AppSettings {
-    showFooter: boolean;
-    theme: ThemeMode;
-    activeWindowMonitoringEnabled: boolean;
-    excludeOwnAppWindows: boolean;
-    sortWindowsByProcessName: boolean;
-    autoHighlightSelectedControl: boolean;
-    highlightBlinkCount: number;
-    showEmptyBoundsNotification: boolean;
-    panelLayout: PanelLayout; // Panel sizes (percentages) 
-    // Properties panel position
-    propertiesPanelPosition: PropertiesPanelPosition;
+    winlist_ActiveWinMonEnabled: boolean; // Whether to monitor the active window
+    winlist_ExcludeUs: boolean; // Whether to exclude the own app windows from the window list
+    winlist_SortWindows: boolean; // Whether to sort the window list by process name
+    controls_AutoHighlight: boolean;
+    controls_highlightBlinks: number; // The number of blinks for the highlight
+    controls_ShowEmptyBoundsNotice: boolean; // Whether to show a notification when the selected control bounds are empty
+    ui_showFooter: boolean;
+    ui_theme: ThemeMode;
+    ui_panels_Layout: PanelLayout; // Panel sizes (percentages) 
+    ui_panels_PropPos: PropertiesPanelPosition; // The position of the properties panel: 'bottom' or 'right'
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
-    showFooter: true,
-    theme: "light",
-    activeWindowMonitoringEnabled: true,
-    excludeOwnAppWindows: false,
-    sortWindowsByProcessName: false,
-    autoHighlightSelectedControl: false,
-    highlightBlinkCount: 3,
-    showEmptyBoundsNotification: true,
-    panelLayout: {
+    winlist_ActiveWinMonEnabled: true,
+    winlist_ExcludeUs: false,
+    winlist_SortWindows: true,
+    controls_AutoHighlight: false,
+    controls_highlightBlinks: 3,
+    controls_ShowEmptyBoundsNotice: true,
+    ui_showFooter: true,
+    ui_theme: "light",
+    ui_panels_Layout: {
         "left-panel": 25,
         "right-panel": 75,
         "controls-panel": 20,
         "control-props-panel": 80,
     },
-    propertiesPanelPosition: 'right',
+    ui_panels_PropPos: 'right',
 };
 
 // Load settings from localStorage
@@ -62,11 +61,11 @@ function loadSettings(): AppSettings {
 
 export const appSettings = proxy<AppSettings>(loadSettings());
 
-themeApplyMode(appSettings.theme);
+themeApplyMode(appSettings.ui_theme);
 
 subscribe(appSettings, () => {
     try {
-        themeApplyMode(appSettings.theme);
+        themeApplyMode(appSettings.ui_theme);
         localStorage.setItem(STORAGE_ID, JSON.stringify(appSettings));
     } catch (e) {
         console.error("Failed to save settings", e);
@@ -78,7 +77,7 @@ export const setPanelLayoutAtom = atom(
     null,
     (get, set, layout: Layout) => {
         for (const [key, value] of Object.entries(layout)) {
-            appSettings.panelLayout[key as PanelId] = value;
+            appSettings.ui_panels_Layout[key as PanelId] = value;
         }
     }
 );

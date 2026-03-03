@@ -8,7 +8,7 @@ import { FooterWindowInfo } from "../2-main/4-footer-window-info";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "../ui/shadcn/resizable";
 
 export function MainContent({ className }: { className?: string; }) {
-    const { panelLayout, propertiesPanelPosition } = useSnapshot(appSettings);
+    const { ui_panels_Layout: panelLayout, ui_panels_PropPos: propertiesPanelPosition } = useSnapshot(appSettings);
 
     const mainPanelSize = panelLayout["left-panel"] ?? 25;
     const rightPanelSize = panelLayout["right-panel"] ?? 75;

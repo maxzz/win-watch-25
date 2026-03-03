@@ -7,7 +7,7 @@ import { selectedControlAtom } from "./2-2-1-atoms-controls-list";
 import { getCurrentHighlightBounds } from "./2-4-atoms-bounds";
 
 export function getSafeHighlightBlinkCount(): number {
-    const raw = Number(appSettings.highlightBlinkCount);
+    const raw = Number(appSettings.controls_highlightBlinks);
     if (!Number.isFinite(raw)) return 3;
     return Math.max(1, Math.min(10, Math.round(raw)));
 }
@@ -15,21 +15,21 @@ export function getSafeHighlightBlinkCount(): number {
 export const setHighlightBlinkCountAtom = atom(
     null,
     (_get, _set, blinkCount: number): void => {
-        appSettings.highlightBlinkCount = Math.max(1, Math.min(10, Math.round(blinkCount)));
+        appSettings.controls_highlightBlinks = Math.max(1, Math.min(10, Math.round(blinkCount)));
     }
 );
 
 export const setShowEmptyBoundsNotificationAtom = atom(
     null,
     (_get, _set, enabled: boolean): void => {
-        appSettings.showEmptyBoundsNotification = enabled;
+        appSettings.controls_ShowEmptyBoundsNotice = enabled;
     }
 );
 
 export const setAutoHighlightSelectedControlAtom = atom(
     null,
     async (get, _set, enabled: boolean): Promise<void> => {
-        appSettings.autoHighlightSelectedControl = enabled;
+        appSettings.controls_AutoHighlight = enabled;
 
         if (!enabled) {
             try {
@@ -60,7 +60,7 @@ export const setSelectedControlAtom = atom(
         set(selectedControlAtom, control);
 
         // Highlight the selected control if auto-highlight is enabled
-        if (!control || !appSettings.autoHighlightSelectedControl) {
+        if (!control || !appSettings.controls_AutoHighlight) {
             return;
         }
 
