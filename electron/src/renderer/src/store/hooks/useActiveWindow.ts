@@ -4,6 +4,7 @@ import { activeHwndAtom, applyActiveWindowChangedAtom, doOnAppStartRefreshWindow
 import { useSnapshot } from "valtio";
 import { appSettings } from "../8-ui-settings";
 import { zoomLevelAtom } from "../2-6-atoms-zoom";
+import { dialogOptionsOpenAtom } from "../2-ui-atoms";
 
 export function useActiveWindow() {
     const { winlist_ActiveWinMonEnabled: activeWindowMonitoringEnabled } = useSnapshot(appSettings);
@@ -69,6 +70,7 @@ export function useMonitorActiveWindow() {
 export function useAppStartInitialize() {
     const refreshWindowInfosOnStart = useSetAtom(doOnAppStartRefreshWindowInfosAtom);
     const setZoomLevel = useSetAtom(zoomLevelAtom);
+    const setOptionsOpen = useSetAtom(dialogOptionsOpenAtom);
 
     useEffect(
         () => {
@@ -79,7 +81,14 @@ export function useAppStartInitialize() {
                 setZoomLevel(level);
             });
 
-            return unsubscribeZoom;
+            const unsubscribeOpenOptions = tmApi.onOpenOptionsShortcut(() => {
+                setOptionsOpen(true);
+            });
+
+            return () => {
+                unsubscribeZoom();
+                unsubscribeOpenOptions();
+            };
         },
-        [refreshWindowInfosOnStart, setZoomLevel]);
+        [refreshWindowInfosOnStart, setZoomLevel, setOptionsOpen]);
 }

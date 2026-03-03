@@ -42,6 +42,7 @@ interface WinWatchApi {
     zoomAction: (action: "in" | "out" | "reset") => Promise<number>;                 // Applies zoom change and returns the resulting zoom level
     getZoomLevel: () => Promise<number>;                                             // Returns current window zoom level
     onZoomChanged: (callback: (level: number) => void) => () => void;                // Subscribes to zoom changes emitted from main process
+    onOpenOptionsShortcut: (callback: () => void) => () => void;                     // Subscribes to shortcut event that should open Options dialog
     quitApp: () => Promise<void>;                                                    // Quits the application
 }
 

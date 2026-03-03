@@ -50,6 +50,13 @@ const mainLocalApi: WinWatchApi = {
         ipcRenderer.on("zoom-changed", subscription);
         return () => ipcRenderer.removeListener("zoom-changed", subscription);
     },
+
+    // Listen for shortcut event from backend to open Options dialog
+    onOpenOptionsShortcut: (callback: () => void) => {
+        const subscription = () => callback();
+        ipcRenderer.on("open-options-dialog", subscription);
+        return () => ipcRenderer.removeListener("open-options-dialog", subscription);
+    },
 };
 
 try {
