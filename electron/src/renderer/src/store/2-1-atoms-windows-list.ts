@@ -9,32 +9,6 @@ import { appSettings } from "./8-ui-settings";
 export const windowInfosAtom = atom<WindowInfo[]>([]);
 export const windowInfosLoadingAtom = atom<boolean>(false);
 
-function getWindowInfosWithAppliedSort(windowInfos: WindowInfo[]): WindowInfo[] {
-    if (!appSettings.sortWindowsByProcessName) {
-        return windowInfos;
-    }
-    return sortWindowInfosByProcessName(windowInfos);
-}
-
-function sortWindowInfosByProcessName(windowInfos: WindowInfo[]): WindowInfo[] {
-    return windowInfos
-        .map((windowInfo) => ({
-            ...windowInfo,
-            children: windowInfo.children ? sortWindowInfosByProcessName(windowInfo.children) : undefined,
-        }))
-        .sort((a, b) => {
-            const processNameComparison = (a.processName ?? "").localeCompare(b.processName ?? "", undefined, { sensitivity: "base" });
-            if (processNameComparison !== 0) {
-                return processNameComparison;
-            }
-            const titleComparison = (a.title ?? "").localeCompare(b.title ?? "", undefined, { sensitivity: "base" });
-            if (titleComparison !== 0) {
-                return titleComparison;
-            }
-            return (a.handle ?? "").localeCompare(b.handle ?? "", undefined, { sensitivity: "base" });
-        });
-}
-
 export const doRefreshWindowInfosAtom = atom(
     null,
     async (_get, set): Promise<void> => {
@@ -199,5 +173,42 @@ export const applyActiveWindowChangedAtom = atom(
         set(selectedHwndAtom, selectedHandle);
     }
 );
+
+//#region sort windows list
+
+function getWindowInfosWithAppliedSort(windowInfos: WindowInfo[]): WindowInfo[] {
+    if (!appSettings.sortWindowsByProcessName) {
+        return windowInfos;
+    }
+    return sortWindowInfosByProcessName(windowInfos);
+}
+
+function sortWindowInfosByProcessName(windowInfos: WindowInfo[]): WindowInfo[] {
+    return windowInfos
+        .map(
+            (windowInfo) => ({
+                ...windowInfo,
+                children: windowInfo.children ? sortWindowInfosByProcessName(windowInfo.children) : undefined,
+            })
+        )
+        .sort(
+            (a, b) => {
+                const processNameComparison = (a.processName ?? "").localeCompare(b.processName ?? "", undefined, { sensitivity: "base" });
+
+                if (processNameComparison !== 0) {
+                    return processNameComparison;
+                }
+
+                const titleComparison = (a.title ?? "").localeCompare(b.title ?? "", undefined, { sensitivity: "base" });
+                if (titleComparison !== 0) {
+                    return titleComparison;
+                }
+                
+                return (a.handle ?? "").localeCompare(b.handle ?? "", undefined, { sensitivity: "base" });
+            }
+        );
+}
+
+//#endregion sort windows list
 
 //#endregion Window list
