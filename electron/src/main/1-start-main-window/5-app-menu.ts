@@ -33,12 +33,6 @@ export function registerZoomShortcuts(win: BrowserWindow) {
     win.webContents.on("before-input-event", (event, input) => {
         if (input.type !== "keyDown") return;
 
-        if (input.key === "F12") {
-            win.webContents.toggleDevTools();
-            event.preventDefault();
-            return;
-        }
-
         const ctrlOrCmd = input.control || input.meta;
         if (!ctrlOrCmd) return;
 
