@@ -1,8 +1,8 @@
 import { BrowserWindow } from "electron";
 
-// Additional zoom shortcuts beyond Electron defaults.
+// Global shortcuts beyond Electron defaults.
 
-export function handleBeforeInputEvent(win: BrowserWindow, event: Electron.Event, input: Electron.Input) {
+export function handleGlobalShortcuts(win: BrowserWindow, event: Electron.Event, input: Electron.Input) {
     if (input.type !== "keyDown") return;
 
     const ctrlOrCmd = input.control || input.meta;
