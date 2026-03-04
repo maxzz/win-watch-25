@@ -53,8 +53,7 @@ export function ControlTreeLoader() {
             <ControlTreeHeader />
             {hasTreeForSelectedWindow && windowControlsTree
                 ? (<>
-                    <ControlTreeInlineStatus refreshing={refreshing} error={error} />
-                    <ControlTree windowControlsTree={windowControlsTree} />
+                    <ControlTree windowControlsTree={windowControlsTree} refreshing={refreshing} error={error} />
                 </>)
                 : <ControlTreeStatus hwnd={selectedHwnd} loading={loading || refreshing} error={error} hasTree={false} />
             }
@@ -97,14 +96,14 @@ function ControlTreeStatus({ hwnd, loading, error, hasTree }: { hwnd: string | n
 function ControlTreeInlineStatus({ refreshing, error }: { refreshing: boolean; error: string | null; }) {
     if (refreshing) {
         return (
-            <div className="px-2 py-1 text-xs text-muted-foreground border-b bg-muted/10">
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 px-2 py-1 text-xs text-muted-foreground border-b bg-muted/80 backdrop-blur-[1px]">
                 Refreshing controls...
             </div>
         );
     }
     if (error) {
         return (
-            <div className="px-2 py-1 text-xs text-amber-600 border-b bg-amber-500/10">
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 px-2 py-1 text-xs text-amber-600 border-b bg-amber-500/20 backdrop-blur-[1px]">
                 Refresh failed. Showing last successful snapshot.
             </div>
         );
@@ -112,10 +111,13 @@ function ControlTreeInlineStatus({ refreshing, error }: { refreshing: boolean; e
     return null;
 }
 
-function ControlTree({ windowControlsTree }: { windowControlsTree: ControlNode; }) {
+function ControlTree({ windowControlsTree, refreshing, error }: { windowControlsTree: ControlNode; refreshing: boolean; error: string | null; }) {
     return (
-        <div className="group/controltree flex-1 overflow-auto" tabIndex={0}>
-            <ControlTreeNode node={windowControlsTree} depth={0} />
+        <div className="relative flex-1">
+            <ControlTreeInlineStatus refreshing={refreshing} error={error} />
+            <div className="group/controltree h-full overflow-auto" tabIndex={0}>
+                <ControlTreeNode node={windowControlsTree} depth={0} />
+            </div>
         </div>
     );
 }
