@@ -1,9 +1,9 @@
-import { BrowserWindow, shell } from "electron";
+import { shell } from "electron";
 import { type AppWindow } from "./9-app-window-instance";
 import { iniFileOptions } from "./8-ini-file-options";
 import { handleGlobalShortcuts } from "./3-global-shortcuts";
 
-export const needReactDevtools = true;
+export const NEED_REACT_DEVTOOLS = true;
 
 export function setAppWindowListeners(appWindow: AppWindow) {
     if (!appWindow.wnd) {
@@ -31,6 +31,13 @@ export function setAppWindowListeners(appWindow: AppWindow) {
         }
     );
 
+    appWindow.wnd.webContents.on("before-input-event",
+        (event, input) => {
+            if (!appWindow.wnd) return;
+            handleGlobalShortcuts(appWindow.wnd, event, input);
+        }
+    );
+
     // If DevTools are opened only after the first navigation is complete, React DevTools
     // often won’t hook until the next reload. We auto-reload once (devtools enabled) so the
     // React tabs appear without requiring the user to press Ctrl+R.
@@ -41,19 +48,12 @@ export function setAppWindowListeners(appWindow: AppWindow) {
             if (iniFileOptions.options?.devTools && !appWindow.wnd.webContents.isDevToolsOpened()) {
                 appWindow.wnd.webContents.openDevTools();
 
-                if (needReactDevtools && !reactDevtoolsReloaded) {
+                if (NEED_REACT_DEVTOOLS && !reactDevtoolsReloaded) {
                     reactDevtoolsReloaded = true;
                     setTimeout(() => appWindow.wnd && appWindow.wnd.webContents.reload(), 1000); // Wait 1 second to ensure DevTools are loaded when page is fully rendered.
                 }
             }
             appWindow.wnd.webContents.send('main-process-message', (new Date).toLocaleString()); // Test active push message to Renderer-process.
-        }
-    );
-
-    appWindow.wnd.webContents.on("before-input-event",
-        (event, input) => {
-            if (!appWindow.wnd) return;
-            handleGlobalShortcuts(appWindow.wnd, event, input);
         }
     );
 }
