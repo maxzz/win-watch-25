@@ -1,6 +1,6 @@
 import { BrowserWindow } from "electron";
 
-// Global shortcuts beyond Electron defaults.
+// Global shortcuts beyond Electron defaults: zoom shortcuts (numpad +/-, Ctrl/Cmd +/-, Ctrl/Cmd+0), options shortcut (Ctrl/Cmd+,)
 
 export function handleGlobalShortcuts(win: BrowserWindow, event: Electron.Event, input: Electron.Input) {
     if (input.type !== "keyDown") return;

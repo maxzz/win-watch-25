@@ -1,7 +1,7 @@
 import { BrowserWindow, shell } from "electron";
 import { type AppWindow } from "./9-app-window-instance";
 import { iniFileOptions } from "./8-ini-file-options";
-import { handleGlobalShortcuts } from "./5-app-menu";
+import { handleGlobalShortcuts } from "./3-global-shortcuts";
 
 export const needReactDevtools = true;
 
@@ -42,7 +42,6 @@ export function setAppWindowListeners(appWindow: AppWindow) {
         appWindow.wnd?.webContents.send('main-process-message', (new Date).toLocaleString()); // Test active push message to Renderer-process.
     });
 
-    // Register additional zoom shortcuts (numpad +/-, Ctrl/Cmd +/-, Ctrl/Cmd+0)
     appWindow.wnd.webContents.on("before-input-event", (event, input) => {
         if (!appWindow.wnd) return;
         handleGlobalShortcuts(appWindow.wnd, event, input);

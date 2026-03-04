@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import { winwatchPlugin } from "../0-all/1-load-plugin";
 import { appWindow } from "./9-app-window-instance";
-import { applyZoomAction } from "./5-app-menu";
+import { applyZoomAction } from "./3-global-shortcuts";
 
 type GetTopLevelWindowsOptions = {
     excludeOwnAppWindows?: boolean;
