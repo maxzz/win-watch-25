@@ -9,28 +9,34 @@ import { TopMenu } from "./1-top-menu";
 import { ButtonThemeToggle } from "./3-5-btn-theme-toggle";
 
 export function AppHeader({ className }: { className?: string; }) {
-    const setOptionsOpen = useSetAtom(dialogOptionsOpenAtom);
-
     return (
         <div className={classNames("px-3 py-1 border-b bg-muted/30 flex items-center justify-between", className)}>
             <div className="flex items-center gap-4">
                 <TopMenu />
             </div>
             <div className="flex items-center gap-1">
-                <Button
-                    className="size-6 rounded"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setOptionsOpen(true)}
-                    title="Options"
-                    type="button"
-                >
-                    <SettingsIcon className="size-3 stroke-1!" />
-                </Button>
+                <ButtonOpenOptionsDialog />
                 <ButtonThemeToggle />
                 {/* <Button_TogglePropertiesPosition /> */}
             </div>
         </div>
+    );
+}
+
+function ButtonOpenOptionsDialog() {
+    const setOptionsOpen = useSetAtom(dialogOptionsOpenAtom);
+
+    return (
+        <Button
+            className="size-6 rounded"
+            variant="ghost"
+            size="icon"
+            onClick={() => setOptionsOpen(true)}
+            title="Options"
+            type="button"
+        >
+            <SettingsIcon className="size-3 stroke-1!" />
+        </Button>
     );
 }
 
