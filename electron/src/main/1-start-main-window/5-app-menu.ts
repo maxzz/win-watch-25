@@ -1,34 +1,7 @@
 import { BrowserWindow } from "electron";
 
-const ZOOM_STEP = 0.5;
-
-function emitZoomChanged(win: BrowserWindow, level: number) {
-    win.webContents.send("zoom-changed", level);
-}
-
-export function setZoomLevel(win: BrowserWindow, level: number): number {
-    win.webContents.setZoomLevel(level);
-    emitZoomChanged(win, level);
-    return level;
-}
-
-export function applyZoomAction(win: BrowserWindow, action: "in" | "out" | "reset"): number {
-    const current = win.webContents.getZoomLevel();
-    let next = current;
-
-    if (action === "in") next += ZOOM_STEP;
-    else if (action === "out") next -= ZOOM_STEP;
-    else next = 0;
-
-    if (next === current) {
-        emitZoomChanged(win, current);
-        return current;
-    }
-
-    return setZoomLevel(win, next);
-}
-
 // Additional zoom shortcuts beyond Electron defaults.
+
 export function registerZoomShortcuts(win: BrowserWindow) {
     win.webContents.on("before-input-event", (event, input) => {
         if (input.type !== "keyDown") return;
@@ -63,3 +36,35 @@ export function registerZoomShortcuts(win: BrowserWindow) {
         }
     });
 }
+
+// Zoom
+
+export function applyZoomAction(win: BrowserWindow, action: "in" | "out" | "reset"): number {
+    const current = win.webContents.getZoomLevel();
+    let next = current;
+
+    if (action === "in") next += ZOOM_STEP;
+    else if (action === "out") next -= ZOOM_STEP;
+    else next = 0;
+
+    if (next === current) {
+        emitZoomChanged(win, current);
+        return current;
+    }
+
+    return setZoomLevel(win, next);
+}
+
+const ZOOM_STEP = 0.5;
+
+function emitZoomChanged(win: BrowserWindow, level: number) {
+    win.webContents.send("zoom-changed", level);
+}
+
+function setZoomLevel(win: BrowserWindow, level: number): number {
+    win.webContents.setZoomLevel(level);
+    emitZoomChanged(win, level);
+    return level;
+}
+
+//
