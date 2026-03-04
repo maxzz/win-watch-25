@@ -3,38 +3,44 @@ import { BrowserWindow } from "electron";
 // Additional zoom shortcuts beyond Electron defaults.
 
 export function registerZoomShortcuts(win: BrowserWindow) {
-    win.webContents.on("before-input-event", (event, input) => {
-        if (input.type !== "keyDown") return;
-
-        const ctrlOrCmd = input.control || input.meta;
-        if (!ctrlOrCmd) return;
-
-        const key = input.key;
-        const normalized = key.length === 1 ? key.toLowerCase() : key;
-
-        if (normalized === "=" || normalized === "+" || normalized === "Add") {
-            applyZoomAction(win, "in");
-            event.preventDefault();
-            return;
+    win.webContents.on("before-input-event",
+        (event, input) => {
+            handleBeforeInputEvent(win, event, input);
         }
+    );
+}
 
-        if (normalized === "-" || normalized === "_" || normalized === "Subtract") {
-            applyZoomAction(win, "out");
-            event.preventDefault();
-            return;
-        }
+function handleBeforeInputEvent(win: BrowserWindow, event: Electron.Event, input: Electron.Input) {
+    if (input.type !== "keyDown") return;
 
-        if (normalized === "0" || normalized === "num0" || normalized === "Numpad0") {
-            applyZoomAction(win, "reset");
-            event.preventDefault();
-            return;
-        }
+    const ctrlOrCmd = input.control || input.meta;
+    if (!ctrlOrCmd) return;
 
-        if (normalized === ",") {
-            win.webContents.send("open-options-dialog");
-            event.preventDefault();
-        }
-    });
+    const key = input.key;
+    const normalized = key.length === 1 ? key.toLowerCase() : key;
+
+    if (normalized === "=" || normalized === "+" || normalized === "Add") {
+        applyZoomAction(win, "in");
+        event.preventDefault();
+        return;
+    }
+
+    if (normalized === "-" || normalized === "_" || normalized === "Subtract") {
+        applyZoomAction(win, "out");
+        event.preventDefault();
+        return;
+    }
+
+    if (normalized === "0" || normalized === "num0" || normalized === "Numpad0") {
+        applyZoomAction(win, "reset");
+        event.preventDefault();
+        return;
+    }
+
+    if (normalized === ",") {
+        win.webContents.send("open-options-dialog");
+        event.preventDefault();
+    }
 }
 
 // Zoom
