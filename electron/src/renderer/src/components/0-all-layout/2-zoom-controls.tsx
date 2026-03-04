@@ -13,7 +13,7 @@ export function ZoomControls() {
             className="justify-between focus:bg-transparent cursor-default"
             onSelect={(event) => event.preventDefault()}
         >
-            <span className="pl-2 text-xs font-normal">Zoom</span>
+            <span className="text-xs font-normal">Zoom</span>
 
             <div className="flex items-center gap-1 border rounded-md p-0.5">
                 <Button

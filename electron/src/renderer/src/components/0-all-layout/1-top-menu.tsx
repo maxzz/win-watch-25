@@ -20,12 +20,12 @@ export function TopMenu() {
                         Options...
                     </MenubarItem>
 
+                    <ZoomControls />
+
                     <MenubarItem onClick={() => setAboutOpen(true)}>
                         About
                     </MenubarItem>
 
-                    <MenubarSeparator />
-                    <ZoomControls />
                     <MenubarSeparator />
 
                     <MenubarItem variant="destructive" onClick={() => tmApi.quitApp()}>
