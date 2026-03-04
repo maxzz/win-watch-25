@@ -1,7 +1,7 @@
-import { shell } from "electron";
-import { iniFileOptions } from "./8-ini-file-options";
+import { BrowserWindow, shell } from "electron";
 import { type AppWindow } from "./9-app-window-instance";
-import { registerZoomShortcuts } from "./5-app-menu";
+import { iniFileOptions } from "./8-ini-file-options";
+import { handleBeforeInputEvent } from "./5-app-menu";
 
 export const needReactDevtools = true;
 
@@ -44,4 +44,10 @@ export function setAppWindowListeners(appWindow: AppWindow) {
 
     // Register additional zoom shortcuts (numpad +/-, Ctrl/Cmd +/-, Ctrl/Cmd+0)
     registerZoomShortcuts(appWindow.wnd);
+}
+
+function registerZoomShortcuts(win: BrowserWindow) {
+    win.webContents.on("before-input-event", (event, input) => {
+        handleBeforeInputEvent(win, event, input);
+    });
 }
