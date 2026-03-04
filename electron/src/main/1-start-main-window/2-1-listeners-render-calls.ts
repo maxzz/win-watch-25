@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain } from "electron";
-import { winwatchPlugin } from "../0-all/1-load-plugin";
+import { pluginWinWatch } from "../0-all/1-load-plugin";
 import { appWindow } from "./9-app-window-instance";
 import { applyZoomAction } from "./3-global-shortcuts";
 
@@ -17,26 +17,26 @@ export function setListenersRenderCalls() {
 
     ipcMain.handle('get-top-level-windows',
         (_, options?: GetTopLevelWindowsOptions) => {
-            if (!winwatchPlugin) {
+            if (!pluginWinWatch) {
                 return JSON.stringify([{ title: "Native module not loaded" }]);
             }
             const excludeProcessId = options?.excludeOwnAppWindows ? process.pid : 0;
-            return winwatchPlugin.getTopLevelWindows(excludeProcessId);
+            return pluginWinWatch.getTopLevelWindows(excludeProcessId);
         }
     );
 
     ipcMain.handle('get-control-tree',
-        (_, handle) => {
-            if (!winwatchPlugin) {
+        (_, handle: string) => {
+            if (!pluginWinWatch) {
                 return JSON.stringify({});
             }
-            return winwatchPlugin.getControlTree(handle);
+            return pluginWinWatch.getControlTree(handle);
         }
     );
 
     ipcMain.handle('start-monitoring',
-        (event, handle: string) => {
-            if (!winwatchPlugin) return false;
+        (_, handle: string) => {
+            if (!pluginWinWatch) return false;
 
             const callback = (windowInfoJson: string) => { // Define callback for active window changes
                 // Send to all windows
@@ -47,21 +47,21 @@ export function setListenersRenderCalls() {
                 );
             };
 
-            return winwatchPlugin.startMonitoring(callback);
+            return pluginWinWatch.startMonitoring(callback);
         }
     );
 
     ipcMain.handle('stop-monitoring',
         () => {
-            if (!winwatchPlugin) return false;
-            return winwatchPlugin.stopMonitoring();
+            if (!pluginWinWatch) return false;
+            return pluginWinWatch.stopMonitoring();
         }
     );
 
     ipcMain.handle('invoke-control',
         (_, handle: string, runtimeId: string) => {
-            if (!winwatchPlugin) return false;
-            return winwatchPlugin.invokeControl(handle, runtimeId);
+            if (!pluginWinWatch) return false;
+            return pluginWinWatch.invokeControl(handle, runtimeId);
         }
     );
 
@@ -70,40 +70,40 @@ export function setListenersRenderCalls() {
     // options: {color?, borderWidth?, blinkCount?}
     ipcMain.handle('highlight-rect',
         (_, bounds: { left: number; top: number; right: number; bottom: number; }, options?: { color?: number; borderWidth?: number; blinkCount?: number; }) => {
-            if (!winwatchPlugin) return;
-            winwatchPlugin.highlightRect(bounds, options);
+            if (!pluginWinWatch) return;
+            pluginWinWatch.highlightRect(bounds, options);
         }
     );
 
     // Hide the highlight rectangle
     ipcMain.handle('hide-highlight',
         () => {
-            if (!winwatchPlugin) return;
-            winwatchPlugin.hideHighlight();
+            if (!pluginWinWatch) return;
+            pluginWinWatch.hideHighlight();
         }
     );
 
     // Get current window rectangle in screen coordinates
     ipcMain.handle('get-window-rect',
         (_, handle: string) => {
-            if (!winwatchPlugin) return 'null';
-            return winwatchPlugin.getWindowRect(handle);
+            if (!pluginWinWatch) return 'null';
+            return pluginWinWatch.getWindowRect(handle);
         }
     );
 
     // Get current control bounds in screen coordinates by runtime ID
     ipcMain.handle('get-control-current-bounds',
         (_, handle: string, runtimeId: string) => {
-            if (!winwatchPlugin) return 'null';
-            return winwatchPlugin.getControlCurrentBounds(handle, runtimeId);
+            if (!pluginWinWatch) return 'null';
+            return pluginWinWatch.getControlCurrentBounds(handle, runtimeId);
         }
     );
 
     // Check whether a window handle is currently valid
     ipcMain.handle('is-window-handle-valid',
         (_, handle: string) => {
-            if (!winwatchPlugin) return false;
-            return winwatchPlugin.isWindowHandleValid(handle);
+            if (!pluginWinWatch) return false;
+            return pluginWinWatch.isWindowHandleValid(handle);
         }
     );
 

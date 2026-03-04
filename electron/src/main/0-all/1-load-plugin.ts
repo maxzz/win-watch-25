@@ -1,7 +1,7 @@
-import { fileURLToPath } from "url";
-import { createRequire } from "node:module";
-import { existsSync } from "node:fs";
 import path from "node:path";
+import { existsSync } from "node:fs";
+import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
 import { app } from "electron";
 
 const pathToPlugin = getPluginPath();
@@ -38,6 +38,6 @@ function loadNapiWinWatchPlugin(): any {
     }
 }
 
-const winwatchPlugin = loadNapiWinWatchPlugin();
+const pluginWinWatch = loadNapiWinWatchPlugin();
 
-export { winwatchPlugin, pathToPreload, pathToRenderer, pathToIcon };
+export { pluginWinWatch, pathToPreload, pathToRenderer, pathToIcon };
