@@ -5,14 +5,17 @@ import { electronAPI } from "@electron-toolkit/preload";
 
 const mainLocalApi: WinWatchApi = {
     quitApp: () => ipcRenderer.invoke('quit-app'),
+    
     // Get list of all top-level windows
     getTopLevelWindows: (options?: { excludeOwnAppWindows?: boolean; }) => ipcRenderer.invoke('get-top-level-windows', options),
     // Get control tree for a specific window
     getControlTree: (handle: string) => ipcRenderer.invoke('get-control-tree', handle),
+    
     // Start monitoring active window changes
     startMonitoring: (handle: string) => ipcRenderer.invoke('start-monitoring', handle),
     // Stop monitoring active window changes
     stopMonitoring: () => ipcRenderer.invoke('stop-monitoring'),
+    
     // Invoke a control (e.g. click)
     invokeControl: (handle: string, runtimeId: string) => ipcRenderer.invoke('invoke-control', handle, runtimeId),
     

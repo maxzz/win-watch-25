@@ -1,4 +1,4 @@
-import { screen, type BrowserWindow } from "electron";
+import { type BrowserWindow, screen } from "electron";
 import { type RectangleInt, type SizeInt } from "./1-shared-ipc-types";
 
 export function getWindowRect(win: BrowserWindow): Electron.Rectangle {

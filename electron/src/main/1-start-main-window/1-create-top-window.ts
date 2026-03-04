@@ -1,4 +1,4 @@
-import { shell, BrowserWindow } from "electron";
+import { BrowserWindow } from "electron";
 import { is } from "@electron-toolkit/utils";
 import { pathToPreload, pathToRenderer, pathToIcon } from "../0-all/1-load-plugin";
 import { iniFileOptions } from "./8-ini-file-options";

@@ -65,15 +65,13 @@ export function setListenersRenderCalls() {
         }
     );
 
-    // Highlight a rectangle on screen. bounds: {left, top, right, bottom},  options: {color?, borderWidth?, blinkCount?}
     ipcMain.handle('highlight-rect',
-        (_, bounds: { left: number; top: number; right: number; bottom: number; }, options?: { color?: number; borderWidth?: number; blinkCount?: number; }) => {
+        (_, bounds: Rect4, options?: HighlightOptions) => {
             if (!plugin) return;
             plugin.highlightRect(bounds, options);
         }
     );
 
-    // Hide the highlight rectangle
     ipcMain.handle('hide-highlight',
         () => {
             if (!plugin) return;
