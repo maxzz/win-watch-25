@@ -18,8 +18,8 @@
         ]
     },
     "devDependencies": {
-        "@types/node": "^22.15.3",
-        "tsx": "^4.19.2"
+        "@types/node": "^25.9.0",
+        "tsx": "^4.22.2"
     },
     "scripts": {
         "tsc": "pnpm --filter wwe run tsc",
@@ -31,13 +31,13 @@
 
         "build:all": "tsx scripts/build-plugins.ts --debug",
         "build:all:release": "tsx scripts/build-plugins.ts --release",
-        
+
         "build:native": "tsx scripts/build-plugins.ts --debug --native-only",
         "build:napi": "tsx scripts/build-plugins.ts --debug --napi-only",
 
         "build:native:release": "tsx scripts/build-plugins.ts --release --native-only",
         "build:napi:release": "tsx scripts/build-plugins.ts --release --napi-only",
-
+        
         "build:exe": "pnpm build:all:release && pnpm --filter wwe run build && pnpm --filter wwe exec electron-builder --win --x64"
     }
 }
