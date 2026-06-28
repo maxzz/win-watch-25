@@ -143,10 +143,10 @@ function strEmpty(value: ReactNode): string {
 function PropertiesSeparatorRow() {
     return (
         <div className="contents">
-            <div className="h-[5px] border-r border-foreground/20 dark:border-foreground/20 flex items-center">
+            <div className="h-1.25 border-r border-foreground/20 dark:border-foreground/20 flex items-center">
                 <div className="w-full border-b border-foreground/20 dark:border-foreground/20" />
             </div>
-            <div className="h-[5px] flex items-center">
+            <div className="h-1.25 flex items-center">
                 <div className="w-full border-b border-foreground/20 dark:border-foreground/20" />
             </div>
         </div>
